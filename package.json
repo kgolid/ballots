@@ -1,0 +1,23 @@
+{
+  "name": "ballots",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "author": "Kjetil Golid",
+  "license": "ISC",
+  "keywords": [],
+  "description": "Generates ballot-like visual structures using the Apparatus Generator repetetively.",
+  "browser": "dist/index.js",
+  "dependencies": {
+    "apparatus-generator": "^1.3.1",
+    "chromotome": "^1.9.2"
+  },
+  "devDependencies": {
+    "rollup": "1.1.2",
+    "rollup-plugin-node-resolve": "4.0.0",
+    "rollup-plugin-commonjs": "9.2.0"
+  }
+}
