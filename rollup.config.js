@@ -10,5 +10,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  },
+  {
+    input: 'index_full.js',
+    output: {
+      file: pkg.browserFull,
+      format: 'umd'
+    },
+    plugins: [resolve(), commonjs()]
   }
 ];
