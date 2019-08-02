@@ -4,9 +4,9 @@ import * as tome from 'chromotome';
 let sketch = function(p) {
   let THE_SEED;
 
-  const mag = 6;
-  const xu = [3 * mag, -0.6 * mag]; // X Unit
-  const yu = [1.2 * mag, 2.5 * mag]; // Y Unit
+  const mag = 18;
+  const xu = [1 * mag, -0.2 * mag]; // X Unit
+  const yu = [0.3 * mag, 0.8 * mag]; // Y Unit
 
   const palette = get_palette();
   const generator = new Apparatus(10, 18, {
@@ -29,7 +29,7 @@ let sketch = function(p) {
   let tick;
 
   p.setup = function() {
-    p.createCanvas(1000, 1000);
+    p.createCanvas(950, 950);
     THE_SEED = p.floor(p.random(9999999));
     p.randomSeed(THE_SEED);
     p.noFill();
@@ -59,7 +59,7 @@ let sketch = function(p) {
   }
 
   function displayLayout(depth, colorize) {
-    p.translate(30, 220);
+    p.translate(45, 180);
     layout.forEach(box => {
       displayBox(box, depth, colorize);
     });
@@ -125,8 +125,8 @@ let sketch = function(p) {
 
   function createGrid(box) {
     const { x1, y1, w, h } = box;
-    const cols = Math.ceil((Math.random() * w) / 2.5);
-    const rows = Math.ceil((Math.random() * h) / 2.5);
+    const cols = Math.ceil((Math.random() * w) / 3);
+    const rows = Math.ceil((Math.random() * h) / 2);
     const cell_w = w / cols;
     const cell_h = h / rows;
 
@@ -186,6 +186,6 @@ new p5(sketch);
 
 function get_palette() {
   const url = window.location.href.split('#');
-  if (url.length === 1) return tome.get();
+  if (url.length === 1) return tome.get('dt05');
   return tome.get(url[1]);
 }

@@ -810,9 +810,9 @@
   let sketch = function(p) {
     let THE_SEED;
 
-    const mag = 6;
-    const xu = [3 * mag, -0.6 * mag]; // X Unit
-    const yu = [1.2 * mag, 2.5 * mag]; // Y Unit
+    const mag = 18;
+    const xu = [1 * mag, -0.2 * mag]; // X Unit
+    const yu = [0.3 * mag, 0.8 * mag]; // Y Unit
 
     const palette = get_palette();
     const generator = new index(10, 18, {
@@ -835,7 +835,7 @@
     let tick;
 
     p.setup = function() {
-      p.createCanvas(1000, 1000);
+      p.createCanvas(950, 950);
       THE_SEED = p.floor(p.random(9999999));
       p.randomSeed(THE_SEED);
       p.noFill();
@@ -865,7 +865,7 @@
     }
 
     function displayLayout(depth, colorize) {
-      p.translate(30, 220);
+      p.translate(45, 180);
       layout.forEach(box => {
         displayBox(box, depth, colorize);
       });
@@ -931,8 +931,8 @@
 
     function createGrid(box) {
       const { x1, y1, w, h } = box;
-      const cols = Math.ceil((Math.random() * w) / 2.5);
-      const rows = Math.ceil((Math.random() * h) / 2.5);
+      const cols = Math.ceil((Math.random() * w) / 3);
+      const rows = Math.ceil((Math.random() * h) / 2);
       const cell_w = w / cols;
       const cell_h = h / rows;
 
@@ -992,7 +992,7 @@
 
   function get_palette() {
     const url = window.location.href.split('#');
-    if (url.length === 1) return get();
+    if (url.length === 1) return get('dt05');
     return get(url[1]);
   }
 
