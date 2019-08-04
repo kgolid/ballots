@@ -18,5 +18,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  },
+  {
+    input: 'index_elevate.js',
+    output: {
+      file: pkg.browserElevate,
+      format: 'umd'
+    },
+    plugins: [resolve(), commonjs()]
   }
 ];
