@@ -912,7 +912,7 @@
     const mag = 18;
     const xu = [1 * mag, -0.2 * mag]; // X Unit
     const yu = [0.3 * mag, 0.8 * mag]; // Y Unit
-    const zu = [0 * mag, -0.1 * mag]; // Y Unit
+    const zu = [0.02 * mag, -0.1 * mag]; // Y Unit
 
     const palette = get_palette();
     const generator = new index(10, 18, {
@@ -940,12 +940,10 @@
       p.noFill();
       p.smooth();
       p.frameRate(1);
-      //p.stroke(palette.stroke ? palette.stroke : '#111');
       p.background(palette.background ? palette.background : '#eee');
       p.strokeJoin(p.ROUND);
-      p.noStroke();
 
-      //p.noLoop();
+      p.stroke(palette.stroke ? palette.stroke : '#111');
     };
 
     p.draw = function() {
@@ -977,7 +975,6 @@
       if (box.filled && colorize) p.fill(box.col);
       else p.noFill();
 
-      p.strokeWeight(3 / (box.level + 1));
       p.beginShape();
       p.vertex(
         box.x1 * xu[0] + box.y1 * yu[0] + box.z1 * zu[0],
@@ -1032,41 +1029,46 @@
       );
       p.endShape(p.CLOSE);
 
-      p.fill(0, 80);
-      p.beginShape();
-      p.vertex(
-        box.x1 * xu[0] + box.y1 * yu[0] + box.z1 * zu[0],
-        box.x1 * xu[1] + box.y1 * yu[1] + box.z1 * zu[1]
-      );
-      p.vertex(
-        box.x1 * xu[0] + (box.y1 + box.h) * yu[0] + box.z1 * zu[0],
-        box.x1 * xu[1] + (box.y1 + box.h) * yu[1] + box.z1 * zu[1]
-      );
-      p.vertex(
-        box.x1 * xu[0] + (box.y1 + box.h) * yu[0],
-        box.x1 * xu[1] + (box.y1 + box.h) * yu[1]
-      );
-      p.vertex(box.x1 * xu[0] + box.y1 * yu[0], box.x1 * xu[1] + box.y1 * yu[1]);
-      p.endShape(p.CLOSE);
+      {
+        p.fill(0, 80);
+        p.beginShape();
+        p.vertex(
+          box.x1 * xu[0] + box.y1 * yu[0] + box.z1 * zu[0],
+          box.x1 * xu[1] + box.y1 * yu[1] + box.z1 * zu[1]
+        );
+        p.vertex(
+          box.x1 * xu[0] + (box.y1 + box.h) * yu[0] + box.z1 * zu[0],
+          box.x1 * xu[1] + (box.y1 + box.h) * yu[1] + box.z1 * zu[1]
+        );
+        p.vertex(
+          box.x1 * xu[0] + (box.y1 + box.h) * yu[0],
+          box.x1 * xu[1] + (box.y1 + box.h) * yu[1]
+        );
+        p.vertex(
+          box.x1 * xu[0] + box.y1 * yu[0],
+          box.x1 * xu[1] + box.y1 * yu[1]
+        );
+        p.endShape(p.CLOSE);
 
-      p.beginShape();
-      p.vertex(
-        (box.x1 + box.w) * xu[0] + (box.y1 + box.h) * yu[0] + box.z1 * zu[0],
-        (box.x1 + box.w) * xu[1] + (box.y1 + box.h) * yu[1] + box.z1 * zu[1]
-      );
-      p.vertex(
-        box.x1 * xu[0] + (box.y1 + box.h) * yu[0] + box.z1 * zu[0],
-        box.x1 * xu[1] + (box.y1 + box.h) * yu[1] + box.z1 * zu[1]
-      );
-      p.vertex(
-        box.x1 * xu[0] + (box.y1 + box.h) * yu[0],
-        box.x1 * xu[1] + (box.y1 + box.h) * yu[1]
-      );
-      p.vertex(
-        (box.x1 + box.w) * xu[0] + (box.y1 + box.h) * yu[0],
-        (box.x1 + box.w) * xu[1] + (box.y1 + box.h) * yu[1]
-      );
-      p.endShape(p.CLOSE);
+        p.beginShape();
+        p.vertex(
+          (box.x1 + box.w) * xu[0] + (box.y1 + box.h) * yu[0] + box.z1 * zu[0],
+          (box.x1 + box.w) * xu[1] + (box.y1 + box.h) * yu[1] + box.z1 * zu[1]
+        );
+        p.vertex(
+          box.x1 * xu[0] + (box.y1 + box.h) * yu[0] + box.z1 * zu[0],
+          box.x1 * xu[1] + (box.y1 + box.h) * yu[1] + box.z1 * zu[1]
+        );
+        p.vertex(
+          box.x1 * xu[0] + (box.y1 + box.h) * yu[0],
+          box.x1 * xu[1] + (box.y1 + box.h) * yu[1]
+        );
+        p.vertex(
+          (box.x1 + box.w) * xu[0] + (box.y1 + box.h) * yu[0],
+          (box.x1 + box.w) * xu[1] + (box.y1 + box.h) * yu[1]
+        );
+        p.endShape(p.CLOSE);
+      }
     }
 
     function createGrid(box) {
