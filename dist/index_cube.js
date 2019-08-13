@@ -1004,7 +1004,7 @@
     const none = [0, 40];
     const light = [0, 0];
 
-    const stroke = [0, 35];
+    const stroke = [0, 40];
 
     const generator = new index(35, 35, {
       simple: true,
@@ -1026,7 +1026,7 @@
     let frontLayout, leftLayout, topLayout;
 
     p.setup = function() {
-      p.createCanvas(1000, 1500);
+      p.createCanvas(1000, 1000);
       THE_SEED = p.floor(p.random(9999999));
       p.randomSeed(THE_SEED);
       p.noFill();
