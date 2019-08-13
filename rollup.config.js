@@ -34,5 +34,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  },
+  {
+    input: 'index_cube.js',
+    output: {
+      file: pkg.browserCube,
+      format: 'umd'
+    },
+    plugins: [resolve(), commonjs()]
   }
 ];
