@@ -38,7 +38,7 @@
       this.simple = simple;
     }
 
-    generate() {
+    generate(initial_top = null, initial_left = null, verbose = false) {
       this.main_color = get_random(this.colors);
       this.id_counter = 0;
 
@@ -46,9 +46,10 @@
       for (var i = 0; i < grid.length; i++) {
         grid[i] = new Array(this.xdim + 1);
         for (var j = 0; j < grid[i].length; j++) {
-          if (i == 0 || j == 0) {
-            grid[i][j] = { h: false, v: false, in: false, col: null };
-          } else if (this.h_symmetric && j > grid[i].length / 2) {
+          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null };
+          else if (i == 1 && initial_top != null) grid[i][j] = { ...initial_top[j], h: true };
+          else if (j == 1 && initial_left != null) grid[i][j] = { ...initial_left[i], v: true };
+          else if (this.h_symmetric && j > grid[i].length / 2) {
             grid[i][j] = deep_copy(grid[i][grid[i].length - j]);
             grid[i][j].v = grid[i][grid[i].length - j + 1].v;
           } else if (this.v_symmetric && i > grid.length / 2) {
@@ -60,7 +61,7 @@
         }
       }
       let rects = convert_linegrid_to_rectangles(grid);
-      return rects;
+      return verbose ? [rects, grid] : rects;
     }
 
     next_block(x, y, left, top) {
@@ -337,6 +338,30 @@
       colors: ['#f05e3b', '#ebdec4', '#ffdb00'],
       stroke: '#ebdec4',
       background: '#161616'
+    },
+    {
+      name: 'moir',
+      colors: ['#a49f4f', '#d4501e', '#f7c558', '#ebbaa6'],
+      stroke: '#161716',
+      background: '#f7f4ef'
+    },
+    {
+      name: 'tokyo',
+      colors: ['#d13821', '#1d295b', '#51587d', '#e7e7e7'],
+      stroke: '#0b0e3e',
+      background: '#c7b09e'
+    },
+    {
+      name: 'bauhaus01',
+      colors: ['#ea542f', '#f19c1b', '#4f8ba9'],
+      stroke: '#221e1f',
+      background: '#e7dbc4'
+    },
+    {
+      name: 'bauhaus02',
+      colors: ['#bb2f2a', '#e9b500', '#0165b7'],
+      stroke: '#000000',
+      background: '#e5d6b8'
     }
   ];
 
@@ -738,6 +763,26 @@
       colors: ['#de3f1a', '#de9232', '#007158', '#e6cdaf', '#869679'],
       stroke: '#010006',
       background: '#7aa5a6'
+    },
+    {
+      name: 'kov_06',
+      colors: [
+        '#a87c2a',
+        '#bdc9b1',
+        '#f14616',
+        '#ecbfaf',
+        '#017724',
+        '#0e2733',
+        '#2b9ae9'
+      ],
+      stroke: '#292319',
+      background: '#dfd4c1'
+    },
+    {
+      name: 'kov_07',
+      colors: ['#c91619', '#fdecd2', '#f4a000', '#4c2653'],
+      stroke: '#111',
+      background: '#89c2cd'
     }
   ];
 
@@ -777,6 +822,24 @@
       colors: ['#271f47', '#e7ceb5'],
       stroke: '#271f47',
       background: '#cc2b1c'
+    },
+    {
+      name: 'dt07',
+      colors: ['#6a98a5', '#d24c18'],
+      stroke: '#efebda',
+      background: '#efebda'
+    },
+    {
+      name: 'dt08',
+      colors: ['#5d9d88', '#ebb43b'],
+      stroke: '#efebda',
+      background: '#efebda'
+    },
+    {
+      name: 'dt09',
+      colors: ['#052e57', '#de8d80'],
+      stroke: '#efebda',
+      background: '#efebda'
     }
   ];
 
