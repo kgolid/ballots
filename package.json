@@ -11,6 +11,7 @@
   "keywords": [],
   "description": "Generates ballot-like visual structures using the Apparatus Generator repetetively.",
   "browser": "dist/index.js",
+  "browserSheet": "dist/index_sheet.js",
   "browserFull": "dist/index_full.js",
   "browserElevate": "dist/index_elevate.js",
   "dependencies": {

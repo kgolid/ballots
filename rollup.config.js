@@ -26,5 +26,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  },
+  {
+    input: 'index_sheet.js',
+    output: {
+      file: pkg.browserSheet,
+      format: 'umd'
+    },
+    plugins: [resolve(), commonjs()]
   }
 ];
