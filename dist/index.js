@@ -779,10 +779,45 @@
       background: '#dfd4c1'
     },
     {
+      name: 'kov_06b',
+      colors: [
+        '#d57846',
+        '#dfe0cc',
+        '#de442f',
+        '#e7d3c5',
+        '#5ec227',
+        '#302f35',
+        '#63bdb3'
+      ],
+      stroke: '#292319',
+      background: '#dfd4c1'
+    },
+    {
       name: 'kov_07',
       colors: ['#c91619', '#fdecd2', '#f4a000', '#4c2653'],
       stroke: '#111',
       background: '#89c2cd'
+    }
+  ];
+
+  var tsuchimochi = [
+    {
+      name: 'tsu_arcade',
+      colors: ['#4aad8b', '#e15147', '#f3b551', '#cec8b8', '#d1af84', '#544e47'],
+      stroke: '#251c12',
+      background: '#cfc7b9'
+    },
+    {
+      name: 'tsu_harutan',
+      colors: ['#75974a', '#c83e3c', '#f39140', '#e4ded2', '#f8c5a4', '#434f55'],
+      stroke: '#251c12',
+      background: '#cfc7b9'
+    },
+    {
+      name: 'tsu_akasaka',
+      colors: ['#687f72', '#cc7d6c', '#dec36f', '#dec7af', '#ad8470', '#424637'],
+      stroke: '#251c12',
+      background: '#cfc7b9'
     }
   ];
 
@@ -853,6 +888,7 @@
     judson,
     iivonen,
     kovecses,
+    tsuchimochi,
     duotone
   );
 

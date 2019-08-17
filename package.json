@@ -21,7 +21,7 @@
   "browserCube": "dist/index_cube.js",
   "dependencies": {
     "apparatus-generator": "^1.4.0",
-    "chromotome": "^1.10.1",
+    "chromotome": "^1.11.0",
     "toposort": "^2.0.2"
   },
   "devDependencies": {
