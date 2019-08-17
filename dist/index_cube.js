@@ -986,6 +986,7 @@
   let sketch = function(p) {
     let THE_SEED;
 
+    const cubedim = 35;
     const mag = 15;
 
     const xr = -Math.PI / 6;
@@ -995,6 +996,9 @@
     const xu = [Math.cos(xr) * mag, Math.sin(xr) * mag]; // X Unit
     const yu = [Math.cos(yr) * mag, Math.sin(yr) * mag]; // Y Unit
     const zu = [Math.cos(zr) * mag, Math.sin(zr) * mag]; // Z Unit
+    const nxu = xu.map(v => -v);
+    const nyu = yu.map(v => -v);
+    const nzu = zu.map(v => -v);
 
     const maxDepth = 3;
     const depthSteps = 8;
@@ -1006,7 +1010,7 @@
 
     const stroke = [0, 40];
 
-    const generator = new index(35, 35, {
+    const generator = new index(cubedim, cubedim, {
       simple: true,
       extension_chance: 0.95,
       horizontal_symmetry: false,
@@ -1073,31 +1077,15 @@
     }
 
     function displayLayout(depth, colorize) {
-      frontLayout.forEach(i => {
-        displayBox(i, depth, colorize, xu, yu, zu, [none, shade, light]);
-      });
-      leftLayout.forEach(i => {
-        displayBox(
-          i,
-          depth,
-          colorize,
-          yu,
-          [-zu[0], -zu[1]],
-          [-xu[0], -xu[1]],
-          [shade, light, none]
-        );
-      });
-      topLayout.forEach(i => {
-        displayBox(
-          i,
-          depth,
-          colorize,
-          [-zu[0], -zu[1]],
-          xu,
-          [-yu[0], -yu[1]],
-          [light, none, shade]
-        );
-      });
+      frontLayout.forEach(i =>
+        displayBox(i, depth, colorize, xu, yu, zu, [none, shade, light])
+      );
+      leftLayout.forEach(i =>
+        displayBox(i, depth, colorize, yu, nzu, nxu, [shade, light, none])
+      );
+      topLayout.forEach(i =>
+        displayBox(i, depth, colorize, nzu, xu, nyu, [light, none, shade])
+      );
     }
 
     function displayBox(box, maxLevel, colorize, xu, yu, zu, shades) {
