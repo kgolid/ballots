@@ -19,9 +19,11 @@
   "browserFull": "dist/index_full.js",
   "browserElevate": "dist/index_elevate.js",
   "browserCube": "dist/index_cube.js",
+  "browserInteractive": "dist/index_interactive.js",
   "dependencies": {
     "apparatus-generator": "^1.4.0",
     "chromotome": "^1.11.0",
+    "dat.gui": "^0.7.6",
     "toposort": "^2.0.2"
   },
   "devDependencies": {

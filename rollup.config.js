@@ -42,5 +42,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  },
+  {
+    input: 'index_interactive.js',
+    output: {
+      file: pkg.browserInteractive,
+      format: 'umd'
+    },
+    plugins: [resolve(), commonjs()]
   }
 ];
