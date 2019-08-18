@@ -8,7 +8,9 @@ export default function(
   shades,
   shadeOpacity,
   strokeOpacity,
-  strokeWeight
+  strokeWeight,
+  hiddenTop,
+  hiddenLeft
 ) {
   const bx = box.x1 - box.x_off * depth; // X Position
   const by = box.y1 - box.y_off * depth; // Y Position
@@ -37,9 +39,12 @@ export default function(
   p.noFill();
   p.stroke(0, strokeOpacity);
   p.strokeWeight(Math.ceil(strokeWeight / 2));
-  displayFront();
-  displayLeft();
-  displayTop();
+  if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
+    displayInteriorFrontLine();
+
+  if (!(box.x1 === 0 && hiddenLeft)) displayInteriorTopLine();
+
+  if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
 
   p.strokeWeight(strokeWeight);
   displayShape();
@@ -95,9 +100,34 @@ export default function(
     p.endShape();
   }
 
+  function displayInteriorFrontLine() {
+    p.line(
+      bx * xu[0] + by * yu[0] + bd * zu[0],
+      bx * xu[1] + by * yu[1] + bd * zu[1],
+      bx * xu[0] + by * yu[0],
+      bx * xu[1] + by * yu[1]
+    );
+  }
+  function displayInteriorLeftLine() {
+    p.line(
+      bx * xu[0] + by * yu[0] + bd * zu[0],
+      bx * xu[1] + by * yu[1] + bd * zu[1],
+      (bx + bw) * xu[0] + by * yu[0] + bd * zu[0],
+      (bx + bw) * xu[1] + by * yu[1] + bd * zu[1]
+    );
+  }
+
+  function displayInteriorTopLine() {
+    p.line(
+      bx * xu[0] + by * yu[0] + bd * zu[0],
+      bx * xu[1] + by * yu[1] + bd * zu[1],
+      bx * xu[0] + (by + bh) * yu[0] + bd * zu[0],
+      bx * xu[1] + (by + bh) * yu[1] + bd * zu[1]
+    );
+  }
+
   function displayShape() {
     p.beginShape();
-    p.vertex(bx * xu[0] + by * yu[0], bx * xu[1] + by * yu[1]);
     p.vertex((bx + bw) * xu[0] + by * yu[0], (bx + bw) * xu[1] + by * yu[1]);
     p.vertex(
       (bx + bw) * xu[0] + by * yu[0] + bd * zu[0],
@@ -112,6 +142,6 @@ export default function(
       bx * xu[1] + (by + bh) * yu[1] + bd * zu[1]
     );
     p.vertex(bx * xu[0] + (by + bh) * yu[0], bx * xu[1] + (by + bh) * yu[1]);
-    p.endShape(p.CLOSE);
+    p.endShape();
   }
 }

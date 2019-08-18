@@ -140,13 +140,19 @@ let sketch = function(p) {
     p.translate(tx + p.width / 2, ty + p.height / 2);
     p.background(palette.background ? palette.background : '#eee');
 
-    frontLayout.forEach(i => displayBoxx(i, xu, yu, zu, [0.5, 1, 0]));
-    leftLayout.forEach(i => displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5]));
-    topLayout.forEach(i => displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1]));
+    frontLayout.forEach(i =>
+      displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true)
+    );
+    leftLayout.forEach(i =>
+      displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true)
+    );
+    topLayout.forEach(i =>
+      displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false)
+    );
     p.pop();
   }
 
-  function displayBoxx(box, xu, yu, zu, shades) {
+  function displayBoxx(box, xu, yu, zu, shades, hiddenTop, hiddenLeft) {
     display(
       p,
       box,
@@ -157,7 +163,9 @@ let sketch = function(p) {
       shades,
       shadeOpacity,
       strokeOpacity,
-      strokeWeight
+      strokeWeight,
+      hiddenTop,
+      hiddenLeft
     );
   }
 
