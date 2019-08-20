@@ -36,11 +36,14 @@ export default function(opts, full_reset, redraw, print) {
   f1.add(opts, 'ty', -600, 600, 50)
     .name('Translate Y')
     .onChange(redraw);
-  f1.add(opts, 'mag', 2, 30, 2)
+  f1.add(opts, 'mag', 1, 8, 0.5)
     .name('Cell Size')
     .onChange(redraw);
   f1.add(opts, 'depthDim', 0, 10, 0.5)
     .name('Depth')
+    .onChange(redraw);
+  f1.add(opts, 'perspective', 0.55, 1, 0.05)
+    .name('Perspective')
     .onChange(redraw);
   f1.add(opts, 'shadeOpacity', 0, 255, 5)
     .name('Shade Opacity')

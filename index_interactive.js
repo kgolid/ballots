@@ -1,21 +1,24 @@
 import Apparatus from 'apparatus-generator';
 import * as tome from 'chromotome';
 import toposort from 'toposort';
+import perspective from 'change-perspective';
+
 import ui from './ui';
 import display from './display';
 
 let opts = {
-  cubedim: 22,
+  cubedim: 18,
   depthDim: 2,
-  mag: 15,
+  mag: 5,
   tx: 0,
   ty: 0,
   shadeOpacity: 60,
-  strokeOpacity: 150,
+  strokeOpacity: 200,
   strokeWeight: 2,
-  outerSize: 0.95,
+  outerSize: 0.96,
   minGridSize: 4,
   innerSize: 0.78,
+  perspective: 0.8,
   colorMode: 'group',
   palette: 'tsu_arcade'
 };
@@ -43,6 +46,8 @@ let sketch = function(p) {
 
   let outerApparatusOptions, innerApparatusOptions;
   let minGridSize;
+
+  let persp;
 
   let frontLayout, leftLayout, topLayout;
 
@@ -90,6 +95,8 @@ let sketch = function(p) {
     strokeWeight = opts.strokeWeight;
 
     maxDepth = opts.depthDim;
+    persp = opts.perspective;
+
     palette = tome.get(opts.palette);
 
     minGridSize = opts.minGridSize;
@@ -140,19 +147,34 @@ let sketch = function(p) {
     p.translate(tx + p.width / 2, ty + p.height / 2);
     p.background(palette.background ? palette.background : '#eee');
 
+    const ft = perspective(...getSrcDst(xu, yu, persp, cubedim));
+    const lt = perspective(...getSrcDst(yu, nzu, persp, cubedim));
+    const tt = perspective(...getSrcDst(nzu, xu, persp, cubedim));
+
     frontLayout.forEach(i =>
-      displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true)
+      displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
     );
     leftLayout.forEach(i =>
-      displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true)
+      displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
     );
     topLayout.forEach(i =>
-      displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false)
+      displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
     );
     p.pop();
   }
 
-  function displayBoxx(box, xu, yu, zu, shades, hiddenTop, hiddenLeft) {
+  function displayBoxx(
+    box,
+    xu,
+    yu,
+    zu,
+    shades,
+    hiddenTop,
+    hiddenLeft,
+    t1,
+    t2,
+    t3
+  ) {
     display(
       p,
       box,
@@ -165,7 +187,10 @@ let sketch = function(p) {
       strokeOpacity,
       strokeWeight,
       hiddenTop,
-      hiddenLeft
+      hiddenLeft,
+      t1,
+      t2,
+      t3
     );
   }
 
@@ -319,11 +344,31 @@ let sketch = function(p) {
     if (p.keyCode === 80) print();
   };
 };
-
 new p5(sketch);
 
-function get_palette() {
-  const url = window.location.href.split('#');
-  if (url.length === 1) return tome.get('kov_06b');
-  return tome.get(url[1]);
+function getSrcDst(xu, yu, persp, cubedim) {
+  const m = cubedim * 2 + 11;
+
+  const src = [
+    0,
+    0,
+    m * xu[0],
+    m * xu[1],
+    m * (xu[0] + yu[0]),
+    m * (xu[1] + yu[1]),
+    m * yu[0],
+    m * yu[1]
+  ];
+  const dst = [
+    0,
+    0,
+    m * xu[0],
+    m * xu[1],
+    m * (xu[0] + yu[0]) * persp,
+    m * (xu[1] + yu[1]) * persp,
+    m * yu[0],
+    m * yu[1]
+  ];
+
+  return [src, dst];
 }

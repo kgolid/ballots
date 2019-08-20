@@ -1009,6 +1009,375 @@
   }
   toposort_1.array = array;
 
+  function unwrapExports (x) {
+  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
+  }
+
+  function createCommonjsModule(fn, module) {
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  }
+
+  var changePerspective = createCommonjsModule(function (module, exports) {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  function dim(x) {
+      var y;
+      if (typeof x === 'object') {
+          y = x[0];
+          if (typeof y === 'object') {
+              return [x.length, y.length];
+          }
+          return [x.length];
+      }
+      return [];
+  }
+  function _foreach2(x, s, k, f) {
+      if (k === s.length - 1) {
+          return f(x);
+      }
+      var i;
+      var n = s[k];
+      var ret = Array(n);
+      for (i = n - 1; i >= 0; i--) {
+          ret[i] = _foreach2(x[i], s, k + 1, f);
+      }
+      return ret;
+  }
+  function cloneV(x) {
+      var _n = x.length;
+      var i;
+      var ret = Array(_n);
+      for (i = _n - 1; i !== -1; --i) {
+          ret[i] = x[i];
+      }
+      return ret;
+  }
+  function clone(x) {
+      if (typeof x !== 'object')
+          return x;
+      var V = cloneV;
+      var s = dim(x);
+      return _foreach2(x, s, 0, V);
+  }
+  function diag(d) {
+      var i;
+      var i1;
+      var j;
+      var n = d.length;
+      var A = Array(n);
+      var Ai;
+      for (i = n - 1; i >= 0; i--) {
+          Ai = Array(n);
+          i1 = i + 2;
+          for (j = n - 1; j >= i1; j -= 2) {
+              Ai[j] = 0;
+              Ai[j - 1] = 0;
+          }
+          if (j > i) {
+              Ai[j] = 0;
+          }
+          Ai[i] = d[i];
+          for (j = i - 1; j >= 1; j -= 2) {
+              Ai[j] = 0;
+              Ai[j - 1] = 0;
+          }
+          if (j === 0) {
+              Ai[0] = 0;
+          }
+          A[i] = Ai;
+      }
+      return A;
+  }
+  function rep(s, v, k) {
+      if (typeof k === 'undefined') {
+          k = 0;
+      }
+      var n = s[k];
+      var ret = Array(n);
+      var i;
+      if (k === s.length - 1) {
+          for (i = n - 2; i >= 0; i -= 2) {
+              ret[i + 1] = v;
+              ret[i] = v;
+          }
+          if (i === -1) {
+              ret[0] = v;
+          }
+          return ret;
+      }
+      for (i = n - 1; i >= 0; i--) {
+          ret[i] = rep(s, v, k + 1);
+      }
+      return ret;
+  }
+  function identity(n) {
+      return diag(rep([n], 1));
+  }
+  function inv(a) {
+      var s = dim(a);
+      var abs = Math.abs;
+      var m = s[0];
+      var n = s[1];
+      var A = clone(a);
+      var Ai;
+      var Aj;
+      var I = identity(m);
+      var Ii;
+      var Ij;
+      var i, j, k, x;
+      for (j = 0; j < n; ++j) {
+          var i0 = -1;
+          var v0 = -1;
+          for (i = j; i !== m; ++i) {
+              k = abs(A[i][j]);
+              if (k > v0) {
+                  i0 = i;
+                  v0 = k;
+              }
+          }
+          Aj = A[i0];
+          A[i0] = A[j];
+          A[j] = Aj;
+          Ij = I[i0];
+          I[i0] = I[j];
+          I[j] = Ij;
+          x = Aj[j];
+          for (k = j; k !== n; ++k)
+              Aj[k] /= x;
+          for (k = n - 1; k !== -1; --k)
+              Ij[k] /= x;
+          for (i = m - 1; i !== -1; --i) {
+              if (i !== j) {
+                  Ai = A[i];
+                  Ii = I[i];
+                  x = Ai[j];
+                  for (k = j + 1; k !== n; ++k)
+                      Ai[k] -= Aj[k] * x;
+                  for (k = n - 1; k > 0; --k) {
+                      Ii[k] -= Ij[k] * x;
+                      --k;
+                      Ii[k] -= Ij[k] * x;
+                  }
+                  if (k === 0)
+                      Ii[0] -= Ij[0] * x;
+              }
+          }
+      }
+      return I;
+  }
+  function dotMMsmall(x, y) {
+      var i, j, k, p, q, r, ret, foo, bar, woo, i0;
+      p = x.length;
+      q = y.length;
+      r = y[0].length;
+      ret = Array(p);
+      for (i = p - 1; i >= 0; i--) {
+          foo = Array(r);
+          bar = x[i];
+          for (k = r - 1; k >= 0; k--) {
+              woo = bar[q - 1] * y[q - 1][k];
+              for (j = q - 2; j >= 1; j -= 2) {
+                  i0 = j - 1;
+                  woo += bar[j] * y[j][k] + bar[i0] * y[i0][k];
+              }
+              if (j === 0) {
+                  woo += bar[0] * y[0][k];
+              }
+              foo[k] = woo;
+          }
+          ret[i] = foo;
+      }
+      return ret;
+  }
+  function dotMV(x, y) {
+      var p = x.length;
+      var i;
+      var ret = Array(p);
+      for (i = p - 1; i >= 0; i--) {
+          ret[i] = dotVV(x[i], y);
+      }
+      return ret;
+  }
+  function dotVV(x, y) {
+      var i;
+      var n = x.length;
+      var i1;
+      var ret = x[n - 1] * y[n - 1];
+      for (i = n - 2; i >= 1; i -= 2) {
+          i1 = i - 1;
+          ret += x[i] * y[i] + x[i1] * y[i1];
+      }
+      if (i === 0) {
+          ret += x[0] * y[0];
+      }
+      return ret;
+  }
+  function transpose(x) {
+      var i;
+      var j;
+      var m = x.length;
+      var n = x[0].length;
+      var ret = Array(n);
+      var A0;
+      var A1;
+      var Bj;
+      for (j = 0; j < n; j++)
+          ret[j] = Array(m);
+      for (i = m - 1; i >= 1; i -= 2) {
+          A1 = x[i];
+          A0 = x[i - 1];
+          for (j = n - 1; j >= 1; --j) {
+              Bj = ret[j];
+              Bj[i] = A1[j];
+              Bj[i - 1] = A0[j];
+              --j;
+              Bj = ret[j];
+              Bj[i] = A1[j];
+              Bj[i - 1] = A0[j];
+          }
+          if (j === 0) {
+              Bj = ret[0];
+              Bj[i] = A1[0];
+              Bj[i - 1] = A0[0];
+          }
+      }
+      if (i === 0) {
+          A0 = x[0];
+          for (j = n - 1; j >= 1; --j) {
+              ret[j][0] = A0[j];
+              --j;
+              ret[j][0] = A0[j];
+          }
+          if (j === 0) {
+              ret[0][0] = A0[0];
+          }
+      }
+      return ret;
+  }
+  function round(num) {
+      return Math.round(num * 10000000000) / 10000000000;
+  }
+  function getNormalizationCoefficients(srcPts, dstPts, isInverse) {
+      if (isInverse) {
+          var tmp = dstPts;
+          dstPts = srcPts;
+          srcPts = tmp;
+      }
+      var r1 = [
+          srcPts[0],
+          srcPts[1],
+          1,
+          0,
+          0,
+          0,
+          -1 * dstPts[0] * srcPts[0],
+          -1 * dstPts[0] * srcPts[1],
+      ];
+      var r2 = [
+          0,
+          0,
+          0,
+          srcPts[0],
+          srcPts[1],
+          1,
+          -1 * dstPts[1] * srcPts[0],
+          -1 * dstPts[1] * srcPts[1],
+      ];
+      var r3 = [
+          srcPts[2],
+          srcPts[3],
+          1,
+          0,
+          0,
+          0,
+          -1 * dstPts[2] * srcPts[2],
+          -1 * dstPts[2] * srcPts[3],
+      ];
+      var r4 = [
+          0,
+          0,
+          0,
+          srcPts[2],
+          srcPts[3],
+          1,
+          -1 * dstPts[3] * srcPts[2],
+          -1 * dstPts[3] * srcPts[3],
+      ];
+      var r5 = [
+          srcPts[4],
+          srcPts[5],
+          1,
+          0,
+          0,
+          0,
+          -1 * dstPts[4] * srcPts[4],
+          -1 * dstPts[4] * srcPts[5],
+      ];
+      var r6 = [
+          0,
+          0,
+          0,
+          srcPts[4],
+          srcPts[5],
+          1,
+          -1 * dstPts[5] * srcPts[4],
+          -1 * dstPts[5] * srcPts[5],
+      ];
+      var r7 = [
+          srcPts[6],
+          srcPts[7],
+          1,
+          0,
+          0,
+          0,
+          -1 * dstPts[6] * srcPts[6],
+          -1 * dstPts[6] * srcPts[7],
+      ];
+      var r8 = [
+          0,
+          0,
+          0,
+          srcPts[6],
+          srcPts[7],
+          1,
+          -1 * dstPts[7] * srcPts[6],
+          -1 * dstPts[7] * srcPts[7],
+      ];
+      var matA = [r1, r2, r3, r4, r5, r6, r7, r8];
+      var matB = dstPts;
+      var matC;
+      try {
+          matC = inv(dotMMsmall(transpose(matA), matA));
+      }
+      catch (e) {
+          return [1, 0, 0, 0, 1, 0, 0, 0];
+      }
+      var matD = dotMMsmall(matC, transpose(matA));
+      var matX = dotMV(matD, matB);
+      for (var i = 0; i < matX.length; i++) {
+          matX[i] = round(matX[i]);
+      }
+      matX[8] = 1;
+      return matX;
+  }
+  function applyTransform(coeffs, x, y) {
+      var coordinates = [];
+      coordinates[0] =
+          (coeffs[0] * x + coeffs[1] * y + coeffs[2]) /
+              (coeffs[6] * x + coeffs[7] * y + 1);
+      coordinates[1] =
+          (coeffs[3] * x + coeffs[4] * y + coeffs[5]) /
+              (coeffs[6] * x + coeffs[7] * y + 1);
+      return coordinates;
+  }
+  function fixPerspective(srcPts, dstPts) {
+      var coeffs = getNormalizationCoefficients(srcPts, dstPts, false);
+      return function (x, y) { return applyTransform(coeffs, x, y); };
+  }
+  exports.default = fixPerspective;
+  });
+
+  var perspective = unwrapExports(changePerspective);
+
   /**
    * dat-gui JavaScript Controller Library
    * http://code.google.com/p/dat-gui
@@ -3539,11 +3908,14 @@
     f1.add(opts, 'ty', -600, 600, 50)
       .name('Translate Y')
       .onChange(redraw);
-    f1.add(opts, 'mag', 2, 30, 2)
+    f1.add(opts, 'mag', 1, 8, 0.5)
       .name('Cell Size')
       .onChange(redraw);
     f1.add(opts, 'depthDim', 0, 10, 0.5)
       .name('Depth')
+      .onChange(redraw);
+    f1.add(opts, 'perspective', 0.55, 1, 0.05)
+      .name('Perspective')
       .onChange(redraw);
     f1.add(opts, 'shadeOpacity', 0, 255, 5)
       .name('Shade Opacity')
@@ -3572,14 +3944,16 @@
     strokeOpacity,
     strokeWeight,
     hiddenTop,
-    hiddenLeft
+    hiddenLeft,
+    t1,
+    t2,
+    t3
   ) {
     const bx = box.x1 - box.x_off * depth; // X Position
     const by = box.y1 - box.y_off * depth; // Y Position
     const bw = box.w + box.x_off * depth; // Width
     const bh = box.h + box.y_off * depth; // Height
     const bd = box.z1 * depth; // Depth
-
     p.fill(box.col);
     p.noStroke();
 
@@ -3613,113 +3987,81 @@
 
     function displayFront() {
       p.beginShape();
-      p.vertex(
-        bx * xu[0] + by * yu[0] + bd * zu[0],
-        bx * xu[1] + by * yu[1] + bd * zu[1]
-      );
-      p.vertex(
-        (bx + bw) * xu[0] + by * yu[0] + bd * zu[0],
-        (bx + bw) * xu[1] + by * yu[1] + bd * zu[1]
-      );
-      p.vertex(
-        (bx + bw) * xu[0] + (by + bh) * yu[0] + bd * zu[0],
-        (bx + bw) * xu[1] + (by + bh) * yu[1] + bd * zu[1]
-      );
-      p.vertex(
-        bx * xu[0] + (by + bh) * yu[0] + bd * zu[0],
-        bx * xu[1] + (by + bh) * yu[1] + bd * zu[1]
-      );
+      p.vertex(...getPos(bx, by, bd, t1, t2, t3));
+      p.vertex(...getPos(bx + bw, by, bd, t1, t2, t3));
+      p.vertex(...getPos(bx + bw, by + bh, bd, t1, t2, t3));
+      p.vertex(...getPos(bx, by + bh, bd, t1, t2, t3));
       p.endShape();
     }
 
     function displayLeft() {
       p.beginShape();
-      p.vertex(
-        bx * xu[0] + by * yu[0] + bd * zu[0],
-        bx * xu[1] + by * yu[1] + bd * zu[1]
-      );
-      p.vertex(
-        bx * xu[0] + (by + bh) * yu[0] + bd * zu[0],
-        bx * xu[1] + (by + bh) * yu[1] + bd * zu[1]
-      );
-      p.vertex(bx * xu[0] + (by + bh) * yu[0], bx * xu[1] + (by + bh) * yu[1]);
-      p.vertex(bx * xu[0] + by * yu[0], bx * xu[1] + by * yu[1]);
+      p.vertex(...getPos(bx, by, bd, t1, t2, t3));
+      p.vertex(...getPos(bx, by + bh, bd, t1, t2, t3));
+      p.vertex(...getPos(bx, by + bh, 0, t1, t2, t3));
+      p.vertex(...getPos(bx, by, 0, t1, t2, t3));
       p.endShape();
     }
 
     function displayTop() {
       p.beginShape();
-      p.vertex(
-        (bx + bw) * xu[0] + by * yu[0] + bd * zu[0],
-        (bx + bw) * xu[1] + by * yu[1] + bd * zu[1]
-      );
-      p.vertex((bx + bw) * xu[0] + by * yu[0], (bx + bw) * xu[1] + by * yu[1]);
-      p.vertex(bx * xu[0] + by * yu[0], bx * xu[1] + by * yu[1]);
-      p.vertex(
-        bx * xu[0] + by * yu[0] + bd * zu[0],
-        bx * xu[1] + by * yu[1] + bd * zu[1]
-      );
+      p.vertex(...getPos(bx + bw, by, bd, t1, t2, t3));
+      p.vertex(...getPos(bx + bw, by, 0, t1, t2, t3));
+      p.vertex(...getPos(bx, by, 0, t1, t2, t3));
+      p.vertex(...getPos(bx, by, bd, t1, t2, t3));
       p.endShape();
     }
 
     function displayInteriorFrontLine() {
-      p.line(
-        bx * xu[0] + by * yu[0] + bd * zu[0],
-        bx * xu[1] + by * yu[1] + bd * zu[1],
-        bx * xu[0] + by * yu[0],
-        bx * xu[1] + by * yu[1]
-      );
+      p.line(...getPos(bx, by, bd, t1, t2, t3), ...getPos(bx, by, 0, t1, t2, t3));
     }
+
     function displayInteriorLeftLine() {
       p.line(
-        bx * xu[0] + by * yu[0] + bd * zu[0],
-        bx * xu[1] + by * yu[1] + bd * zu[1],
-        (bx + bw) * xu[0] + by * yu[0] + bd * zu[0],
-        (bx + bw) * xu[1] + by * yu[1] + bd * zu[1]
+        ...getPos(bx, by, bd, t1, t2, t3),
+        ...getPos(bx + bw, by, bd, t1, t2, t3)
       );
     }
 
     function displayInteriorTopLine() {
       p.line(
-        bx * xu[0] + by * yu[0] + bd * zu[0],
-        bx * xu[1] + by * yu[1] + bd * zu[1],
-        bx * xu[0] + (by + bh) * yu[0] + bd * zu[0],
-        bx * xu[1] + (by + bh) * yu[1] + bd * zu[1]
+        ...getPos(bx, by, bd, t1, t2, t3),
+        ...getPos(bx, by + bh, bd, t1, t2, t3)
       );
     }
 
     function displayShape() {
       p.beginShape();
-      p.vertex((bx + bw) * xu[0] + by * yu[0], (bx + bw) * xu[1] + by * yu[1]);
-      p.vertex(
-        (bx + bw) * xu[0] + by * yu[0] + bd * zu[0],
-        (bx + bw) * xu[1] + by * yu[1] + bd * zu[1]
-      );
-      p.vertex(
-        (bx + bw) * xu[0] + (by + bh) * yu[0] + bd * zu[0],
-        (bx + bw) * xu[1] + (by + bh) * yu[1] + bd * zu[1]
-      );
-      p.vertex(
-        bx * xu[0] + (by + bh) * yu[0] + bd * zu[0],
-        bx * xu[1] + (by + bh) * yu[1] + bd * zu[1]
-      );
-      p.vertex(bx * xu[0] + (by + bh) * yu[0], bx * xu[1] + (by + bh) * yu[1]);
+      p.vertex(...getPos(bx + bw, by, 0, t1, t2, t3));
+      p.vertex(...getPos(bx + bw, by, bd, t1, t2, t3));
+      p.vertex(...getPos(bx + bw, by + bh, bd, t1, t2, t3));
+      p.vertex(...getPos(bx, by + bh, bd, t1, t2, t3));
+      p.vertex(...getPos(bx, by + bh, 0, t1, t2, t3));
       p.endShape();
+    }
+
+    function getPos(x, y, z, tz, ty, tx) {
+      const zc = tz(x * xu[0] + y * yu[0], x * xu[1] + y * yu[1]);
+      const yc = ty(x * xu[0] + z * zu[0], x * xu[1] + z * zu[1]);
+      const xc = tx(y * yu[0] + z * zu[0], y * yu[1] + z * zu[1]);
+
+      return [zc[0] + yc[0] + xc[0], zc[1] + yc[1] + xc[1]];
     }
   }
 
   let opts = {
-    cubedim: 22,
+    cubedim: 18,
     depthDim: 2,
-    mag: 15,
+    mag: 5,
     tx: 0,
     ty: 0,
     shadeOpacity: 60,
-    strokeOpacity: 150,
+    strokeOpacity: 200,
     strokeWeight: 2,
-    outerSize: 0.95,
+    outerSize: 0.96,
     minGridSize: 4,
     innerSize: 0.78,
+    perspective: 0.8,
     colorMode: 'group',
     palette: 'tsu_arcade'
   };
@@ -3747,6 +4089,8 @@
 
     let outerApparatusOptions, innerApparatusOptions;
     let minGridSize;
+
+    let persp;
 
     let frontLayout, leftLayout, topLayout;
 
@@ -3794,6 +4138,8 @@
       strokeWeight = opts.strokeWeight;
 
       maxDepth = opts.depthDim;
+      persp = opts.perspective;
+
       palette = get(opts.palette);
 
       minGridSize = opts.minGridSize;
@@ -3844,19 +4190,34 @@
       p.translate(tx + p.width / 2, ty + p.height / 2);
       p.background(palette.background ? palette.background : '#eee');
 
+      const ft = perspective(...getSrcDst(xu, yu, persp, cubedim));
+      const lt = perspective(...getSrcDst(yu, nzu, persp, cubedim));
+      const tt = perspective(...getSrcDst(nzu, xu, persp, cubedim));
+
       frontLayout.forEach(i =>
-        displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true)
+        displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
       );
       leftLayout.forEach(i =>
-        displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true)
+        displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
       );
       topLayout.forEach(i =>
-        displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false)
+        displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
       );
       p.pop();
     }
 
-    function displayBoxx(box, xu, yu, zu, shades, hiddenTop, hiddenLeft) {
+    function displayBoxx(
+      box,
+      xu,
+      yu,
+      zu,
+      shades,
+      hiddenTop,
+      hiddenLeft,
+      t1,
+      t2,
+      t3
+    ) {
       display(
         p,
         box,
@@ -3869,7 +4230,10 @@
         strokeOpacity,
         strokeWeight,
         hiddenTop,
-        hiddenLeft
+        hiddenLeft,
+        t1,
+        t2,
+        t3
       );
     }
 
@@ -4023,7 +4387,33 @@
       if (p.keyCode === 80) print();
     };
   };
-
   new p5(sketch);
+
+  function getSrcDst(xu, yu, persp, cubedim) {
+    const m = cubedim * 2 + 11;
+
+    const src = [
+      0,
+      0,
+      m * xu[0],
+      m * xu[1],
+      m * (xu[0] + yu[0]),
+      m * (xu[1] + yu[1]),
+      m * yu[0],
+      m * yu[1]
+    ];
+    const dst = [
+      0,
+      0,
+      m * xu[0],
+      m * xu[1],
+      m * (xu[0] + yu[0]) * persp,
+      m * (xu[1] + yu[1]) * persp,
+      m * yu[0],
+      m * yu[1]
+    ];
+
+    return [src, dst];
+  }
 
 }));

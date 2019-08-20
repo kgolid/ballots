@@ -22,6 +22,7 @@
   "browserInteractive": "dist/index_interactive.js",
   "dependencies": {
     "apparatus-generator": "^1.4.0",
+    "change-perspective": "^1.0.1",
     "chromotome": "^1.11.0",
     "dat.gui": "^0.7.6",
     "toposort": "^2.0.2"
