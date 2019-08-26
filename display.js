@@ -7,7 +7,7 @@ export default function(
   depth,
   shades,
   shadeOpacity,
-  strokeOpacity,
+  strokeColor,
   strokeWeight,
   hiddenTop,
   hiddenLeft,
@@ -20,6 +20,7 @@ export default function(
   const bw = box.w + box.x_off * depth; // Width
   const bh = box.h + box.y_off * depth; // Height
   const bd = box.z1 * depth; // Depth
+
   p.fill(box.col);
   p.noStroke();
 
@@ -39,8 +40,8 @@ export default function(
   }
 
   p.noFill();
-  p.stroke(0, strokeOpacity);
-  p.strokeWeight(Math.ceil(strokeWeight / 2));
+  p.stroke(strokeColor);
+  p.strokeWeight(Math.max(0, Math.floor(strokeWeight / 2)));
   if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
     displayInteriorFrontLine();
 
@@ -112,12 +113,5 @@ export default function(
     const xc = tx(y * yu[0] + z * zu[0], y * yu[1] + z * zu[1]);
 
     return [zc[0] + yc[0] + xc[0], zc[1] + yc[1] + xc[1]];
-  }
-
-  function getPos2(x, y, z, t = (x, y) => [x, y]) {
-    return t(
-      x * xu[0] + y * yu[0] + z * zu[0],
-      x * xu[1] + y * yu[1] + z * zu[1]
-    );
   }
 }

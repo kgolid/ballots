@@ -7,13 +7,14 @@ import ui from './ui';
 import display from './display';
 
 let opts = {
-  cubedim: 18,
+  cubedimX: 18,
+  cubedimY: 18,
+  cubedimZ: 18,
   depthDim: 2,
   mag: 5,
   tx: 0,
   ty: 0,
   shadeOpacity: 60,
-  strokeOpacity: 200,
   strokeWeight: 2,
   outerSize: 0.96,
   minGridSize: 4,
@@ -26,7 +27,9 @@ let opts = {
 let sketch = function(p) {
   let THE_SEED;
 
-  let cubedim;
+  let cubedimX;
+  let cubedimY;
+  let cubedimZ;
   let tx, ty;
 
   const xr = (-1 * Math.PI) / 6;
@@ -40,11 +43,11 @@ let sketch = function(p) {
   const depthSteps = 8;
 
   let palette;
+  let strokeCol;
   let shadeOpacity;
-  let strokeOpacity;
   let strokeWeight;
 
-  let outerApparatusOptions, innerApparatusOptions;
+  let sectionAppOpts, atomAppOpts;
   let minGridSize;
 
   let persp;
@@ -78,7 +81,10 @@ let sketch = function(p) {
   }
 
   function updateGlobals(opts) {
-    cubedim = opts.cubedim;
+    cubedimX = opts.cubedimX;
+    cubedimY = opts.cubedimY;
+    cubedimZ = opts.cubedimZ;
+
     tx = opts.tx;
     ty = opts.ty;
 
@@ -91,24 +97,24 @@ let sketch = function(p) {
     nzu = zu.map(v => -v);
 
     shadeOpacity = opts.shadeOpacity;
-    strokeOpacity = opts.strokeOpacity;
     strokeWeight = opts.strokeWeight;
 
     maxDepth = opts.depthDim;
     persp = opts.perspective;
 
     palette = tome.get(opts.palette);
+    strokeCol = palette.stroke ? palette.stroke : '#000';
 
     minGridSize = opts.minGridSize;
 
-    outerApparatusOptions = {
+    sectionAppOpts = {
       simple: true,
       extension_chance: opts.outerSize,
       horizontal_symmetry: false,
       vertical_chance: 0.5
     };
 
-    innerApparatusOptions = {
+    atomAppOpts = {
       simple: true,
       extension_chance: opts.innerSize,
       horizontal_symmetry: false,
@@ -120,14 +126,16 @@ let sketch = function(p) {
   }
 
   function reset() {
-    const generator = new Apparatus(cubedim, cubedim, outerApparatusOptions);
-    const frontApp = generator.generate(null, null, true);
-    const leftApp = generator.generate(
+    const generatorFront = new Apparatus(cubedimX, cubedimY, sectionAppOpts);
+    const generatorLeft = new Apparatus(cubedimY, cubedimZ, sectionAppOpts);
+    const generatorTop = new Apparatus(cubedimZ, cubedimX, sectionAppOpts);
+    const frontApp = generatorFront.generate(null, null, true);
+    const leftApp = generatorLeft.generate(
       frontApp[1].map(i => ({ ...i[1], v: i[1].h })),
       null,
       true
     );
-    const topApp = generator.generate(
+    const topApp = generatorTop.generate(
       leftApp[1].map(i => ({ ...i[1], v: i[1].h })),
       frontApp[1][1].map(i => ({ ...i, h: i.v })),
       true
@@ -147,23 +155,23 @@ let sketch = function(p) {
     p.translate(tx + p.width / 2, ty + p.height / 2);
     p.background(palette.background ? palette.background : '#eee');
 
-    const ft = perspective(...getSrcDst(xu, yu, persp, cubedim));
-    const lt = perspective(...getSrcDst(yu, nzu, persp, cubedim));
-    const tt = perspective(...getSrcDst(nzu, xu, persp, cubedim));
+    const ft = perspective(...getSrcDst(xu, yu, persp, cubedimX));
+    const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
+    const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
     frontLayout.forEach(i =>
-      displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
+      displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
     );
     leftLayout.forEach(i =>
-      displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
+      displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
     );
     topLayout.forEach(i =>
-      displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
+      displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
     );
     p.pop();
   }
 
-  function displayBoxx(
+  function displayBox(
     box,
     xu,
     yu,
@@ -184,7 +192,7 @@ let sketch = function(p) {
       maxDepth,
       shades,
       shadeOpacity,
-      strokeOpacity,
+      strokeCol,
       strokeWeight,
       hiddenTop,
       hiddenLeft,
@@ -280,7 +288,7 @@ let sketch = function(p) {
     const generator = new Apparatus(
       (cols - 11) / 2,
       (rows - 11) / 2,
-      innerApparatusOptions
+      atomAppOpts
     );
 
     const apparatus = generator.generate(top, left, true);
@@ -346,8 +354,8 @@ let sketch = function(p) {
 };
 new p5(sketch);
 
-function getSrcDst(xu, yu, persp, cubedim) {
-  const m = cubedim * 2 + 11;
+function getSrcDst(xu, yu, persp, dim) {
+  const m = dim * 2 + 11;
 
   const src = [
     0,

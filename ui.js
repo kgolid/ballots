@@ -10,8 +10,14 @@ export default function(opts, full_reset, redraw, print) {
   const gui = new dat.GUI();
   const f0 = gui.addFolder('Structural Changes');
   f0.open();
-  f0.add(opts, 'cubedim', 2, 60, 2)
-    .name('Cube Dimension')
+  f0.add(opts, 'cubedimX', 0, 80, 5)
+    .name('X Dimension')
+    .onChange(full_reset);
+  f0.add(opts, 'cubedimY', 0, 80, 5)
+    .name('Y Dimension')
+    .onChange(full_reset);
+  f0.add(opts, 'cubedimZ', 0, 80, 5)
+    .name('Z Dimension')
     .onChange(full_reset);
   f0.add(opts, 'outerSize', 0.7, 1, 0.02)
     .name('Section Sizes')
@@ -36,7 +42,7 @@ export default function(opts, full_reset, redraw, print) {
   f1.add(opts, 'ty', -600, 600, 50)
     .name('Translate Y')
     .onChange(redraw);
-  f1.add(opts, 'mag', 1, 8, 0.5)
+  f1.add(opts, 'mag', 1, 12, 0.5)
     .name('Cell Size')
     .onChange(redraw);
   f1.add(opts, 'depthDim', 0, 10, 0.5)
@@ -48,10 +54,7 @@ export default function(opts, full_reset, redraw, print) {
   f1.add(opts, 'shadeOpacity', 0, 255, 5)
     .name('Shade Opacity')
     .onChange(redraw);
-  f1.add(opts, 'strokeOpacity', 0, 255, 5)
-    .name('Stroke Opacity')
-    .onChange(redraw);
-  f1.add(opts, 'strokeWeight', 1, 3, 1)
+  f1.add(opts, 'strokeWeight', 0, 5, 1)
     .name('Stroke Weight')
     .onChange(redraw);
   const f2 = gui.addFolder('Control');
