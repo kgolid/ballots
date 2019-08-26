@@ -3882,8 +3882,14 @@
     const gui$$1 = new GUI$1();
     const f0 = gui$$1.addFolder('Structural Changes');
     f0.open();
-    f0.add(opts, 'cubedim', 2, 60, 2)
-      .name('Cube Dimension')
+    f0.add(opts, 'cubedimX', 0, 80, 5)
+      .name('X Dimension')
+      .onChange(full_reset);
+    f0.add(opts, 'cubedimY', 0, 80, 5)
+      .name('Y Dimension')
+      .onChange(full_reset);
+    f0.add(opts, 'cubedimZ', 0, 80, 5)
+      .name('Z Dimension')
       .onChange(full_reset);
     f0.add(opts, 'outerSize', 0.7, 1, 0.02)
       .name('Section Sizes')
@@ -3908,7 +3914,7 @@
     f1.add(opts, 'ty', -600, 600, 50)
       .name('Translate Y')
       .onChange(redraw);
-    f1.add(opts, 'mag', 1, 8, 0.5)
+    f1.add(opts, 'mag', 1, 12, 0.5)
       .name('Cell Size')
       .onChange(redraw);
     f1.add(opts, 'depthDim', 0, 10, 0.5)
@@ -3920,10 +3926,7 @@
     f1.add(opts, 'shadeOpacity', 0, 255, 5)
       .name('Shade Opacity')
       .onChange(redraw);
-    f1.add(opts, 'strokeOpacity', 0, 255, 5)
-      .name('Stroke Opacity')
-      .onChange(redraw);
-    f1.add(opts, 'strokeWeight', 1, 3, 1)
+    f1.add(opts, 'strokeWeight', 0, 5, 1)
       .name('Stroke Weight')
       .onChange(redraw);
     const f2 = gui$$1.addFolder('Control');
@@ -3941,7 +3944,7 @@
     depth,
     shades,
     shadeOpacity,
-    strokeOpacity,
+    strokeColor,
     strokeWeight,
     hiddenTop,
     hiddenLeft,
@@ -3954,6 +3957,7 @@
     const bw = box.w + box.x_off * depth; // Width
     const bh = box.h + box.y_off * depth; // Height
     const bd = box.z1 * depth; // Depth
+
     p.fill(box.col);
     p.noStroke();
 
@@ -3973,8 +3977,8 @@
     }
 
     p.noFill();
-    p.stroke(0, strokeOpacity);
-    p.strokeWeight(Math.ceil(strokeWeight / 2));
+    p.stroke(strokeColor);
+    p.strokeWeight(Math.max(0, Math.floor(strokeWeight / 2)));
     if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
       displayInteriorFrontLine();
 
@@ -4050,13 +4054,14 @@
   }
 
   let opts = {
-    cubedim: 18,
+    cubedimX: 18,
+    cubedimY: 18,
+    cubedimZ: 18,
     depthDim: 2,
     mag: 5,
     tx: 0,
     ty: 0,
     shadeOpacity: 60,
-    strokeOpacity: 200,
     strokeWeight: 2,
     outerSize: 0.96,
     minGridSize: 4,
@@ -4069,7 +4074,9 @@
   let sketch = function(p) {
     let THE_SEED;
 
-    let cubedim;
+    let cubedimX;
+    let cubedimY;
+    let cubedimZ;
     let tx, ty;
 
     const xr = (-1 * Math.PI) / 6;
@@ -4083,11 +4090,11 @@
     const depthSteps = 8;
 
     let palette;
+    let strokeCol;
     let shadeOpacity;
-    let strokeOpacity;
     let strokeWeight;
 
-    let outerApparatusOptions, innerApparatusOptions;
+    let sectionAppOpts, atomAppOpts;
     let minGridSize;
 
     let persp;
@@ -4103,6 +4110,7 @@
       p.frameRate(1);
       p.strokeJoin(p.ROUND);
       p.noLoop();
+      //p.pixelDensity(4);
 
       ui(opts, generateAndDraw, updateAndDraw, print);
 
@@ -4121,7 +4129,10 @@
     }
 
     function updateGlobals(opts) {
-      cubedim = opts.cubedim;
+      cubedimX = opts.cubedimX;
+      cubedimY = opts.cubedimY;
+      cubedimZ = opts.cubedimZ;
+
       tx = opts.tx;
       ty = opts.ty;
 
@@ -4134,24 +4145,24 @@
       nzu = zu.map(v => -v);
 
       shadeOpacity = opts.shadeOpacity;
-      strokeOpacity = opts.strokeOpacity;
       strokeWeight = opts.strokeWeight;
 
       maxDepth = opts.depthDim;
       persp = opts.perspective;
 
       palette = get(opts.palette);
+      strokeCol = palette.stroke ? palette.stroke : '#000';
 
       minGridSize = opts.minGridSize;
 
-      outerApparatusOptions = {
+      sectionAppOpts = {
         simple: true,
         extension_chance: opts.outerSize,
         horizontal_symmetry: false,
         vertical_chance: 0.5
       };
 
-      innerApparatusOptions = {
+      atomAppOpts = {
         simple: true,
         extension_chance: opts.innerSize,
         horizontal_symmetry: false,
@@ -4163,14 +4174,16 @@
     }
 
     function reset() {
-      const generator = new index(cubedim, cubedim, outerApparatusOptions);
-      const frontApp = generator.generate(null, null, true);
-      const leftApp = generator.generate(
+      const generatorFront = new index(cubedimX, cubedimY, sectionAppOpts);
+      const generatorLeft = new index(cubedimY, cubedimZ, sectionAppOpts);
+      const generatorTop = new index(cubedimZ, cubedimX, sectionAppOpts);
+      const frontApp = generatorFront.generate(null, null, true);
+      const leftApp = generatorLeft.generate(
         frontApp[1].map(i => ({ ...i[1], v: i[1].h })),
         null,
         true
       );
-      const topApp = generator.generate(
+      const topApp = generatorTop.generate(
         leftApp[1].map(i => ({ ...i[1], v: i[1].h })),
         frontApp[1][1].map(i => ({ ...i, h: i.v })),
         true
@@ -4190,23 +4203,23 @@
       p.translate(tx + p.width / 2, ty + p.height / 2);
       p.background(palette.background ? palette.background : '#eee');
 
-      const ft = perspective(...getSrcDst(xu, yu, persp, cubedim));
-      const lt = perspective(...getSrcDst(yu, nzu, persp, cubedim));
-      const tt = perspective(...getSrcDst(nzu, xu, persp, cubedim));
+      const ft = perspective(...getSrcDst(xu, yu, persp, cubedimX));
+      const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
+      const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
       frontLayout.forEach(i =>
-        displayBoxx(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
+        displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
       );
       leftLayout.forEach(i =>
-        displayBoxx(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
+        displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
       );
       topLayout.forEach(i =>
-        displayBoxx(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
+        displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
       );
       p.pop();
     }
 
-    function displayBoxx(
+    function displayBox(
       box,
       xu,
       yu,
@@ -4227,7 +4240,7 @@
         maxDepth,
         shades,
         shadeOpacity,
-        strokeOpacity,
+        strokeCol,
         strokeWeight,
         hiddenTop,
         hiddenLeft,
@@ -4323,7 +4336,7 @@
       const generator = new index(
         (cols - 11) / 2,
         (rows - 11) / 2,
-        innerApparatusOptions
+        atomAppOpts
       );
 
       const apparatus = generator.generate(top, left, true);
@@ -4389,8 +4402,8 @@
   };
   new p5(sketch);
 
-  function getSrcDst(xu, yu, persp, cubedim) {
-    const m = cubedim * 2 + 11;
+  function getSrcDst(xu, yu, persp, dim) {
+    const m = dim * 2 + 11;
 
     const src = [
       0,
