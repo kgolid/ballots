@@ -3874,6 +3874,11 @@
   //# sourceMappingURL=dat.gui.module.js.map
 
   function ui(opts, full_reset, redraw, print) {
+    const onPaletteChange = function(controller) {
+      controller.setValue(0);
+      controller.max(get(opts.palette).size - 1);
+    };
+
     const ctrls = {
       print: print,
       reset: full_reset
@@ -3903,9 +3908,6 @@
     f0.add(opts, 'colorMode', ['single', 'main', 'group', 'random'])
       .name('Color Distr.')
       .onChange(full_reset);
-    f0.add(opts, 'palette', getNames())
-      .name('Palette')
-      .onChange(full_reset);
     const f1 = gui$$1.addFolder('Stylistic Changes');
     f1.open();
     f1.add(opts, 'tx', -600, 600, 50)
@@ -3923,6 +3925,15 @@
     f1.add(opts, 'perspective', 0.55, 1, 0.05)
       .name('Perspective')
       .onChange(redraw);
+    const shiftController = f1
+      .add(opts, 'paletteShift', 0, 10, 1)
+      .listen()
+      .name('Palette Shift')
+      .onChange(redraw);
+    f1.add(opts, 'palette', getNames())
+      .name('Palette')
+      .onChange(redraw)
+      .onFinishChange(() => onPaletteChange(shiftController));
     f1.add(opts, 'shadeOpacity', 0, 255, 5)
       .name('Shade Opacity')
       .onChange(redraw);
@@ -3931,8 +3942,8 @@
       .onChange(redraw);
     const f2 = gui$$1.addFolder('Control');
     f2.open();
-    f2.add(ctrls, 'print').name('Download image');
     f2.add(ctrls, 'reset').name('Generate new');
+    f2.add(ctrls, 'print').name('Download image');
   }
 
   function display(
@@ -3944,6 +3955,8 @@
     depth,
     shades,
     shadeOpacity,
+    fillColors,
+    paletteShift,
     strokeColor,
     strokeWeight,
     hiddenTop,
@@ -3958,7 +3971,11 @@
     const bh = box.h + box.y_off * depth; // Height
     const bd = box.z1 * depth; // Depth
 
-    p.fill(box.col);
+    let cols = fillColors
+      .slice(paletteShift)
+      .concat(fillColors.slice(0, paletteShift));
+
+    p.fill(cols[box.col % cols.length]);
     p.noStroke();
 
     displayFront();
@@ -4068,7 +4085,8 @@
     innerSize: 0.78,
     perspective: 0.8,
     colorMode: 'group',
-    palette: 'tsu_arcade'
+    palette: 'tsu_arcade',
+    paletteShift: 0
   };
 
   let sketch = function(p) {
@@ -4089,6 +4107,7 @@
     let maxDepth;
     const depthSteps = 8;
 
+    let paletteShift;
     let palette;
     let strokeCol;
     let shadeOpacity;
@@ -4110,7 +4129,6 @@
       p.frameRate(1);
       p.strokeJoin(p.ROUND);
       p.noLoop();
-      //p.pixelDensity(4);
 
       ui(opts, generateAndDraw, updateAndDraw, print);
 
@@ -4151,6 +4169,7 @@
       persp = opts.perspective;
 
       palette = get(opts.palette);
+      paletteShift = opts.paletteShift;
       strokeCol = palette.stroke ? palette.stroke : '#000';
 
       minGridSize = opts.minGridSize;
@@ -4169,7 +4188,7 @@
         vertical_chance: 0.5,
         color_mode: opts.colorMode,
         group_size: 0.4,
-        colors: palette.colors
+        colors: [...Array(1000).keys()]
       };
     }
 
@@ -4240,6 +4259,8 @@
         maxDepth,
         shades,
         shadeOpacity,
+        palette.colors,
+        paletteShift,
         strokeCol,
         strokeWeight,
         hiddenTop,

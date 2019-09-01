@@ -21,7 +21,8 @@ let opts = {
   innerSize: 0.78,
   perspective: 0.8,
   colorMode: 'group',
-  palette: 'tsu_arcade'
+  palette: 'tsu_arcade',
+  paletteShift: 0
 };
 
 let sketch = function(p) {
@@ -42,6 +43,7 @@ let sketch = function(p) {
   let maxDepth;
   const depthSteps = 8;
 
+  let paletteShift;
   let palette;
   let strokeCol;
   let shadeOpacity;
@@ -103,6 +105,7 @@ let sketch = function(p) {
     persp = opts.perspective;
 
     palette = tome.get(opts.palette);
+    paletteShift = opts.paletteShift;
     strokeCol = palette.stroke ? palette.stroke : '#000';
 
     minGridSize = opts.minGridSize;
@@ -121,7 +124,7 @@ let sketch = function(p) {
       vertical_chance: 0.5,
       color_mode: opts.colorMode,
       group_size: 0.4,
-      colors: palette.colors
+      colors: [...Array(1000).keys()]
     };
   }
 
@@ -192,6 +195,8 @@ let sketch = function(p) {
       maxDepth,
       shades,
       shadeOpacity,
+      palette.colors,
+      paletteShift,
       strokeCol,
       strokeWeight,
       hiddenTop,

@@ -7,6 +7,8 @@ export default function(
   depth,
   shades,
   shadeOpacity,
+  fillColors,
+  paletteShift,
   strokeColor,
   strokeWeight,
   hiddenTop,
@@ -21,7 +23,11 @@ export default function(
   const bh = box.h + box.y_off * depth; // Height
   const bd = box.z1 * depth; // Depth
 
-  p.fill(box.col);
+  let cols = fillColors
+    .slice(paletteShift)
+    .concat(fillColors.slice(0, paletteShift));
+
+  p.fill(cols[box.col % cols.length]);
   p.noStroke();
 
   displayFront();

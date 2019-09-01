@@ -2,6 +2,11 @@ import * as dat from 'dat.gui';
 import * as tome from 'chromotome';
 
 export default function(opts, full_reset, redraw, print) {
+  const onPaletteChange = function(controller) {
+    controller.setValue(0);
+    controller.max(tome.get(opts.palette).size - 1);
+  };
+
   const ctrls = {
     print: print,
     reset: full_reset
@@ -31,9 +36,6 @@ export default function(opts, full_reset, redraw, print) {
   f0.add(opts, 'colorMode', ['single', 'main', 'group', 'random'])
     .name('Color Distr.')
     .onChange(full_reset);
-  f0.add(opts, 'palette', tome.getNames())
-    .name('Palette')
-    .onChange(full_reset);
   const f1 = gui.addFolder('Stylistic Changes');
   f1.open();
   f1.add(opts, 'tx', -600, 600, 50)
@@ -51,6 +53,15 @@ export default function(opts, full_reset, redraw, print) {
   f1.add(opts, 'perspective', 0.55, 1, 0.05)
     .name('Perspective')
     .onChange(redraw);
+  const shiftController = f1
+    .add(opts, 'paletteShift', 0, 10, 1)
+    .listen()
+    .name('Palette Shift')
+    .onChange(redraw);
+  f1.add(opts, 'palette', tome.getNames())
+    .name('Palette')
+    .onChange(redraw)
+    .onFinishChange(() => onPaletteChange(shiftController));
   f1.add(opts, 'shadeOpacity', 0, 255, 5)
     .name('Shade Opacity')
     .onChange(redraw);
@@ -59,6 +70,6 @@ export default function(opts, full_reset, redraw, print) {
     .onChange(redraw);
   const f2 = gui.addFolder('Control');
   f2.open();
-  f2.add(ctrls, 'print').name('Download image');
   f2.add(ctrls, 'reset').name('Generate new');
+  f2.add(ctrls, 'print').name('Download image');
 }
