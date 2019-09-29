@@ -65,8 +65,11 @@ export default function(opts, full_reset, redraw, print) {
   f1.add(opts, 'shadeOpacity', 0, 255, 5)
     .name('Shade Opacity')
     .onChange(redraw);
-  f1.add(opts, 'strokeWeight', 0, 5, 1)
-    .name('Stroke Weight')
+  f1.add(opts, 'outerStrokeWeight', 0, 5, 1)
+    .name('Outer Stroke Weight')
+    .onChange(redraw);
+  f1.add(opts, 'innerStrokeWeight', 0, 5, 1)
+    .name('Inner Stroke Weight')
     .onChange(redraw);
   const f2 = gui.addFolder('Control');
   f2.open();

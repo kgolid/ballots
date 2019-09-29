@@ -15,7 +15,8 @@ let opts = {
   tx: 0,
   ty: 0,
   shadeOpacity: 60,
-  strokeWeight: 2,
+  outerStrokeWeight: 2,
+  innerStrokeWeight: 2,
   outerSize: 0.96,
   minGridSize: 4,
   innerSize: 0.78,
@@ -47,7 +48,7 @@ let sketch = function(p) {
   let palette;
   let strokeCol;
   let shadeOpacity;
-  let strokeWeight;
+  let outerStrokeWeight, innerStrokeWeight;
 
   let sectionAppOpts, atomAppOpts;
   let minGridSize;
@@ -99,7 +100,8 @@ let sketch = function(p) {
     nzu = zu.map(v => -v);
 
     shadeOpacity = opts.shadeOpacity;
-    strokeWeight = opts.strokeWeight;
+    outerStrokeWeight = opts.outerStrokeWeight;
+    innerStrokeWeight = opts.innerStrokeWeight;
 
     maxDepth = opts.depthDim;
     persp = opts.perspective;
@@ -198,7 +200,8 @@ let sketch = function(p) {
       palette.colors,
       paletteShift,
       strokeCol,
-      strokeWeight,
+      innerStrokeWeight,
+      outerStrokeWeight,
       hiddenTop,
       hiddenLeft,
       t1,
@@ -248,13 +251,13 @@ let sketch = function(p) {
           let y_offset =
             topsideGrid && i == 0 && ypos <= 0
               ? topsideGrid.content.filter(
-                  c => c.x1 <= 0 && p.max(c.y1, 0) == xpos
+                  c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
                 )[0].z1
               : 0;
           let x_offset =
             leftsideGrid && j == 0 && xpos <= 0
               ? leftsideGrid.content.filter(
-                  c => c.y1 <= 0 && p.max(c.x1, 0) == ypos
+                  c => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
                 )[0].z1
               : 0;
           return {

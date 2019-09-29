@@ -3977,8 +3977,11 @@
     f1.add(opts, 'shadeOpacity', 0, 255, 5)
       .name('Shade Opacity')
       .onChange(redraw);
-    f1.add(opts, 'strokeWeight', 0, 5, 1)
-      .name('Stroke Weight')
+    f1.add(opts, 'outerStrokeWeight', 0, 5, 1)
+      .name('Outer Stroke Weight')
+      .onChange(redraw);
+    f1.add(opts, 'innerStrokeWeight', 0, 5, 1)
+      .name('Inner Stroke Weight')
       .onChange(redraw);
     const f2 = gui$$1.addFolder('Control');
     f2.open();
@@ -3998,7 +4001,8 @@
     fillColors,
     paletteShift,
     strokeColor,
-    strokeWeight,
+    outerStrokeWeight,
+    innerStrokeWeight,
     hiddenTop,
     hiddenLeft,
     t1,
@@ -4035,7 +4039,7 @@
 
     p.noFill();
     p.stroke(strokeColor);
-    p.strokeWeight(Math.max(0, Math.floor(strokeWeight / 2)));
+    p.strokeWeight(innerStrokeWeight);
     if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
       displayInteriorFrontLine();
 
@@ -4043,7 +4047,7 @@
 
     if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
 
-    p.strokeWeight(strokeWeight);
+    p.strokeWeight(outerStrokeWeight);
     displayShape();
 
     function displayFront() {
@@ -4119,7 +4123,8 @@
     tx: 0,
     ty: 0,
     shadeOpacity: 60,
-    strokeWeight: 2,
+    outerStrokeWeight: 2,
+    innerStrokeWeight: 2,
     outerSize: 0.96,
     minGridSize: 4,
     innerSize: 0.78,
@@ -4151,7 +4156,7 @@
     let palette;
     let strokeCol;
     let shadeOpacity;
-    let strokeWeight;
+    let outerStrokeWeight, innerStrokeWeight;
 
     let sectionAppOpts, atomAppOpts;
     let minGridSize;
@@ -4203,7 +4208,8 @@
       nzu = zu.map(v => -v);
 
       shadeOpacity = opts.shadeOpacity;
-      strokeWeight = opts.strokeWeight;
+      outerStrokeWeight = opts.outerStrokeWeight;
+      innerStrokeWeight = opts.innerStrokeWeight;
 
       maxDepth = opts.depthDim;
       persp = opts.perspective;
@@ -4302,7 +4308,8 @@
         palette.colors,
         paletteShift,
         strokeCol,
-        strokeWeight,
+        innerStrokeWeight,
+        outerStrokeWeight,
         hiddenTop,
         hiddenLeft,
         t1,
@@ -4352,13 +4359,13 @@
             let y_offset =
               topsideGrid && i == 0 && ypos <= 0
                 ? topsideGrid.content.filter(
-                    c => c.x1 <= 0 && p.max(c.y1, 0) == xpos
+                    c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
                   )[0].z1
                 : 0;
             let x_offset =
               leftsideGrid && j == 0 && xpos <= 0
                 ? leftsideGrid.content.filter(
-                    c => c.y1 <= 0 && p.max(c.x1, 0) == ypos
+                    c => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
                   )[0].z1
                 : 0;
             return {
