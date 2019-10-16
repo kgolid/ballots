@@ -50,5 +50,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  },
+  {
+    input: 'index_radial.js',
+    output: {
+      file: pkg.browserRadial,
+      format: 'umd'
+    },
+    plugins: [resolve(), commonjs()]
   }
 ];

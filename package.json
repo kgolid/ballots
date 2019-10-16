@@ -20,6 +20,7 @@
   "browserElevate": "dist/index_elevate.js",
   "browserCube": "dist/index_cube.js",
   "browserInteractive": "dist/index_interactive.js",
+  "browserRadial": "dist/index_radial.js",
   "dependencies": {
     "apparatus-generator": "^1.4.0",
     "change-perspective": "^1.0.1",
