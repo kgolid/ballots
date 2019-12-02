@@ -176,18 +176,7 @@ let sketch = function(p) {
     p.pop();
   }
 
-  function displayBox(
-    box,
-    xu,
-    yu,
-    zu,
-    shades,
-    hiddenTop,
-    hiddenLeft,
-    t1,
-    t2,
-    t3
-  ) {
+  function displayBox(box, xu, yu, zu, shades, hiddenTop, hiddenLeft, t1, t2, t3) {
     display(
       p,
       box,
@@ -214,14 +203,10 @@ let sketch = function(p) {
     const { x1, y1, w, h } = box;
 
     const topsideGrid =
-      topside && y1 == 1
-        ? topside.filter(c => c.x1 == 1 && c.y1 == x1)[0]
-        : null;
+      topside && y1 == 1 ? topside.filter(c => c.x1 == 1 && c.y1 == x1)[0] : null;
 
     const leftsideGrid =
-      leftside && x1 == 1
-        ? leftside.filter(c => c.y1 == 1 && c.x1 == y1)[0]
-        : null;
+      leftside && x1 == 1 ? leftside.filter(c => c.y1 == 1 && c.x1 == y1)[0] : null;
 
     const cols = topsideGrid
       ? topsideGrid.rows
@@ -250,9 +235,8 @@ let sketch = function(p) {
           const ypos = y1 + app.y1 + i * cell_h - 1;
           let y_offset =
             topsideGrid && i == 0 && ypos <= 0
-              ? topsideGrid.content.filter(
-                  c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
-                )[0].z1
+              ? topsideGrid.content.filter(c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos)[0]
+                  .z1
               : 0;
           let x_offset =
             leftsideGrid && j == 0 && xpos <= 0
@@ -293,11 +277,7 @@ let sketch = function(p) {
     const w_unit = w / cols;
     const h_unit = h / rows;
 
-    const generator = new Apparatus(
-      (cols - 11) / 2,
-      (rows - 11) / 2,
-      atomAppOpts
-    );
+    const generator = new Apparatus((cols - 11) / 2, (rows - 11) / 2, atomAppOpts);
 
     const apparatus = generator.generate(top, left, true);
     apparatus[0] = apparatus[0].map(a => ({
