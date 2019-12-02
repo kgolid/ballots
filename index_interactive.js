@@ -358,6 +358,7 @@ let sketch = function(p) {
 
   p.keyPressed = function() {
     if (p.keyCode === 80) print();
+    if (p.keyCode === 82) generateAndDraw();
   };
 };
 new p5(sketch);
