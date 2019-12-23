@@ -48,7 +48,7 @@ export default function(
 
   p.noFill();
   p.stroke(strokeColor);
-  p.strokeWeight(innerStrokeWeight);
+  p.strokeWeight(outerStrokeWeight);
   if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
     displayInteriorFrontLine();
 
@@ -56,7 +56,7 @@ export default function(
 
   if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
 
-  p.strokeWeight(outerStrokeWeight);
+  p.strokeWeight(innerStrokeWeight);
   displayShape();
 
   function displayFront() {
