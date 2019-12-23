@@ -24,9 +24,7 @@ export default function(
   const bh = box.h + box.y_off * depth; // Height
   const bd = box.z1 * depth; // Depth
 
-  let cols = fillColors
-    .slice(paletteShift)
-    .concat(fillColors.slice(0, paletteShift));
+  let cols = fillColors.slice(paletteShift).concat(fillColors.slice(0, paletteShift));
 
   p.fill(cols[box.col % cols.length]);
   p.noStroke();
@@ -36,12 +34,15 @@ export default function(
   displayTop();
 
   if (shadeOpacity !== 0) {
+    //p.fill(cols[shades[0]]);
     p.fill(0, shades[0] * shadeOpacity);
     displayFront();
 
+    //p.fill(cols[shades[1]]);
     p.fill(0, shades[1] * shadeOpacity);
     displayLeft();
 
+    //p.fill(cols[shades[2]]);
     p.fill(0, shades[2] * shadeOpacity);
     displayTop();
   }
@@ -91,17 +92,11 @@ export default function(
   }
 
   function displayInteriorLeftLine() {
-    p.line(
-      ...getPos(bx, by, bd, t1, t2, t3),
-      ...getPos(bx + bw, by, bd, t1, t2, t3)
-    );
+    p.line(...getPos(bx, by, bd, t1, t2, t3), ...getPos(bx + bw, by, bd, t1, t2, t3));
   }
 
   function displayInteriorTopLine() {
-    p.line(
-      ...getPos(bx, by, bd, t1, t2, t3),
-      ...getPos(bx, by + bh, bd, t1, t2, t3)
-    );
+    p.line(...getPos(bx, by, bd, t1, t2, t3), ...getPos(bx, by + bh, bd, t1, t2, t3));
   }
 
   function displayShape() {

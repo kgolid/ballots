@@ -346,22 +346,34 @@
       background: '#f7f4ef'
     },
     {
-      name: 'tokyo',
-      colors: ['#d13821', '#1d295b', '#51587d', '#e7e7e7'],
-      stroke: '#0b0e3e',
-      background: '#c7b09e'
-    },
-    {
-      name: 'bauhaus01',
-      colors: ['#ea542f', '#f19c1b', '#4f8ba9'],
+      name: 'sprague',
+      colors: ['#ec2f28', '#f8cd28', '#1e95bb', '#fbaab3', '#fcefdf'],
       stroke: '#221e1f',
-      background: '#e7dbc4'
+      background: '#fcefdf'
     },
     {
-      name: 'bauhaus02',
-      colors: ['#bb2f2a', '#e9b500', '#0165b7'],
-      stroke: '#000000',
-      background: '#e5d6b8'
+      name: 'bloomberg',
+      colors: ['#ff5500', '#f4c145', '#144714', '#2f04fc', '#e276af'],
+      stroke: '#000',
+      background: '#fff3dd'
+    },
+    {
+      name: 'revolucion',
+      colors: ['#ed555d', '#fffcc9', '#41b797', '#eda126', '#7b5770'],
+      stroke: '#fffcc9',
+      background: '#2d1922'
+    },
+    {
+      name: 'sneaker',
+      colors: ['#e8165b', '#401e38', '#66c3b4', '#ee7724', '#584098'],
+      stroke: '#401e38',
+      background: '#ffffff'
+    },
+    {
+      name: 'miradors',
+      colors: ['#ff6936', '#fddc3f', '#0075ca', '#00bb70'],
+      stroke: '#ffffff',
+      background: '#020202'
     }
   ];
 
@@ -917,6 +929,73 @@
     }
   ];
 
+  var spatial = [
+    {
+      name: 'spatial01',
+      colors: ['#ff5937', '#f6f6f4', '#4169ff'],
+      stroke: '#ff5937',
+      background: '#f6f6f4'
+    },
+    {
+      name: 'spatial02',
+      colors: ['#ff5937', '#f6f6f4', '#f6f6f4'],
+      stroke: '#ff5937',
+      background: '#f6f6f4'
+    },
+    {
+      name: 'spatial02i',
+      colors: ['#f6f6f4', '#ff5937', '#ff5937'],
+      stroke: '#f6f6f4',
+      background: '#ff5937'
+    },
+
+    {
+      name: 'spatial03',
+      colors: ['#4169ff', '#f6f6f4', '#f6f6f4'],
+      stroke: '#4169ff',
+      background: '#f6f6f4'
+    },
+    {
+      name: 'spatial03i',
+      colors: ['#f6f6f4', '#4169ff', '#4169ff'],
+      stroke: '#f6f6f4',
+      background: '#4169ff'
+    }
+  ];
+
+  var jung = [
+    {
+      name: 'jung_bird',
+      colors: ['#fc3032', '#fed530', '#33c3fb', '#ff7bac', '#fda929'],
+      stroke: '#000000',
+      background: '#ffffff'
+    },
+    {
+      name: 'jung_horse',
+      colors: ['#e72e81', '#f0bf36', '#3056a2'],
+      stroke: '#000000',
+      background: '#ffffff'
+    },
+    {
+      name: 'jung_croc',
+      colors: ['#f13274', '#eed03e', '#405e7f', '#19a198'],
+      stroke: '#000000',
+      background: '#ffffff'
+    },
+    {
+      name: 'jung_hippo',
+      colors: ['#ff7bac', '#ff921e', '#3ea8f5', '#7ac943'],
+      stroke: '#000000',
+      background: '#ffffff'
+    },
+    {
+      name: 'jung_wolf',
+      colors: ['#e51c39', '#f1b844', '#36c4b7', '#666666'],
+      stroke: '#000000',
+      background: '#ffffff'
+    }
+  ];
+
   const pals = misc.concat(
     ranganath,
     roygbivs,
@@ -929,7 +1008,9 @@
     kovecses,
     tsuchimochi,
     duotone,
-    hilda
+    hilda,
+    spatial,
+    jung
   );
 
   var palettes = pals.map(p => {
@@ -4015,9 +4096,7 @@
     const bh = box.h + box.y_off * depth; // Height
     const bd = box.z1 * depth; // Depth
 
-    let cols = fillColors
-      .slice(paletteShift)
-      .concat(fillColors.slice(0, paletteShift));
+    let cols = fillColors.slice(paletteShift).concat(fillColors.slice(0, paletteShift));
 
     p.fill(cols[box.col % cols.length]);
     p.noStroke();
@@ -4027,19 +4106,22 @@
     displayTop();
 
     if (shadeOpacity !== 0) {
+      //p.fill(cols[shades[0]]);
       p.fill(0, shades[0] * shadeOpacity);
       displayFront();
 
+      //p.fill(cols[shades[1]]);
       p.fill(0, shades[1] * shadeOpacity);
       displayLeft();
 
+      //p.fill(cols[shades[2]]);
       p.fill(0, shades[2] * shadeOpacity);
       displayTop();
     }
 
     p.noFill();
     p.stroke(strokeColor);
-    p.strokeWeight(innerStrokeWeight);
+    p.strokeWeight(outerStrokeWeight);
     if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
       displayInteriorFrontLine();
 
@@ -4047,7 +4129,7 @@
 
     if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
 
-    p.strokeWeight(outerStrokeWeight);
+    p.strokeWeight(innerStrokeWeight);
     displayShape();
 
     function displayFront() {
@@ -4082,17 +4164,11 @@
     }
 
     function displayInteriorLeftLine() {
-      p.line(
-        ...getPos(bx, by, bd, t1, t2, t3),
-        ...getPos(bx + bw, by, bd, t1, t2, t3)
-      );
+      p.line(...getPos(bx, by, bd, t1, t2, t3), ...getPos(bx + bw, by, bd, t1, t2, t3));
     }
 
     function displayInteriorTopLine() {
-      p.line(
-        ...getPos(bx, by, bd, t1, t2, t3),
-        ...getPos(bx, by + bh, bd, t1, t2, t3)
-      );
+      p.line(...getPos(bx, by, bd, t1, t2, t3), ...getPos(bx, by + bh, bd, t1, t2, t3));
     }
 
     function displayShape() {
@@ -4114,6 +4190,29 @@
     }
   }
 
+  /*
+  // Options suitable for print.
+  let opts = {
+    cubedimX: 15,
+    cubedimY: 50,
+    cubedimZ: 15,
+    depthDim: 2,
+    mag: 10,
+    tx: 0,
+    ty: -600,
+    shadeOpacity: 30,
+    outerStrokeWeight: 2,
+    innerStrokeWeight: 2,
+    outerSize: 0.99,
+    minGridSize: 4,
+    innerSize: 0.78,
+    perspective: 0.95,
+    colorMode: 'group',
+    palette: 'tsu_arcade',
+    paletteShift: 0
+  };
+  */
+
   let opts = {
     cubedimX: 18,
     cubedimY: 18,
@@ -4122,13 +4221,13 @@
     mag: 5,
     tx: 0,
     ty: 0,
-    shadeOpacity: 60,
+    shadeOpacity: 25,
     outerStrokeWeight: 2,
-    innerStrokeWeight: 2,
-    outerSize: 0.96,
+    innerStrokeWeight: 1,
+    outerSize: 0.97,
     minGridSize: 4,
     innerSize: 0.78,
-    perspective: 0.8,
+    perspective: 0.85,
     colorMode: 'group',
     palette: 'tsu_arcade',
     paletteShift: 0
@@ -4284,18 +4383,7 @@
       p.pop();
     }
 
-    function displayBox(
-      box,
-      xu,
-      yu,
-      zu,
-      shades,
-      hiddenTop,
-      hiddenLeft,
-      t1,
-      t2,
-      t3
-    ) {
+    function displayBox(box, xu, yu, zu, shades, hiddenTop, hiddenLeft, t1, t2, t3) {
       display(
         p,
         box,
@@ -4322,14 +4410,10 @@
       const { x1, y1, w, h } = box;
 
       const topsideGrid =
-        topside && y1 == 1
-          ? topside.filter(c => c.x1 == 1 && c.y1 == x1)[0]
-          : null;
+        topside && y1 == 1 ? topside.filter(c => c.x1 == 1 && c.y1 == x1)[0] : null;
 
       const leftsideGrid =
-        leftside && x1 == 1
-          ? leftside.filter(c => c.y1 == 1 && c.x1 == y1)[0]
-          : null;
+        leftside && x1 == 1 ? leftside.filter(c => c.y1 == 1 && c.x1 == y1)[0] : null;
 
       const cols = topsideGrid
         ? topsideGrid.rows
@@ -4358,9 +4442,8 @@
             const ypos = y1 + app.y1 + i * cell_h - 1;
             let y_offset =
               topsideGrid && i == 0 && ypos <= 0
-                ? topsideGrid.content.filter(
-                    c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
-                  )[0].z1
+                ? topsideGrid.content.filter(c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos)[0]
+                    .z1
                 : 0;
             let x_offset =
               leftsideGrid && j == 0 && xpos <= 0
@@ -4401,11 +4484,7 @@
       const w_unit = w / cols;
       const h_unit = h / rows;
 
-      const generator = new index(
-        (cols - 11) / 2,
-        (rows - 11) / 2,
-        atomAppOpts
-      );
+      const generator = new index((cols - 11) / 2, (rows - 11) / 2, atomAppOpts);
 
       const apparatus = generator.generate(top, left, true);
       apparatus[0] = apparatus[0].map(a => ({
@@ -4466,6 +4545,7 @@
 
     p.keyPressed = function() {
       if (p.keyCode === 80) print();
+      if (p.keyCode === 82) generateAndDraw();
     };
   };
   new p5(sketch);

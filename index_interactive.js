@@ -6,6 +6,29 @@ import perspective from 'change-perspective';
 import ui from './ui';
 import display from './display';
 
+/*
+// Options suitable for print.
+let opts = {
+  cubedimX: 15,
+  cubedimY: 50,
+  cubedimZ: 15,
+  depthDim: 2,
+  mag: 10,
+  tx: 0,
+  ty: -600,
+  shadeOpacity: 30,
+  outerStrokeWeight: 2,
+  innerStrokeWeight: 2,
+  outerSize: 0.99,
+  minGridSize: 4,
+  innerSize: 0.78,
+  perspective: 0.95,
+  colorMode: 'group',
+  palette: 'tsu_arcade',
+  paletteShift: 0
+};
+*/
+
 let opts = {
   cubedimX: 18,
   cubedimY: 18,
@@ -14,13 +37,13 @@ let opts = {
   mag: 5,
   tx: 0,
   ty: 0,
-  shadeOpacity: 60,
+  shadeOpacity: 25,
   outerStrokeWeight: 2,
-  innerStrokeWeight: 2,
-  outerSize: 0.96,
+  innerStrokeWeight: 1,
+  outerSize: 0.97,
   minGridSize: 4,
   innerSize: 0.78,
-  perspective: 0.8,
+  perspective: 0.85,
   colorMode: 'group',
   palette: 'tsu_arcade',
   paletteShift: 0

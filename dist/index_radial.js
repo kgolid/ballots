@@ -1128,27 +1128,6 @@
       p.vertex(p4[0] * xu[0] + p4[1] * yu[0], p4[0] * xu[1] + p4[1] * yu[1]);
       arc(p, rad1 * mag, cir2, cir1);
       p.endShape(p.CLOSE);
-
-      /*
-      p.line(
-        p1[0] * xu[0] + p1[1] * yu[0],
-        p1[0] * xu[1] + p1[1] * yu[1],
-        p2[0] * xu[0] + p2[1] * yu[0],
-        p2[0] * xu[1] + p2[1] * yu[1]
-      );
-      p.arc(0, 0, rad2 * mag * 2, rad2 * mag * 2, cir1, cir2);
-      p.line(
-        p3[0] * xu[0] + p3[1] * yu[0],
-        p3[0] * xu[1] + p3[1] * yu[1],
-        p4[0] * xu[0] + p4[1] * yu[0],
-        p4[0] * xu[1] + p4[1] * yu[1]
-      );
-
-      p.arc(0, 0, rad1 * mag * 2, rad1 * mag * 2, cir1, cir2);
-  */
-      if (colorize && box.filled && box.h > 1.5 && box.w > 3) ;
-
-      if (colorize && box.filled && box.crossed) ;
     }
 
     function createGrid(box) {
@@ -1213,7 +1192,7 @@
   new p5(sketch);
 
   function get_palette() {
-    const url = window.location.href.split('#');
+    const url = window.location.href.split('?');
     if (url.length === 1) return get('spatial01');
     return get(url[1]);
   }
