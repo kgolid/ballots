@@ -99,55 +99,6 @@ let sketch = function(p) {
     p.vertex(p4[0] * xu[0] + p4[1] * yu[0], p4[0] * xu[1] + p4[1] * yu[1]);
     arc(p, rad1 * mag, cir2, cir1);
     p.endShape(p.CLOSE);
-
-    /*
-    p.line(
-      p1[0] * xu[0] + p1[1] * yu[0],
-      p1[0] * xu[1] + p1[1] * yu[1],
-      p2[0] * xu[0] + p2[1] * yu[0],
-      p2[0] * xu[1] + p2[1] * yu[1]
-    );
-    p.arc(0, 0, rad2 * mag * 2, rad2 * mag * 2, cir1, cir2);
-    p.line(
-      p3[0] * xu[0] + p3[1] * yu[0],
-      p3[0] * xu[1] + p3[1] * yu[1],
-      p4[0] * xu[0] + p4[1] * yu[0],
-      p4[0] * xu[1] + p4[1] * yu[1]
-    );
-
-    p.arc(0, 0, rad1 * mag * 2, rad1 * mag * 2, cir1, cir2);
-*/
-    if (colorize && box.filled && box.h > 1.5 && box.w > 3) {
-      //displayLegend(box);
-    }
-
-    if (colorize && box.filled && box.crossed) {
-      //displayCross(box);
-    }
-  }
-
-  function displayLegend(box) {
-    p.line(
-      (box.x1 + 0.5) * xu[0] + (box.y1 + 0.5) * yu[0],
-      (box.x1 + 0.5) * xu[1] + (box.y1 + 0.5) * yu[1],
-      (box.x1 + box.legend_width) * xu[0] + (box.y1 + 0.5) * yu[0],
-      (box.x1 + box.legend_width) * xu[1] + (box.y1 + 0.5) * yu[1]
-    );
-  }
-
-  function displayCross(box) {
-    p.line(
-      box.x1 * xu[0] + box.y1 * yu[0],
-      box.x1 * xu[1] + box.y1 * yu[1],
-      (box.x1 + box.w) * xu[0] + (box.y1 + box.h) * yu[0],
-      (box.x1 + box.w) * xu[1] + (box.y1 + box.h) * yu[1]
-    );
-    p.line(
-      (box.x1 + box.w) * xu[0] + box.y1 * yu[0],
-      (box.x1 + box.w) * xu[1] + box.y1 * yu[1],
-      box.x1 * xu[0] + (box.y1 + box.h) * yu[0],
-      box.x1 * xu[1] + (box.y1 + box.h) * yu[1]
-    );
   }
 
   function createGrid(box) {
