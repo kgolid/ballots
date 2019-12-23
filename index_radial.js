@@ -163,7 +163,7 @@ let sketch = function(p) {
 new p5(sketch);
 
 function get_palette() {
-  const url = window.location.href.split('#');
+  const url = window.location.href.split('?');
   if (url.length === 1) return tome.get('spatial01');
   return tome.get(url[1]);
 }
