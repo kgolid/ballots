@@ -46,10 +46,10 @@ let opts = {
   perspective: 0.85,
   colorMode: 'group',
   palette: 'tsu_arcade',
-  paletteShift: 0
+  paletteShift: 0,
 };
 
-let sketch = function(p) {
+let sketch = function (p) {
   let THE_SEED;
 
   let cubedimX;
@@ -80,10 +80,11 @@ let sketch = function(p) {
 
   let frontLayout, leftLayout, topLayout;
 
-  p.setup = function() {
+  p.setup = function () {
     p.createCanvas(1000, 1000);
     THE_SEED = p.floor(p.random(9999999));
     p.randomSeed(THE_SEED);
+    p.pixelDensity(2);
     p.noFill();
     p.smooth();
     p.frameRate(1);
@@ -118,9 +119,9 @@ let sketch = function(p) {
     yu = [Math.cos(yr) * opts.mag, Math.sin(yr) * opts.mag];
     zu = [Math.cos(zr) * opts.mag, Math.sin(zr) * opts.mag];
 
-    nxu = xu.map(v => -v);
-    nyu = yu.map(v => -v);
-    nzu = zu.map(v => -v);
+    nxu = xu.map((v) => -v);
+    nyu = yu.map((v) => -v);
+    nzu = zu.map((v) => -v);
 
     shadeOpacity = opts.shadeOpacity;
     outerStrokeWeight = opts.outerStrokeWeight;
@@ -139,7 +140,7 @@ let sketch = function(p) {
       simple: true,
       extension_chance: opts.outerSize,
       horizontal_symmetry: false,
-      vertical_chance: 0.5
+      vertical_chance: 0.5,
     };
 
     atomAppOpts = {
@@ -149,7 +150,7 @@ let sketch = function(p) {
       vertical_chance: 0.5,
       color_mode: opts.colorMode,
       group_size: 0.4,
-      colors: [...Array(1000).keys()]
+      colors: [...Array(1000).keys()],
     };
   }
 
@@ -159,23 +160,23 @@ let sketch = function(p) {
     const generatorTop = new Apparatus(cubedimZ, cubedimX, sectionAppOpts);
     const frontApp = generatorFront.generate(null, null, true);
     const leftApp = generatorLeft.generate(
-      frontApp[1].map(i => ({ ...i[1], v: i[1].h })),
+      frontApp[1].map((i) => ({ ...i[1], v: i[1].h })),
       null,
       true
     );
     const topApp = generatorTop.generate(
-      leftApp[1].map(i => ({ ...i[1], v: i[1].h })),
-      frontApp[1][1].map(i => ({ ...i, h: i.v })),
+      leftApp[1].map((i) => ({ ...i[1], v: i[1].h })),
+      frontApp[1][1].map((i) => ({ ...i, h: i.v })),
       true
     );
 
-    const frontGrids = frontApp[0].map(a => createGrid(a, null, null));
-    const leftGrids = leftApp[0].map(a => createGrid(a, frontGrids, null));
-    const topGrids = topApp[0].map(a => createGrid(a, leftGrids, frontGrids));
+    const frontGrids = frontApp[0].map((a) => createGrid(a, null, null));
+    const leftGrids = leftApp[0].map((a) => createGrid(a, frontGrids, null));
+    const topGrids = topApp[0].map((a) => createGrid(a, leftGrids, frontGrids));
 
-    frontLayout = get_overlap_graph(frontGrids.flatMap(g => g.content));
-    leftLayout = get_overlap_graph(leftGrids.flatMap(g => g.content));
-    topLayout = get_overlap_graph(topGrids.flatMap(g => g.content));
+    frontLayout = get_overlap_graph(frontGrids.flatMap((g) => g.content));
+    leftLayout = get_overlap_graph(leftGrids.flatMap((g) => g.content));
+    topLayout = get_overlap_graph(topGrids.flatMap((g) => g.content));
   }
 
   function displayLayout() {
@@ -187,13 +188,13 @@ let sketch = function(p) {
     const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
     const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-    frontLayout.forEach(i =>
+    frontLayout.forEach((i) =>
       displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
     );
-    leftLayout.forEach(i =>
+    leftLayout.forEach((i) =>
       displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
     );
-    topLayout.forEach(i =>
+    topLayout.forEach((i) =>
       displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
     );
     p.pop();
@@ -226,10 +227,10 @@ let sketch = function(p) {
     const { x1, y1, w, h } = box;
 
     const topsideGrid =
-      topside && y1 == 1 ? topside.filter(c => c.x1 == 1 && c.y1 == x1)[0] : null;
+      topside && y1 == 1 ? topside.filter((c) => c.x1 == 1 && c.y1 == x1)[0] : null;
 
     const leftsideGrid =
-      leftside && x1 == 1 ? leftside.filter(c => c.y1 == 1 && c.x1 == y1)[0] : null;
+      leftside && x1 == 1 ? leftside.filter((c) => c.y1 == 1 && c.x1 == y1)[0] : null;
 
     const cols = topsideGrid
       ? topsideGrid.rows
@@ -242,29 +243,30 @@ let sketch = function(p) {
     const cell_h = h / rows;
 
     const init_top = topsideGrid
-      ? topsideGrid.apparatus.map(i => ({ ...i[1], v: i[1].h }))
+      ? topsideGrid.apparatus.map((i) => ({ ...i[1], v: i[1].h }))
       : null;
 
     const init_left = leftsideGrid
-      ? leftsideGrid.apparatus[1].map(i => ({ ...i, h: i.v }))
+      ? leftsideGrid.apparatus[1].map((i) => ({ ...i, h: i.v }))
       : null;
 
     const apparatus = createApparatus(cell_w, cell_h, init_top, init_left);
     let grid = [];
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
-        const content = apparatus[0].map(app => {
+        const content = apparatus[0].map((app) => {
           const xpos = x1 + app.x1 + j * cell_w - 1;
           const ypos = y1 + app.y1 + i * cell_h - 1;
           let y_offset =
             topsideGrid && i == 0 && ypos <= 0
-              ? topsideGrid.content.filter(c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos)[0]
-                  .z1
+              ? topsideGrid.content.filter(
+                  (c) => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
+                )[0].z1
               : 0;
           let x_offset =
             leftsideGrid && j == 0 && xpos <= 0
               ? leftsideGrid.content.filter(
-                  c => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
+                  (c) => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
                 )[0].z1
               : 0;
           return {
@@ -276,7 +278,7 @@ let sketch = function(p) {
             x_off: x_offset,
             y_off: y_offset,
             level: 2,
-            filled: true
+            filled: true,
           };
         });
 
@@ -289,7 +291,7 @@ let sketch = function(p) {
       cols: cols,
       rows: rows,
       apparatus: apparatus[1],
-      content: grid
+      content: grid,
     };
   }
 
@@ -303,13 +305,13 @@ let sketch = function(p) {
     const generator = new Apparatus((cols - 11) / 2, (rows - 11) / 2, atomAppOpts);
 
     const apparatus = generator.generate(top, left, true);
-    apparatus[0] = apparatus[0].map(a => ({
+    apparatus[0] = apparatus[0].map((a) => ({
       x1: (a.x1 - 1) * w_unit,
       y1: (a.y1 - 1) * h_unit,
       z1: Math.floor(Math.random() * depthSteps) / depthSteps,
       w: a.w * w_unit,
       h: a.h * h_unit,
-      col: a.col
+      col: a.col,
     }));
 
     return apparatus;
@@ -352,14 +354,14 @@ let sketch = function(p) {
     });
 
     const overlapping = toposort(edges);
-    return overlapping.reverse().map(i => boxes[i]);
+    return overlapping.reverse().map((i) => boxes[i]);
   }
 
   function print() {
-    p.saveCanvas('sketch_' + THE_SEED, 'jpeg');
+    p.saveCanvas('sketch_' + THE_SEED, 'png');
   }
 
-  p.keyPressed = function() {
+  p.keyPressed = function () {
     if (p.keyCode === 80) print();
     if (p.keyCode === 82) generateAndDraw();
   };
@@ -377,7 +379,7 @@ function getSrcDst(xu, yu, persp, dim) {
     m * (xu[0] + yu[0]),
     m * (xu[1] + yu[1]),
     m * yu[0],
-    m * yu[1]
+    m * yu[1],
   ];
   const dst = [
     0,
@@ -387,7 +389,7 @@ function getSrcDst(xu, yu, persp, dim) {
     m * (xu[0] + yu[0]) * persp,
     m * (xu[1] + yu[1]) * persp,
     m * yu[0],
-    m * yu[1]
+    m * yu[1],
   ];
 
   return [src, dst];
