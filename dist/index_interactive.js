@@ -3,6 +3,188 @@
   factory();
 }(function () { 'use strict';
 
+  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+  function createCommonjsModule(fn, module) {
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  }
+
+  var seedRandom = createCommonjsModule(function (module) {
+
+  var width = 256;// each RC4 output is 0 <= x < 256
+  var chunks = 6;// at least six RC4 outputs for each double
+  var digits = 52;// there are 52 significant digits in a double
+  var pool = [];// pool: entropy pool starts empty
+  var GLOBAL = typeof commonjsGlobal === 'undefined' ? window : commonjsGlobal;
+
+  //
+  // The following constants are related to IEEE 754 limits.
+  //
+  var startdenom = Math.pow(width, chunks),
+      significance = Math.pow(2, digits),
+      overflow = significance * 2,
+      mask = width - 1;
+
+
+  var oldRandom = Math.random;
+
+  //
+  // seedrandom()
+  // This is the seedrandom function described above.
+  //
+  module.exports = function(seed, options) {
+    if (options && options.global === true) {
+      options.global = false;
+      Math.random = module.exports(seed, options);
+      options.global = true;
+      return Math.random;
+    }
+    var use_entropy = (options && options.entropy) || false;
+    var key = [];
+
+    // Flatten the seed string or build one from local entropy if needed.
+    var shortseed = mixkey(flatten(
+      use_entropy ? [seed, tostring(pool)] :
+      0 in arguments ? seed : autoseed(), 3), key);
+
+    // Use the seed to initialize an ARC4 generator.
+    var arc4 = new ARC4(key);
+
+    // Mix the randomness into accumulated entropy.
+    mixkey(tostring(arc4.S), pool);
+
+    // Override Math.random
+
+    // This function returns a random double in [0, 1) that contains
+    // randomness in every bit of the mantissa of the IEEE 754 value.
+
+    return function() {         // Closure to return a random double:
+      var n = arc4.g(chunks),             // Start with a numerator n < 2 ^ 48
+          d = startdenom,                 //   and denominator d = 2 ^ 48.
+          x = 0;                          //   and no 'extra last byte'.
+      while (n < significance) {          // Fill up all significant digits by
+        n = (n + x) * width;              //   shifting numerator and
+        d *= width;                       //   denominator and generating a
+        x = arc4.g(1);                    //   new least-significant-byte.
+      }
+      while (n >= overflow) {             // To avoid rounding up, before adding
+        n /= 2;                           //   last byte, shift everything
+        d /= 2;                           //   right using integer Math until
+        x >>>= 1;                         //   we have exactly the desired bits.
+      }
+      return (n + x) / d;                 // Form the number within [0, 1).
+    };
+  };
+
+  module.exports.resetGlobal = function () {
+    Math.random = oldRandom;
+  };
+
+  //
+  // ARC4
+  //
+  // An ARC4 implementation.  The constructor takes a key in the form of
+  // an array of at most (width) integers that should be 0 <= x < (width).
+  //
+  // The g(count) method returns a pseudorandom integer that concatenates
+  // the next (count) outputs from ARC4.  Its return value is a number x
+  // that is in the range 0 <= x < (width ^ count).
+  //
+  /** @constructor */
+  function ARC4(key) {
+    var t, keylen = key.length,
+        me = this, i = 0, j = me.i = me.j = 0, s = me.S = [];
+
+    // The empty key [] is treated as [0].
+    if (!keylen) { key = [keylen++]; }
+
+    // Set up S using the standard key scheduling algorithm.
+    while (i < width) {
+      s[i] = i++;
+    }
+    for (i = 0; i < width; i++) {
+      s[i] = s[j = mask & (j + key[i % keylen] + (t = s[i]))];
+      s[j] = t;
+    }
+
+    // The "g" method returns the next (count) outputs as one number.
+    (me.g = function(count) {
+      // Using instance members instead of closure state nearly doubles speed.
+      var t, r = 0,
+          i = me.i, j = me.j, s = me.S;
+      while (count--) {
+        t = s[i = mask & (i + 1)];
+        r = r * width + s[mask & ((s[i] = s[j = mask & (j + t)]) + (s[j] = t))];
+      }
+      me.i = i; me.j = j;
+      return r;
+      // For robust unpredictability discard an initial batch of values.
+      // See http://www.rsa.com/rsalabs/node.asp?id=2009
+    })(width);
+  }
+
+  //
+  // flatten()
+  // Converts an object tree to nested arrays of strings.
+  //
+  function flatten(obj, depth) {
+    var result = [], typ = (typeof obj)[0], prop;
+    if (depth && typ == 'o') {
+      for (prop in obj) {
+        try { result.push(flatten(obj[prop], depth - 1)); } catch (e) {}
+      }
+    }
+    return (result.length ? result : typ == 's' ? obj : obj + '\0');
+  }
+
+  //
+  // mixkey()
+  // Mixes a string seed into a key that is an array of integers, and
+  // returns a shortened string seed that is equivalent to the result key.
+  //
+  function mixkey(seed, key) {
+    var stringseed = seed + '', smear, j = 0;
+    while (j < stringseed.length) {
+      key[mask & j] =
+        mask & ((smear ^= key[mask & j] * 19) + stringseed.charCodeAt(j++));
+    }
+    return tostring(key);
+  }
+
+  //
+  // autoseed()
+  // Returns an object for autoseeding, using window.crypto if available.
+  //
+  /** @param {Uint8Array=} seed */
+  function autoseed(seed) {
+    try {
+      GLOBAL.crypto.getRandomValues(seed = new Uint8Array(width));
+      return tostring(seed);
+    } catch (e) {
+      return [+new Date, GLOBAL, GLOBAL.navigator && GLOBAL.navigator.plugins,
+              GLOBAL.screen, tostring(pool)];
+    }
+  }
+
+  //
+  // tostring()
+  // Converts an array of charcodes to a string
+  //
+  function tostring(a) {
+    return String.fromCharCode.apply(0, a);
+  }
+
+  //
+  // When seedrandom.js is loaded, we immediately mix a few bits
+  // from the built-in RNG into the entropy pool.  Because we do
+  // not want to intefere with determinstic PRNG state later,
+  // seedrandom will not call Math.random on its own again after
+  // initialization.
+  //
+  mixkey(Math.random(), pool);
+  });
+  var seedRandom_1 = seedRandom.resetGlobal;
+
   class index {
     constructor(
       width,
@@ -19,6 +201,8 @@
         color_mode = 'group',
         group_size = 0.8,
         simple = false,
+        simplex = null,
+        rate_of_change = 0.01,
       } = {}
     ) {
       this.xdim = Math.round(width * 2 + 11, 0);
@@ -36,10 +220,16 @@
       this.roundness = roundness;
       this.solidness = solidness;
       this.simple = simple;
+      this.simplex = simplex;
+      this.rate_of_change = rate_of_change;
+      this.global_seed = Math.random();
     }
 
-    generate(initial_top = null, initial_left = null, verbose = false) {
-      this.main_color = get_random(this.colors);
+    generate(initial_top = null, initial_left = null, verbose = false, idx = 0, idy = 0) {
+      this.idx = idx;
+      this.idy = idy;
+
+      this.main_color = this.get_random(this.colors, 1, 1);
       this.id_counter = 0;
 
       let grid = new Array(this.ydim + 1);
@@ -91,12 +281,12 @@
       // --- Block sets ----
 
       function block_set_1(x, y) {
-        if (start_new_from_blank(x, y)) return new_block();
+        if (start_new_from_blank(x, y)) return new_block(x, y);
         return { v: false, h: false, in: false, col: null, id: null };
       }
 
       function block_set_2(x, y) {
-        if (start_new_from_blank(x, y)) return new_block();
+        if (start_new_from_blank(x, y)) return new_block(x, y);
         return { v: true, h: false, in: false, col: null, id: null };
       }
 
@@ -106,7 +296,7 @@
       }
 
       function block_set_4(x, y) {
-        if (start_new_from_blank(x, y)) return new_block();
+        if (start_new_from_blank(x, y)) return new_block(x, y);
         return { v: false, h: true, in: false, col: null, id: null };
       }
 
@@ -121,33 +311,35 @@
 
       function block_set_7(x, y) {
         if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, id: left.id };
-        if (start_new(x, y)) return new_block();
+        if (start_new(x, y)) return new_block(x, y);
         return { v: true, h: true, in: false, col: null, id: null };
       }
 
       function block_set_8(x, y) {
         if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
-        if (start_new(x, y)) return new_block();
+        if (start_new(x, y)) return new_block(x, y);
         return { v: true, h: true, in: false, col: null, id: null };
       }
 
       function block_set_9(x, y) {
-        if (vertical_dir()) return { v: true, h: false, in: true, col: top.col, id: top.id };
+        if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
         return { v: false, h: true, in: true, col: left.col, id: left.id };
       }
 
       // ---- Blocks ----
 
-      function new_block() {
+      function new_block(nx, ny) {
         let col;
         if (context.color_mode === 'random') {
-          col = get_random(context.colors);
+          col = context.get_random(context.colors, nx, ny);
         } else if (context.color_mode === 'main') {
-          col = Math.random() > 0.75 ? get_random(context.colors) : context.main_color;
+          col = context.noise(x, y, '_main') > 0.75 ? context.get_random(context.colors, x, y) : context.main_color;
         } else if (context.color_mode === 'group') {
-          let keep = Math.random() > 0.5 ? left.col : top.col;
+          let keep = context.noise(x, y, '_keep') > 0.5 ? left.col : top.col;
           context.main_color =
-            Math.random() > context.group_size ? get_random(context.colors) : keep || context.main_color;
+            context.noise(x, y, '_group') > context.group_size
+              ? context.get_random(context.colors, x, y)
+              : keep || context.main_color;
           col = context.main_color;
         } else {
           col = context.main_color;
@@ -161,35 +353,42 @@
       function start_new_from_blank(x, y) {
         if (context.simple) return true;
         if (!active_position(x, y, -1 * (1 - context.roundness))) return false;
-        return Math.random() <= context.solidness;
+        return context.noise(x, y, '_blank') <= context.solidness;
       }
 
       function start_new(x, y) {
         if (context.simple) return true;
         if (!active_position(x, y, 0)) return false;
-        return Math.random() <= context.chance_new;
+        return context.noise(x, y, '_new') <= context.chance_new;
       }
 
       function extend(x, y) {
         if (!active_position(x, y, 1 - context.roundness) && !context.simple) return false;
-        return Math.random() <= context.chance_extend;
+        return context.noise(x, y, '_extend') <= context.chance_extend;
       }
 
-      function vertical_dir() {
-        return Math.random() <= context.chance_vertical;
+      function vertical_dir(x, y) {
+        return context.noise(x, y, '_vert') <= context.chance_vertical;
       }
 
       function active_position(x, y, fuzzy) {
-        let fuzziness = 1 + Math.random() * fuzzy;
+        let fuzziness = 1 + context.noise(x, y, '_active') * fuzzy;
         let xa = Math.pow(x - context.xdim / 2, 2) / Math.pow(context.radius_x * fuzziness, 2);
         let ya = Math.pow(y - context.ydim / 2, 2) / Math.pow(context.radius_y * fuzziness, 2);
         return xa + ya < 1;
       }
     }
-  }
 
-  function get_random(array) {
-    return array[Math.floor(Math.random() * array.length)];
+    noise(nx, ny, nz = '') {
+      if (!this.simplex) return Math.random();
+      const rng = seedRandom('' + this.global_seed + nx + ny + nz);
+      const n = this.simplex.noise3D(this.idx * this.rate_of_change, this.idy * this.rate_of_change, rng() * 23.4567);
+      return (n + 1) / 2;
+    }
+
+    get_random(array, nx, ny) {
+      return array[Math.floor(this.noise(nx, ny, '_array') * array.length)];
+    }
   }
 
   function deep_copy(obj) {
@@ -240,141 +439,133 @@
     {
       name: 'frozen-rose',
       colors: ['#29368f', '#e9697b', '#1b164d', '#f7d996'],
-      background: '#f2e8e4'
+      background: '#f2e8e4',
     },
     {
       name: 'winter-night',
       colors: ['#122438', '#dd672e', '#87c7ca', '#ebebeb'],
-      background: '#ebebeb'
+      background: '#ebebeb',
     },
     {
       name: 'saami',
       colors: ['#eab700', '#e64818', '#2c6393', '#eecfca'],
-      background: '#e7e6e4'
+      background: '#e7e6e4',
     },
     {
       name: 'knotberry1',
       colors: ['#20342a', '#f74713', '#686d2c', '#e9b4a6'],
-      background: '#e5ded8'
+      background: '#e5ded8',
     },
     {
       name: 'knotberry2',
       colors: ['#1d3b1a', '#eb4b11', '#e5bc00', '#f29881'],
-      background: '#eae2d0'
+      background: '#eae2d0',
     },
     {
       name: 'tricolor',
       colors: ['#ec643b', '#56b7ab', '#f8cb57', '#1f1e43'],
-      background: '#f7f2df'
+      background: '#f7f2df',
     },
     {
       name: 'foxshelter',
       colors: ['#ff3931', '#007861', '#311f27', '#bab9a4'],
-      background: '#dddddd'
+      background: '#dddddd',
     },
     {
       name: 'hermes',
       colors: ['#253852', '#51222f', '#b53435', '#ecbb51'],
-      background: '#eeccc2'
+      background: '#eeccc2',
     },
     {
       name: 'olympia',
       colors: ['#ff3250', '#ffb33a', '#008c36', '#0085c6', '#4c4c4c'],
       stroke: '#0b0b0b',
-      background: '#faf2e5'
+      background: '#faf2e5',
     },
     {
       name: 'byrnes',
       colors: ['#c54514', '#dca215', '#23507f'],
       stroke: '#0b0b0b',
-      background: '#e8e7d4'
+      background: '#e8e7d4',
     },
     {
       name: 'butterfly',
       colors: ['#f40104', '#f6c0b3', '#99673a', '#f0f1f4'],
       stroke: '#191e36',
-      background: '#191e36'
+      background: '#191e36',
     },
     {
       name: 'floratopia',
       colors: ['#bf4a2b', '#cd902a', '#4e4973', '#f5d4bc'],
       stroke: '#1e1a43',
-      background: '#1e1a43'
+      background: '#1e1a43',
     },
     {
       name: 'verena',
       colors: ['#f1594a', '#f5b50e', '#14a160', '#2969de', '#885fa4'],
       stroke: '#1a1a1a',
-      background: '#e2e6e8'
-    },
-    {
-      name: 'empusa',
-      colors: [
-        '#c92a28',
-        '#e69301',
-        '#1f8793',
-        '#13652b',
-        '#e7d8b0',
-        '#48233b',
-        '#e3b3ac'
-      ],
-      stroke: '#1a1a1a',
-      background: '#f0f0f2'
+      background: '#e2e6e8',
     },
     {
       name: 'florida_citrus',
       colors: ['#ea7251', '#ebf7f0', '#02aca5'],
       stroke: '#050100',
-      background: '#9ae2d3'
+      background: '#9ae2d3',
     },
     {
       name: 'lemon_citrus',
       colors: ['#e2d574', '#f1f4f7', '#69c5ab'],
       stroke: '#463231',
-      background: '#f79eac'
+      background: '#f79eac',
     },
     {
       name: 'yuma_punk',
       colors: ['#f05e3b', '#ebdec4', '#ffdb00'],
       stroke: '#ebdec4',
-      background: '#161616'
+      background: '#161616',
     },
     {
       name: 'moir',
       colors: ['#a49f4f', '#d4501e', '#f7c558', '#ebbaa6'],
       stroke: '#161716',
-      background: '#f7f4ef'
+      background: '#f7f4ef',
     },
     {
       name: 'sprague',
       colors: ['#ec2f28', '#f8cd28', '#1e95bb', '#fbaab3', '#fcefdf'],
       stroke: '#221e1f',
-      background: '#fcefdf'
+      background: '#fcefdf',
     },
     {
       name: 'bloomberg',
       colors: ['#ff5500', '#f4c145', '#144714', '#2f04fc', '#e276af'],
       stroke: '#000',
-      background: '#fff3dd'
+      background: '#fff3dd',
     },
     {
       name: 'revolucion',
       colors: ['#ed555d', '#fffcc9', '#41b797', '#eda126', '#7b5770'],
       stroke: '#fffcc9',
-      background: '#2d1922'
+      background: '#2d1922',
     },
     {
       name: 'sneaker',
       colors: ['#e8165b', '#401e38', '#66c3b4', '#ee7724', '#584098'],
       stroke: '#401e38',
-      background: '#ffffff'
+      background: '#ffffff',
     },
     {
       name: 'miradors',
       colors: ['#ff6936', '#fddc3f', '#0075ca', '#00bb70'],
       stroke: '#ffffff',
-      background: '#020202'
-    }
+      background: '#020202',
+    },
+    {
+      name: 'kaffeprat',
+      colors: ['#BCAA8C', '#D8CDBE', '#484A42', '#746B58', '#9A8C73'],
+      stroke: '#000',
+      background: '#fff',
+    },
   ];
 
   var colourscafe = [
@@ -996,6 +1187,135 @@
     }
   ];
 
+  var system = [
+    {
+      name: 'system.#01',
+      colors: ['#ff4242', '#fec101', '#1841fe', '#fcbdcc', '#82e9b5'],
+      stroke: '#000',
+      background: '#fff'
+    },
+    {
+      name: 'system.#02',
+      colors: ['#ff4242', '#ffd480', '#1e365d', '#edb14c', '#418dcd'],
+      stroke: '#000',
+      background: '#fff'
+    },
+    {
+      name: 'system.#03',
+      colors: ['#f73f4a', '#d3e5eb', '#002c3e', '#1aa1b1', '#ec6675'],
+      stroke: '#110b09',
+      background: '#fff'
+    },
+    {
+      name: 'system.#04',
+      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#26265a', '#ea7d81', '#dcd9d0'],
+      stroke: '#26265a',
+      backgrund: '#dcd9d0'
+    },
+    {
+      name: 'system.#05',
+      colors: ['#db4549', '#d1e1e1', '#3e6a90', '#2e3853', '#a3c9d3'],
+      stroke: '#000',
+      background: '#fff'
+    },
+    {
+      name: 'system.#06',
+      colors: ['#e5475c', '#95b394', '#28343b', '#f7c6a3', '#eb8078'],
+      stroke: '#000',
+      background: '#fff'
+    },
+    {
+      name: 'system.#07',
+      colors: ['#d75c49', '#f0efea', '#509da4'],
+      stroke: '#000',
+      background: '#fff'
+    },
+    {
+      name: 'system.#08',
+      colors: ['#f6625a', '#92b29f', '#272c3f'],
+      stroke: '#000',
+      background: '#fff'
+    }
+  ];
+
+  var flourish = [
+    {
+      name: 'empusa',
+      colors: ['#c92a28', '#e69301', '#1f8793', '#13652b', '#e7d8b0', '#48233b', '#e3b3ac'],
+      stroke: '#1a1a1a',
+      background: '#f0f0f2',
+    },
+    {
+      name: 'delphi',
+      colors: ['#475b62', '#7a999c', '#2a1f1d', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
+      stroke: '#2a1f1d',
+      background: '#f0e0c6',
+    },
+    {
+      name: 'mably',
+      colors: [
+        '#13477b',
+        '#2f1b10',
+        '#d18529',
+        '#d72a25',
+        '#e42184',
+        '#138898',
+        '#9d2787',
+        '#7f311b',
+      ],
+      stroke: '#2a1f1d',
+      background: '#dfc792',
+    },
+    {
+      name: 'nowak',
+      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e', '#180305'],
+      stroke: '#180305',
+      background: '#ede4cb',
+    },
+    {
+      name: 'jupiter',
+      colors: ['#c03a53', '#edd09e', '#aab5af', '#023629', '#eba735', '#8e9380', '#6c4127'],
+      stroke: '#12110f',
+      background: '#e6e2d6',
+    },
+    {
+      name: 'hersche',
+      colors: [
+        '#df9f00',
+        '#1f6f50',
+        '#8e6d7f',
+        '#da0607',
+        '#a4a5a7',
+        '#d3d1c3',
+        '#42064f',
+        '#25393a',
+      ],
+      stroke: '#0a0a0a',
+      background: '#f0f5f6',
+    },
+    {
+      name: 'cherfi',
+      colors: ['#99cb9f', '#cfb610', '#d00701', '#dba78d', '#2e2c1d', '#bfbea2', '#d2cfaf'],
+      stroke: '#332e22',
+      background: '#e3e2c5',
+    },
+    {
+      name: 'harvest',
+      colors: [
+        '#313a42',
+        '#9aad2e',
+        '#f0ae3c',
+        '#df4822',
+        '#8eac9b',
+        '#cc3d3f',
+        '#ec8b1c',
+        '#1b9268',
+      ],
+      stroke: '#463930',
+      background: '#e5e2cf',
+    },
+  ];
+
   const pals = misc.concat(
     ranganath,
     roygbivs,
@@ -1010,10 +1330,12 @@
     duotone,
     hilda,
     spatial,
-    jung
+    jung,
+    system,
+    flourish
   );
 
-  var palettes = pals.map(p => {
+  var palettes = pals.map((p) => {
     p.size = p.colors.length;
     return p;
   });
@@ -1134,11 +1456,11 @@
   	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
   }
 
-  function createCommonjsModule(fn, module) {
+  function createCommonjsModule$1(fn, module) {
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  var changePerspective = createCommonjsModule(function (module, exports) {
+  var changePerspective = createCommonjsModule$1(function (module, exports) {
   Object.defineProperty(exports, "__esModule", { value: true });
   function dim(x) {
       var y;
@@ -1681,7 +2003,7 @@
       return obj === false || obj === true;
     },
     isFunction: function isFunction(obj) {
-      return Object.prototype.toString.call(obj) === '[object Function]';
+      return obj instanceof Function;
     }
   };
 
@@ -2179,8 +2501,9 @@
   });
   Object.defineProperty(Color.prototype, 'hex', {
     get: function get$$1() {
-      if (!this.__state.space !== 'HEX') {
+      if (this.__state.space !== 'HEX') {
         this.__state.hex = ColorMath.rgb_to_hex(this.r, this.g, this.b);
+        this.__state.space = 'HEX';
       }
       return this.__state.hex;
     },
@@ -4230,10 +4553,10 @@
     perspective: 0.85,
     colorMode: 'group',
     palette: 'tsu_arcade',
-    paletteShift: 0
+    paletteShift: 0,
   };
 
-  let sketch = function(p) {
+  let sketch = function (p) {
     let THE_SEED;
 
     let cubedimX;
@@ -4264,10 +4587,11 @@
 
     let frontLayout, leftLayout, topLayout;
 
-    p.setup = function() {
+    p.setup = function () {
       p.createCanvas(1000, 1000);
       THE_SEED = p.floor(p.random(9999999));
       p.randomSeed(THE_SEED);
+      p.pixelDensity(2);
       p.noFill();
       p.smooth();
       p.frameRate(1);
@@ -4302,9 +4626,9 @@
       yu = [Math.cos(yr) * opts.mag, Math.sin(yr) * opts.mag];
       zu = [Math.cos(zr) * opts.mag, Math.sin(zr) * opts.mag];
 
-      nxu = xu.map(v => -v);
-      nyu = yu.map(v => -v);
-      nzu = zu.map(v => -v);
+      nxu = xu.map((v) => -v);
+      nyu = yu.map((v) => -v);
+      nzu = zu.map((v) => -v);
 
       shadeOpacity = opts.shadeOpacity;
       outerStrokeWeight = opts.outerStrokeWeight;
@@ -4323,7 +4647,7 @@
         simple: true,
         extension_chance: opts.outerSize,
         horizontal_symmetry: false,
-        vertical_chance: 0.5
+        vertical_chance: 0.5,
       };
 
       atomAppOpts = {
@@ -4333,7 +4657,7 @@
         vertical_chance: 0.5,
         color_mode: opts.colorMode,
         group_size: 0.4,
-        colors: [...Array(1000).keys()]
+        colors: [...Array(1000).keys()],
       };
     }
 
@@ -4343,23 +4667,23 @@
       const generatorTop = new index(cubedimZ, cubedimX, sectionAppOpts);
       const frontApp = generatorFront.generate(null, null, true);
       const leftApp = generatorLeft.generate(
-        frontApp[1].map(i => ({ ...i[1], v: i[1].h })),
+        frontApp[1].map((i) => ({ ...i[1], v: i[1].h })),
         null,
         true
       );
       const topApp = generatorTop.generate(
-        leftApp[1].map(i => ({ ...i[1], v: i[1].h })),
-        frontApp[1][1].map(i => ({ ...i, h: i.v })),
+        leftApp[1].map((i) => ({ ...i[1], v: i[1].h })),
+        frontApp[1][1].map((i) => ({ ...i, h: i.v })),
         true
       );
 
-      const frontGrids = frontApp[0].map(a => createGrid(a, null, null));
-      const leftGrids = leftApp[0].map(a => createGrid(a, frontGrids, null));
-      const topGrids = topApp[0].map(a => createGrid(a, leftGrids, frontGrids));
+      const frontGrids = frontApp[0].map((a) => createGrid(a, null, null));
+      const leftGrids = leftApp[0].map((a) => createGrid(a, frontGrids, null));
+      const topGrids = topApp[0].map((a) => createGrid(a, leftGrids, frontGrids));
 
-      frontLayout = get_overlap_graph(frontGrids.flatMap(g => g.content));
-      leftLayout = get_overlap_graph(leftGrids.flatMap(g => g.content));
-      topLayout = get_overlap_graph(topGrids.flatMap(g => g.content));
+      frontLayout = get_overlap_graph(frontGrids.flatMap((g) => g.content));
+      leftLayout = get_overlap_graph(leftGrids.flatMap((g) => g.content));
+      topLayout = get_overlap_graph(topGrids.flatMap((g) => g.content));
     }
 
     function displayLayout() {
@@ -4371,13 +4695,13 @@
       const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
       const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-      frontLayout.forEach(i =>
+      frontLayout.forEach((i) =>
         displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
       );
-      leftLayout.forEach(i =>
+      leftLayout.forEach((i) =>
         displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
       );
-      topLayout.forEach(i =>
+      topLayout.forEach((i) =>
         displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
       );
       p.pop();
@@ -4410,10 +4734,10 @@
       const { x1, y1, w, h } = box;
 
       const topsideGrid =
-        topside && y1 == 1 ? topside.filter(c => c.x1 == 1 && c.y1 == x1)[0] : null;
+        topside && y1 == 1 ? topside.filter((c) => c.x1 == 1 && c.y1 == x1)[0] : null;
 
       const leftsideGrid =
-        leftside && x1 == 1 ? leftside.filter(c => c.y1 == 1 && c.x1 == y1)[0] : null;
+        leftside && x1 == 1 ? leftside.filter((c) => c.y1 == 1 && c.x1 == y1)[0] : null;
 
       const cols = topsideGrid
         ? topsideGrid.rows
@@ -4426,29 +4750,30 @@
       const cell_h = h / rows;
 
       const init_top = topsideGrid
-        ? topsideGrid.apparatus.map(i => ({ ...i[1], v: i[1].h }))
+        ? topsideGrid.apparatus.map((i) => ({ ...i[1], v: i[1].h }))
         : null;
 
       const init_left = leftsideGrid
-        ? leftsideGrid.apparatus[1].map(i => ({ ...i, h: i.v }))
+        ? leftsideGrid.apparatus[1].map((i) => ({ ...i, h: i.v }))
         : null;
 
       const apparatus = createApparatus(cell_w, cell_h, init_top, init_left);
       let grid = [];
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-          const content = apparatus[0].map(app => {
+          const content = apparatus[0].map((app) => {
             const xpos = x1 + app.x1 + j * cell_w - 1;
             const ypos = y1 + app.y1 + i * cell_h - 1;
             let y_offset =
               topsideGrid && i == 0 && ypos <= 0
-                ? topsideGrid.content.filter(c => c.x1 <= 0 && Math.max(c.y1, 0) == xpos)[0]
-                    .z1
+                ? topsideGrid.content.filter(
+                    (c) => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
+                  )[0].z1
                 : 0;
             let x_offset =
               leftsideGrid && j == 0 && xpos <= 0
                 ? leftsideGrid.content.filter(
-                    c => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
+                    (c) => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
                   )[0].z1
                 : 0;
             return {
@@ -4460,7 +4785,7 @@
               x_off: x_offset,
               y_off: y_offset,
               level: 2,
-              filled: true
+              filled: true,
             };
           });
 
@@ -4473,7 +4798,7 @@
         cols: cols,
         rows: rows,
         apparatus: apparatus[1],
-        content: grid
+        content: grid,
       };
     }
 
@@ -4487,13 +4812,13 @@
       const generator = new index((cols - 11) / 2, (rows - 11) / 2, atomAppOpts);
 
       const apparatus = generator.generate(top, left, true);
-      apparatus[0] = apparatus[0].map(a => ({
+      apparatus[0] = apparatus[0].map((a) => ({
         x1: (a.x1 - 1) * w_unit,
         y1: (a.y1 - 1) * h_unit,
         z1: Math.floor(Math.random() * depthSteps) / depthSteps,
         w: a.w * w_unit,
         h: a.h * h_unit,
-        col: a.col
+        col: a.col,
       }));
 
       return apparatus;
@@ -4536,14 +4861,14 @@
       });
 
       const overlapping = toposort_1(edges);
-      return overlapping.reverse().map(i => boxes[i]);
+      return overlapping.reverse().map((i) => boxes[i]);
     }
 
     function print() {
-      p.saveCanvas('sketch_' + THE_SEED, 'jpeg');
+      p.saveCanvas('sketch_' + THE_SEED, 'png');
     }
 
-    p.keyPressed = function() {
+    p.keyPressed = function () {
       if (p.keyCode === 80) print();
       if (p.keyCode === 82) generateAndDraw();
     };
@@ -4561,7 +4886,7 @@
       m * (xu[0] + yu[0]),
       m * (xu[1] + yu[1]),
       m * yu[0],
-      m * yu[1]
+      m * yu[1],
     ];
     const dst = [
       0,
@@ -4571,7 +4896,7 @@
       m * (xu[0] + yu[0]) * persp,
       m * (xu[1] + yu[1]) * persp,
       m * yu[0],
-      m * yu[1]
+      m * yu[1],
     ];
 
     return [src, dst];

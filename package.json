@@ -22,10 +22,10 @@
   "browserInteractive": "dist/index_interactive.js",
   "browserRadial": "dist/index_radial.js",
   "dependencies": {
-    "apparatus-generator": "^1.4.0",
+    "apparatus-generator": "^1.6.5",
     "change-perspective": "^1.0.1",
-    "chromotome": "^1.15.5",
-    "dat.gui": "^0.7.6",
+    "chromotome": "^1.17.1",
+    "dat.gui": "^0.7.7",
     "toposort": "^2.0.2"
   },
   "devDependencies": {
