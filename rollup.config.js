@@ -7,49 +7,50 @@ export default [
     input: 'index.js',
     output: {
       file: pkg.browser,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs()],
   },
   {
     input: 'index_full.js',
     output: {
       file: pkg.browserFull,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs()],
   },
   {
     input: 'index_elevate.js',
     output: {
       file: pkg.browserElevate,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs()],
   },
   {
     input: 'index_sheet.js',
     output: {
       file: pkg.browserSheet,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs()],
   },
   {
     input: 'index_cube.js',
     output: {
       file: pkg.browserCube,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs()],
   },
   {
     input: 'index_interactive.js',
     output: {
       file: pkg.browserInteractive,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
+    plugins: [resolve(), commonjs()],
+  },
   {
     input: 'index_interactive_print.js',
     output: {
@@ -62,8 +63,8 @@ export default [
     input: 'index_radial.js',
     output: {
       file: pkg.browserRadial,
-      format: 'umd'
+      format: 'umd',
     },
-    plugins: [resolve(), commonjs()]
-  }
+    plugins: [resolve(), commonjs()],
+  },
 ];
