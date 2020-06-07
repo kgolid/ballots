@@ -50,6 +50,13 @@ export default [
       format: 'umd'
     },
     plugins: [resolve(), commonjs()]
+  {
+    input: 'index_interactive_print.js',
+    output: {
+      file: pkg.browserInteractivePrint,
+      format: 'umd',
+    },
+    plugins: [resolve(), commonjs()],
   },
   {
     input: 'index_radial.js',
