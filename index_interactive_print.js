@@ -16,14 +16,14 @@ let opts = {
   tx: 0,
   ty: -600,
   shadeOpacity: 30,
-  outerStrokeWeight: 2,
-  innerStrokeWeight: 2,
-  outerSize: 0.99,
-  minGridSize: 4,
+  outerStrokeWeight: 3,
+  innerStrokeWeight: 1,
+  outerSize: 0.97,
+  minGridSize: 5,
   innerSize: 0.78,
   perspective: 0.95,
   colorMode: 'group',
-  palette: 'tsu_arcade',
+  palette: 'revolucion',
   paletteShift: 0,
 };
 
@@ -189,15 +189,9 @@ let sketch = function (p) {
     const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
     const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-    frontLayout.forEach((i) =>
-      displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
-    );
-    leftLayout.forEach((i) =>
-      displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
-    );
-    topLayout.forEach((i) =>
-      displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
-    );
+    frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt));
+    leftLayout.forEach((i) => displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt));
+    topLayout.forEach((i) => displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft));
     p.pop();
   }
 
@@ -233,12 +227,8 @@ let sketch = function (p) {
     const leftsideGrid =
       leftside && x1 == 1 ? leftside.filter((c) => c.y1 == 1 && c.x1 == y1)[0] : null;
 
-    const cols = topsideGrid
-      ? topsideGrid.rows
-      : Math.ceil((Math.random() * w) / minGridSize);
-    const rows = leftsideGrid
-      ? leftsideGrid.cols
-      : Math.ceil((Math.random() * h) / minGridSize);
+    const cols = topsideGrid ? topsideGrid.rows : Math.ceil((Math.random() * w) / minGridSize);
+    const rows = leftsideGrid ? leftsideGrid.cols : Math.ceil((Math.random() * h) / minGridSize);
 
     const cell_w = w / cols;
     const cell_h = h / rows;
@@ -260,15 +250,11 @@ let sketch = function (p) {
           const ypos = y1 + app.y1 + i * cell_h - 1;
           let y_offset =
             topsideGrid && i == 0 && ypos <= 0
-              ? topsideGrid.content.filter(
-                  (c) => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
-                )[0].z1
+              ? topsideGrid.content.filter((c) => c.x1 <= 0 && Math.max(c.y1, 0) == xpos)[0].z1
               : 0;
           let x_offset =
             leftsideGrid && j == 0 && xpos <= 0
-              ? leftsideGrid.content.filter(
-                  (c) => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
-                )[0].z1
+              ? leftsideGrid.content.filter((c) => c.y1 <= 0 && Math.max(c.x1, 0) == ypos)[0].z1
               : 0;
           return {
             ...app,
