@@ -20,9 +20,9 @@ let opts = {
   innerStrokeWeight: 0.5,
   outerSize: 0.97,
   minGridSize: 6,
-  innerSize: 0.85,
+  innerSize: 0.82,
   perspective: 1,
-  colorMode: 'single',
+  colorMode: 'group',
   palette: 'tsu_arcade',
   paletteShift: 0,
 };
@@ -75,33 +75,37 @@ let sketch = function (p) {
   };
 
   function generateAndDraw() {
-    p.background('#d5cda1');
+    p.background('#dfe0cc');
 
-    for (var i = -7; i <= 14; i++) {
-      for (var j = -4; j <= 4; j++) {
-        if ((j - i) % 2 === 0) {
-          updateGlobals(opts, j, i);
-          reset();
-          displayLayout();
-        }
+    //var palette = tome.get();
+    //updateGlobals(opts, j, i, palette);
+
+    //reset();
+
+    for (var i = -6; i <= 6; i++) {
+      for (var j = -6; j <= 6; j++) {
+        var palette = tome.get();
+        updateGlobals(opts, j, i, palette);
+        reset();
+        displayLayout();
       }
+      //reset();
     }
   }
 
   function updateAndDraw() {
-    p.background('#d5cda1');
+    p.background('#dfe0cc');
 
     for (var i = -7; i <= 14; i++) {
+      var palette = tome.get('empusa');
       for (var j = -4; j <= 4; j++) {
-        if ((j - i) % 2 === 0) {
-          updateGlobals(opts, j, i);
-          displayLayout();
-        }
+        updateGlobals(opts, j, i, palette);
+        displayLayout();
       }
     }
   }
 
-  function updateGlobals(opts, ax, ay) {
+  function updateGlobals(opts, ax, ay, pal) {
     cubedimX = opts.cubedimX;
     cubedimY = opts.cubedimY;
     cubedimZ = opts.cubedimZ;
@@ -114,8 +118,11 @@ let sketch = function (p) {
     nyu = yu.map((v) => -v);
     nzu = zu.map((v) => -v);
 
-    tx = opts.tx + ax * (xu[0] + yu[0] + zu[0]) * 50;
-    ty = opts.ty + ay * (xu[1] + yu[1] + zu[1]) * 50;
+    //tx = opts.tx + ax * (30 + (xu[0] * 1.2 + yu[0] * 0.9 + zu[0]) * 60);
+    //ty = opts.ty + ay * (30 + (xu[1] * 1.2 + yu[1] * 0.9 + zu[1]) * 60);
+
+    tx = opts.tx + (ax * (xu[0] + zu[0]) + ay * (zu[0] + yu[0])) * 55;
+    ty = opts.tx + (ax * (xu[1] + zu[1]) + ay * (zu[1] + yu[1])) * 55;
 
     shadeOpacity = opts.shadeOpacity;
     outerStrokeWeight = opts.outerStrokeWeight;
@@ -124,7 +131,7 @@ let sketch = function (p) {
     maxDepth = opts.depthDim;
     persp = opts.perspective;
 
-    palette = tome.get();
+    palette = pal;
     paletteShift = opts.paletteShift;
     strokeCol = '#000'; //palette.stroke ? palette.stroke : '#000';
 
