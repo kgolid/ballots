@@ -8,9 +8,9 @@ import display from './display';
 import { generateCSV } from './csv';
 
 let opts = {
-  cubedimX: 18,
-  cubedimY: 18,
-  cubedimZ: 18,
+  cubedimX: 15,
+  cubedimY: 15,
+  cubedimZ: 15,
   depthDim: 2,
   mag: 5,
   tx: 0,
@@ -21,8 +21,8 @@ let opts = {
   outerStrokeWeight: 2,
   innerStrokeWeight: 1,
   outerSize: 0.97,
-  minGridSize: 4,
-  innerSize: 0.78,
+  minGridSize: 5,
+  innerSize: 0.8,
   perspective: 0.85,
   colorMode: 'group',
   palette: 'tsu_arcade',
@@ -45,7 +45,7 @@ let sketch = function (p) {
   let nxu, nyu, nzu;
 
   let maxDepth;
-  const depthSteps = 8;
+  const depthSteps = 6;
 
   let paletteShift;
   let palette;
@@ -279,7 +279,7 @@ let sketch = function (p) {
     apparatus[0] = apparatus[0].map((a) => ({
       x1: (a.x1 - 1) * w_unit,
       y1: (a.y1 - 1) * h_unit,
-      z1: Math.floor(Math.random() * depthSteps) / depthSteps,
+      z1: 0.1 + Math.floor(Math.random() * depthSteps) / depthSteps,
       w: a.w * w_unit,
       h: a.h * h_unit,
       col: a.col,

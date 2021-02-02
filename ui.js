@@ -28,7 +28,7 @@ export default function (opts, full_reset, redraw, print) {
   f1.open();
   f1.add(opts, 'tx', -2400, 2400, 200).name('Translate X').onChange(redraw);
   f1.add(opts, 'ty', -2400, 2400, 200).name('Translate Y').onChange(redraw);
-  f1.add(opts, 'mag', 5, 30, 1).name('Cell Size').onChange(redraw);
+  f1.add(opts, 'mag', 2, 30, 1).name('Cell Size').onChange(redraw);
   f1.add(opts, 'depthDim', 0, 10, 0.5).name('Depth').onChange(redraw);
   f1.add(opts, 'perspective', 0.65, 1, 0.05).name('Perspective').onChange(redraw);
   const shiftController = f1
