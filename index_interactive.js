@@ -333,15 +333,8 @@ let sketch = function (p) {
   }
 
   function downloadCSV() {
-    const rows = generateCSV(
-      frontLayout,
-      leftLayout,
-      topLayout,
-      0.1,
-      palette.colors.length
-    );
-    const csvContent =
-      'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(',')).join('\n');
+    const rows = generateCSV(frontLayout, leftLayout, topLayout, 0.1, palette.colors.length);
+    const csvContent = 'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(',')).join('\n');
 
     const encodedUri = encodeURI(csvContent);
     window.open(encodedUri);
