@@ -9,23 +9,23 @@ import display from './display';
 // Options suitable for print.
 let opts = {
   cubedimX: 15,
-  cubedimY: 50,
+  cubedimY: 15,
   cubedimZ: 15,
   depthDim: 2,
-  mag: 10,
+  mag: 14,
   tx: 0,
-  ty: -600,
-  shadeOpacityFront: 255,
-  shadeOpacityLeft: 255,
+  ty: 0,
+  shadeOpacityFront: 80,
+  shadeOpacityLeft: 40,
   shadeOpacityTop: 0,
-  outerStrokeWeight: 2,
-  innerStrokeWeight: 2,
+  outerStrokeWeight: 5,
+  innerStrokeWeight: 3,
   outerSize: 0.99,
   minGridSize: 4,
   innerSize: 0.78,
   perspective: 0.95,
   colorMode: 'group',
-  palette: 'tsu_arcade',
+  palette: 'dt10',
   paletteShift: 0,
 };
 
@@ -61,7 +61,7 @@ let sketch = function (p) {
   let frontLayout, leftLayout, topLayout;
 
   p.setup = function () {
-    p.createCanvas(2000, 3000);
+    p.createCanvas(2500, 2500);
     THE_SEED = p.floor(p.random(9999999));
     p.randomSeed(THE_SEED);
     p.pixelDensity(2);
@@ -114,7 +114,7 @@ let sketch = function (p) {
 
     palette = tome.get(opts.palette);
     paletteShift = opts.paletteShift;
-    strokeCol = '#000'; //palette.stroke ? palette.stroke : '#000';
+    strokeCol = palette.stroke ? palette.stroke : '#000';
 
     minGridSize = opts.minGridSize;
 
