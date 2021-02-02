@@ -60,6 +60,14 @@ export default [
     plugins: [resolve(), commonjs()],
   },
   {
+    input: 'index_interactive_print_b.js',
+    output: {
+      file: pkg.browserInteractivePrintB,
+      format: 'umd',
+    },
+    plugins: [resolve(), commonjs()],
+  },
+  {
     input: 'index_radial.js',
     output: {
       file: pkg.browserRadial,
