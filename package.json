@@ -25,7 +25,7 @@
   "dependencies": {
     "apparatus-generator": "^1.6.5",
     "change-perspective": "^1.0.1",
-    "chromotome": "^1.17.1",
+    "chromotome": "^1.19.1",
     "dat.gui": "^0.7.7",
     "toposort": "^2.0.2"
   },
