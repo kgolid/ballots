@@ -6,7 +6,6 @@ export default function (
   zu,
   depth,
   shades,
-  shadeOpacity,
   fillColors,
   paletteShift,
   strokeColor,
@@ -33,25 +32,24 @@ export default function (
   displayLeft();
   displayTop();
 
-  if (shadeOpacity !== 0) {
-    //p.fill(cols[shades[0]]);
-    p.fill(0, shades[0] * shadeOpacity);
-    displayFront();
+  let shadeCol = p.color(strokeColor);
 
-    //p.fill(cols[shades[1]]);
-    p.fill(0, shades[1] * shadeOpacity);
-    displayLeft();
+  shadeCol.setAlpha(shades[0]);
+  p.fill(shadeCol);
+  displayFront();
 
-    //p.fill(cols[shades[2]]);
-    p.fill(0, shades[2] * shadeOpacity);
-    displayTop();
-  }
+  shadeCol.setAlpha(shades[1]);
+  p.fill(shadeCol);
+  displayLeft();
+
+  shadeCol.setAlpha(shades[2]);
+  p.fill(shadeCol);
+  displayTop();
 
   p.noFill();
   p.stroke(strokeColor);
   p.strokeWeight(outerStrokeWeight);
-  if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
-    displayInteriorFrontLine();
+  if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop)) displayInteriorFrontLine();
 
   if (!(box.x1 === 0 && hiddenLeft)) displayInteriorTopLine();
 

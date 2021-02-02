@@ -15,7 +15,9 @@ let opts = {
   mag: 10,
   tx: 0,
   ty: -600,
-  shadeOpacity: 30,
+  shadeOpacityFront: 255,
+  shadeOpacityLeft: 255,
+  shadeOpacityTop: 0,
   outerStrokeWeight: 2,
   innerStrokeWeight: 2,
   outerSize: 0.99,
@@ -26,28 +28,6 @@ let opts = {
   palette: 'tsu_arcade',
   paletteShift: 0,
 };
-
-/*
-let opts = {
-  cubedimX: 18,
-  cubedimY: 18,
-  cubedimZ: 18,
-  depthDim: 2,
-  mag: 5,
-  tx: 0,
-  ty: 0,
-  shadeOpacity: 25,
-  outerStrokeWeight: 2,
-  innerStrokeWeight: 1,
-  outerSize: 0.97,
-  minGridSize: 4,
-  innerSize: 0.78,
-  perspective: 0.85,
-  colorMode: 'group',
-  palette: 'tsu_arcade',
-  paletteShift: 0,
-};
-*/
 
 let sketch = function (p) {
   let THE_SEED;
@@ -70,7 +50,7 @@ let sketch = function (p) {
   let paletteShift;
   let palette;
   let strokeCol;
-  let shadeOpacity;
+  let shadeOpacityFront, shadeOpacityLeft, shadeOpacityTop;
   let outerStrokeWeight, innerStrokeWeight;
 
   let sectionAppOpts, atomAppOpts;
@@ -123,7 +103,9 @@ let sketch = function (p) {
     nyu = yu.map((v) => -v);
     nzu = zu.map((v) => -v);
 
-    shadeOpacity = opts.shadeOpacity;
+    shadeOpacityFront = opts.shadeOpacityFront;
+    shadeOpacityLeft = opts.shadeOpacityLeft;
+    shadeOpacityTop = opts.shadeOpacityTop;
     outerStrokeWeight = opts.outerStrokeWeight;
     innerStrokeWeight = opts.innerStrokeWeight;
 
@@ -189,15 +171,13 @@ let sketch = function (p) {
     const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
     const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-    frontLayout.forEach((i) =>
-      displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt)
-    );
-    leftLayout.forEach((i) =>
-      displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt)
-    );
-    topLayout.forEach((i) =>
-      displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft)
-    );
+    const sf = shadeOpacityFront;
+    const sl = shadeOpacityLeft;
+    const st = shadeOpacityTop;
+
+    frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [sf, sl, st], true, true, ft, tt, lt));
+    leftLayout.forEach((i) => displayBox(i, yu, nzu, nxu, [sl, st, sf], false, true, lt, ft, tt));
+    topLayout.forEach((i) => displayBox(i, nzu, xu, nyu, [st, sf, sl], false, false, tt, lt, ft));
     p.pop();
   }
 
@@ -210,7 +190,6 @@ let sketch = function (p) {
       zu,
       maxDepth,
       shades,
-      shadeOpacity,
       palette.colors,
       paletteShift,
       strokeCol,
@@ -233,12 +212,8 @@ let sketch = function (p) {
     const leftsideGrid =
       leftside && x1 == 1 ? leftside.filter((c) => c.y1 == 1 && c.x1 == y1)[0] : null;
 
-    const cols = topsideGrid
-      ? topsideGrid.rows
-      : Math.ceil((Math.random() * w) / minGridSize);
-    const rows = leftsideGrid
-      ? leftsideGrid.cols
-      : Math.ceil((Math.random() * h) / minGridSize);
+    const cols = topsideGrid ? topsideGrid.rows : Math.ceil((Math.random() * w) / minGridSize);
+    const rows = leftsideGrid ? leftsideGrid.cols : Math.ceil((Math.random() * h) / minGridSize);
 
     const cell_w = w / cols;
     const cell_h = h / rows;
@@ -260,15 +235,11 @@ let sketch = function (p) {
           const ypos = y1 + app.y1 + i * cell_h - 1;
           let y_offset =
             topsideGrid && i == 0 && ypos <= 0
-              ? topsideGrid.content.filter(
-                  (c) => c.x1 <= 0 && Math.max(c.y1, 0) == xpos
-                )[0].z1
+              ? topsideGrid.content.filter((c) => c.x1 <= 0 && Math.max(c.y1, 0) == xpos)[0].z1
               : 0;
           let x_offset =
             leftsideGrid && j == 0 && xpos <= 0
-              ? leftsideGrid.content.filter(
-                  (c) => c.y1 <= 0 && Math.max(c.x1, 0) == ypos
-                )[0].z1
+              ? leftsideGrid.content.filter((c) => c.y1 <= 0 && Math.max(c.x1, 0) == ypos)[0].z1
               : 0;
           return {
             ...app,

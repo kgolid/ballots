@@ -7,29 +7,6 @@ import ui from './ui';
 import display from './display';
 import { generateCSV } from './csv';
 
-/*
-// Options suitable for print.
-let opts = {
-  cubedimX: 15,
-  cubedimY: 50,
-  cubedimZ: 15,
-  depthDim: 2,
-  mag: 10,
-  tx: 0,
-  ty: -600,
-  shadeOpacity: 30,
-  outerStrokeWeight: 2,
-  innerStrokeWeight: 2,
-  outerSize: 0.99,
-  minGridSize: 4,
-  innerSize: 0.78,
-  perspective: 0.95,
-  colorMode: 'group',
-  palette: 'tsu_arcade',
-  paletteShift: 0
-};
-*/
-
 let opts = {
   cubedimX: 18,
   cubedimY: 18,
@@ -38,7 +15,9 @@ let opts = {
   mag: 5,
   tx: 0,
   ty: 0,
-  shadeOpacity: 25,
+  shadeOpacityFront: 255,
+  shadeOpacityLeft: 255,
+  shadeOpacityTop: 0,
   outerStrokeWeight: 2,
   innerStrokeWeight: 1,
   outerSize: 0.97,
@@ -71,7 +50,7 @@ let sketch = function (p) {
   let paletteShift;
   let palette;
   let strokeCol;
-  let shadeOpacity;
+  let shadeOpacityFront, shadeOpacityLeft, shadeOpacityTop;
   let outerStrokeWeight, innerStrokeWeight;
 
   let sectionAppOpts, atomAppOpts;
@@ -124,7 +103,9 @@ let sketch = function (p) {
     nyu = yu.map((v) => -v);
     nzu = zu.map((v) => -v);
 
-    shadeOpacity = opts.shadeOpacity;
+    shadeOpacityFront = opts.shadeOpacityFront;
+    shadeOpacityLeft = opts.shadeOpacityLeft;
+    shadeOpacityTop = opts.shadeOpacityTop;
     outerStrokeWeight = opts.outerStrokeWeight;
     innerStrokeWeight = opts.innerStrokeWeight;
 
@@ -189,9 +170,13 @@ let sketch = function (p) {
     const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
     const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-    frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt));
-    leftLayout.forEach((i) => displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt));
-    topLayout.forEach((i) => displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft));
+    const sf = shadeOpacityFront;
+    const sl = shadeOpacityLeft;
+    const st = shadeOpacityTop;
+
+    frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [sf, sl, st], true, true, ft, tt, lt));
+    leftLayout.forEach((i) => displayBox(i, yu, nzu, nxu, [sl, st, sf], false, true, lt, ft, tt));
+    topLayout.forEach((i) => displayBox(i, nzu, xu, nyu, [st, sf, sl], false, false, tt, lt, ft));
     p.pop();
   }
 
@@ -204,7 +189,6 @@ let sketch = function (p) {
       zu,
       maxDepth,
       shades,
-      shadeOpacity,
       palette.colors,
       paletteShift,
       strokeCol,
