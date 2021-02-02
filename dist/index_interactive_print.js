@@ -4753,125 +4753,26 @@
     }
   }
 
-  function generateCSV(front, left, top, scale, pal_size) {
-    const c_front = front.map(convert);
-    const c_left = left.map(convert).map(rot);
-    const c_top = top.map(convert).map(rot).map(rot);
-    const array = [...c_front, ...c_left, ...c_top];
-
-    const merged = mergeEdges(array);
-    return merged.map((a) => [
-      a.x1 * scale,
-      a.y1 * scale,
-      a.z1 * scale,
-      a.w * scale,
-      a.h * scale,
-      a.d * scale,
-      a.col % pal_size,
-    ]);
-  }
-
-  function convert(box) {
-    let nbox = { ...box, d: box.z1 * 4 };
-    nbox.z1 = 0;
-    return nbox;
-  }
-
-  function rot(box) {
-    return {
-      x1: -box.z1,
-      y1: box.x1,
-      z1: -box.y1,
-      w: -box.d,
-      h: box.w,
-      d: -box.h,
-      col: box.col,
-    };
-  }
-
-  function mergeEdges(boxes) {
-    const edge_boxes = boxes.filter(is_edge);
-    console.log('edges', edge_boxes);
-
-    const grouped = group_neighbors(edge_boxes);
-    console.log('grouped', grouped);
-
-    const merged = grouped.map(mergeArr);
-    console.log('merged', merged);
-
-    const non_edge_boxes = boxes.filter((b) => !is_edge(b));
-    return non_edge_boxes.concat(merged);
-  }
-
-  function is_edge(box) {
-    return (box.x1 === 0) + (box.y1 === 0) + (box.z1 === 0) > 1; // At least to indices are 0.
-  }
-
-  function group_neighbors(boxes) {
-    return boxes.reduce((acc, cur) => {
-      var i = acc.findIndex((a) => neighbors(a[0], cur));
-      if (i > -1) acc[i].push(cur);
-      else acc.push([cur]);
-      return acc;
-    }, []);
-  }
-
-  function neighbors(b1, b2) {
-    return b1.x1 === b2.x1 && b1.y1 === b2.y1 && b1.z1 === b2.z1;
-  }
-
-  function mergeArr(arr) {
-    if (arr.length === 3) return mergeOrigo(...arr);
-    return merge(...arr);
-  }
-
-  function merge(b1, b2) {
-    var x1 = b1.w === b2.w ? b1.x1 : b1.x1 + Math.min(b1.w, b2.w);
-    var y1 = b1.h === b2.h ? b1.y1 : b1.y1 + Math.min(b1.h, b2.h);
-    var z1 = b1.d === b2.d ? b1.z1 : b1.z1 + Math.min(b1.d, b2.d);
-
-    var w = b1.w === b2.w ? b1.w : Math.abs(b1.w) + Math.abs(b2.w);
-    var h = b1.h === b2.h ? b1.h : Math.abs(b1.h) + Math.abs(b2.h);
-    var d = b1.d === b2.d ? b1.d : Math.abs(b1.d) + Math.abs(b2.d);
-
-    return { x1, y1, z1, w, h, d, col: b1.col };
-  }
-
-  function mergeOrigo(b1, b2, b3) {
-    var xmin = Math.min(b1.w, b2.w, b3.w);
-    var ymin = Math.min(b1.h, b2.h, b3.h);
-    var zmin = Math.min(b1.d, b2.d, b3.d);
-
-    var xmax = Math.max(b1.w, b2.w, b3.w);
-    var ymax = Math.max(b1.h, b2.h, b3.h);
-    var zmax = Math.max(b1.d, b2.d, b3.d);
-
-    var w = -xmin + xmax;
-    var h = -ymin + ymax;
-    var d = -zmin + zmax;
-
-    return { x1: xmin, y1: ymin, z1: zmin, w, d, h, col: b1.col };
-  }
-
+  // Options suitable for print.
   let opts = {
     cubedimX: 15,
     cubedimY: 15,
     cubedimZ: 15,
     depthDim: 2,
-    mag: 5,
+    mag: 14,
     tx: 0,
     ty: 0,
     shadeOpacityFront: 0.2,
     shadeOpacityLeft: 0.1,
     shadeOpacityTop: 0,
-    outerStrokeWeight: 2,
-    innerStrokeWeight: 1,
-    outerSize: 0.97,
-    minGridSize: 5,
-    innerSize: 0.8,
-    perspective: 0.85,
+    outerStrokeWeight: 5,
+    innerStrokeWeight: 3,
+    outerSize: 0.99,
+    minGridSize: 4,
+    innerSize: 0.78,
+    perspective: 0.95,
     colorMode: 'group',
-    palette: 'tsu_arcade',
+    palette: 'dt10',
     paletteShift: 0,
   };
 
@@ -4891,7 +4792,7 @@
     let nxu, nyu, nzu;
 
     let maxDepth;
-    const depthSteps = 6;
+    const depthSteps = 8;
 
     let paletteShift;
     let palette;
@@ -4907,7 +4808,7 @@
     let frontLayout, leftLayout, topLayout;
 
     p.setup = function () {
-      p.createCanvas(1000, 1000);
+      p.createCanvas(2500, 2500);
       THE_SEED = p.floor(p.random(9999999));
       p.randomSeed(THE_SEED);
       p.pixelDensity(2);
@@ -5010,7 +4911,8 @@
     function displayLayout() {
       p.push();
       p.translate(tx + p.width / 2, ty + p.height / 2);
-      p.background(palette.background ? palette.background : '#eee');
+      //p.background(palette.background ? palette.background : '#eee');
+      p.clear();
 
       const ft = perspective(...getSrcDst(xu, yu, persp, cubedimX));
       const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
@@ -5125,7 +5027,7 @@
       apparatus[0] = apparatus[0].map((a) => ({
         x1: (a.x1 - 1) * w_unit,
         y1: (a.y1 - 1) * h_unit,
-        z1: 0.1 + Math.floor(Math.random() * depthSteps) / depthSteps,
+        z1: Math.floor(Math.random() * depthSteps) / depthSteps,
         w: a.w * w_unit,
         h: a.h * h_unit,
         col: a.col,
@@ -5178,18 +5080,9 @@
       p.saveCanvas('sketch_' + THE_SEED, 'png');
     }
 
-    function downloadCSV() {
-      const rows = generateCSV(frontLayout, leftLayout, topLayout, 0.1, palette.colors.length);
-      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(',')).join('\n');
-
-      const encodedUri = encodeURI(csvContent);
-      window.open(encodedUri);
-    }
-
     p.keyPressed = function () {
       if (p.keyCode === 80) print();
       if (p.keyCode === 82) generateAndDraw();
-      if (p.keyCode === 83) downloadCSV();
     };
   };
   new p5(sketch);
