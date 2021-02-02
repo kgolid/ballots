@@ -1,7 +1,7 @@
 import Apparatus from 'apparatus-generator';
 import * as tome from 'chromotome';
 
-let sketch = function(p) {
+let sketch = function (p) {
   let THE_SEED;
 
   const mag = 22;
@@ -13,7 +13,7 @@ let sketch = function(p) {
     simple: true,
     extension_chance: 0.97,
     horizontal_symmetry: false,
-    vertical_chance: 0.3
+    vertical_chance: 0.3,
   });
 
   const innerApparatusOptions = {
@@ -22,13 +22,13 @@ let sketch = function(p) {
     horizontal_symmetry: false,
     vertical_chance: 0.3,
     color_mode: 'main',
-    colors: palette.colors
+    colors: palette.colors,
   };
 
   let layout;
   let tick;
 
-  p.setup = function() {
+  p.setup = function () {
     p.createCanvas(950, 950);
     THE_SEED = p.floor(p.random(9999999));
     p.randomSeed(THE_SEED);
@@ -41,13 +41,13 @@ let sketch = function(p) {
     tick = 0;
   };
 
-  p.draw = function() {
+  p.draw = function () {
     if (tick % 9 == 0) reset();
     displayLayout(tick % 9, tick % 9 > 2);
     tick++;
   };
 
-  p.keyPressed = function() {
+  p.keyPressed = function () {
     if (p.keyCode === 80) p.saveCanvas('sketch_' + THE_SEED, 'jpeg');
   };
 
@@ -55,19 +55,19 @@ let sketch = function(p) {
     p.background(palette.background ? palette.background : '#eee');
     layout = generator
       .generate()
-      .map(b => ({ ...b, level: 0, filled: false, content: createGrid(b) }));
+      .map((b) => ({ ...b, level: 0, filled: false, content: createGrid(b) }));
   }
 
   function displayLayout(depth, colorize) {
     p.translate(-500, -80);
-    layout.forEach(box => {
+    layout.forEach((box) => {
       displayBox(box, depth, colorize);
     });
   }
 
   function displayBox(box, maxLevel, colorize) {
     if (box.content != null && box.content.length > 0 && maxLevel > box.level) {
-      box.content.forEach(c => displayBox(c, maxLevel, colorize));
+      box.content.forEach((c) => displayBox(c, maxLevel, colorize));
     }
 
     if (box.filled && colorize) p.fill(box.col);
@@ -141,16 +141,16 @@ let sketch = function(p) {
           w: cell_w,
           h: cell_h,
           level: 1,
-          filled: false
+          filled: false,
         };
-        const content = apparatus.map(app => ({
+        const content = apparatus.map((app) => ({
           ...app,
           x1: app.x1 + cell.x1,
           y1: app.y1 + cell.y1,
           level: 2,
           filled: true,
           crossed: app.w < 1.5 && app.h < 1.5 && Math.random() < 0.3,
-          legend_width: 2 + Math.random() * (app.w - 3)
+          legend_width: 2 + Math.random() * (app.w - 3),
         }));
 
         grid.push({ ...cell, content: content });
@@ -172,12 +172,12 @@ let sketch = function(p) {
       innerApparatusOptions
     );
 
-    return generator.generate().map(a => ({
+    return generator.generate().map((a) => ({
       x1: (a.x1 - 1) * w_unit,
       y1: (a.y1 - 1) * h_unit,
       w: a.w * w_unit,
       h: a.h * h_unit,
-      col: a.col
+      col: a.col,
     }));
   }
 };

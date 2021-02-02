@@ -1,15 +1,15 @@
 import * as dat from 'dat.gui';
 import * as tome from 'chromotome';
 
-export default function(opts, full_reset, redraw, print) {
-  const onPaletteChange = function(controller) {
+export default function (opts, full_reset, redraw, print) {
+  const onPaletteChange = function (controller) {
     controller.setValue(0);
     controller.max(tome.get(opts.palette).size - 1);
   };
 
   const ctrls = {
     print: print,
-    reset: full_reset
+    reset: full_reset,
   };
 
   const gui = new dat.GUI();
