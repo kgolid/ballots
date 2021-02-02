@@ -5,6 +5,7 @@ import perspective from 'change-perspective';
 
 import ui from './ui';
 import display from './display';
+import { generateCSV } from './csv';
 
 /*
 // Options suitable for print.
@@ -347,9 +348,25 @@ let sketch = function (p) {
     p.saveCanvas('sketch_' + THE_SEED, 'png');
   }
 
+  function downloadCSV() {
+    const rows = generateCSV(
+      frontLayout,
+      leftLayout,
+      topLayout,
+      0.1,
+      palette.colors.length
+    );
+    const csvContent =
+      'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(',')).join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    window.open(encodedUri);
+  }
+
   p.keyPressed = function () {
     if (p.keyCode === 80) print();
     if (p.keyCode === 82) generateAndDraw();
+    if (p.keyCode === 83) downloadCSV();
   };
 };
 new p5(sketch);
