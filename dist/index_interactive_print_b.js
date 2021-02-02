@@ -1,7 +1,7 @@
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
-}(function () { 'use strict';
+}((function () { 'use strict';
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -525,6 +525,12 @@
       background: '#161616',
     },
     {
+      name: 'yuma_punk2',
+      colors: ['#f2d002', '#f7f5e1', '#ec643b'],
+      stroke: '#19080e',
+      background: '#f7f5e1',
+    },
+    {
       name: 'moir',
       colors: ['#a49f4f', '#d4501e', '#f7c558', '#ebbaa6'],
       stroke: '#161716',
@@ -564,6 +570,60 @@
       name: 'kaffeprat',
       colors: ['#BCAA8C', '#D8CDBE', '#484A42', '#746B58', '#9A8C73'],
       stroke: '#000',
+      background: '#fff',
+    },
+    {
+      name: 'jrmy',
+      colors: ['#df456c', '#ea6a82', '#270b32', '#471e43'],
+      stroke: '#270b32',
+      background: '#ef9198',
+    },
+    {
+      name: 'animo',
+      colors: ['#f6c103', '#f6f6f6', '#d1cdc7', '#e7e6e5'],
+      stroke: '#010001',
+      background: '#f5f5f5',
+    },
+    {
+      name: 'book',
+      colors: ['#be1c24', '#d1a082', '#037b68', '#d8b1a5', '#1c2738', '#c95a3f'],
+      stroke: '#0e0f27',
+      background: '#f5b28a',
+    },
+    {
+      name: 'juxtapoz',
+      colors: ['#20357e', '#f44242', '#ffffff'],
+      stroke: '#000000',
+      background: '#cfc398',
+    },
+    {
+      name: 'hurdles',
+      colors: ['#e16503', '#dc9a0f', '#dfe2b4', '#66a7a6'],
+      stroke: '#3c1c03',
+      background: '#3c1c03',
+    },
+    {
+      name: 'ludo',
+      colors: ['#df302f', '#e5a320', '#0466b3', '#0f7963'],
+      stroke: '#272621',
+      background: '#dedccd',
+    },
+    {
+      name: 'riff',
+      colors: ['#e24724', '#c7c7c7', '#1f3e7c', '#d29294', '#010203'],
+      stroke: '#010203',
+      background: '#f2f2f2',
+    },
+    {
+      name: 'san ramon',
+      colors: ['#4f423a', '#f6a74b', '#589286', '#f8e9e2', '#2c2825'],
+      stroke: '#2c2825',
+      background: '#fff',
+    },
+    {
+      name: 'one-dress',
+      colors: ['#1767D2', '#FFFFFF', '#F9AB00', '#212121'],
+      stroke: '#212121',
       background: '#fff',
     },
   ];
@@ -791,10 +851,46 @@
 
   var ducci = [
     {
+      name: 'ducci_jb',
+      colors: ['#395e54', '#e77b4d', '#050006', '#e55486'],
+      stroke: '#050006',
+      background: '#efe0bc'
+    },
+    {
+      name: 'ducci_a',
+      colors: ['#809498', '#d3990e', '#000000', '#ecddc5'],
+      stroke: '#ecddc5',
+      background: '#863f52'
+    },
+    {
+      name: 'ducci_b',
+      colors: ['#ecddc5', '#79b27b', '#000000', '#ac6548'],
+      stroke: '#ac6548',
+      background: '#d5c08e'
+    },
+    {
+      name: 'ducci_d',
+      colors: ['#f3cb4d', '#f2f5e3', '#20191b', '#67875c'],
+      stroke: '#67875c',
+      background: '#433d5f'
+    },
+    {
+      name: 'ducci_e',
+      colors: ['#c37c2b', '#f6ecce', '#000000', '#386a7a'],
+      stroke: '#386a7a',
+      background: '#e3cd98'
+    },
+    {
       name: 'ducci_f',
       colors: ['#596f7e', '#eae6c7', '#463c21', '#f4cb4c'],
       stroke: '#f4cb4c',
       background: '#e67300'
+    },
+    {
+      name: 'ducci_g',
+      colors: ['#c75669', '#000000', '#11706a'],
+      stroke: '#11706a',
+      background: '#ecddc5'
     },
     {
       name: 'ducci_h',
@@ -809,10 +905,34 @@
       background: '#a74c02'
     },
     {
+      name: 'ducci_j',
+      colors: ['#c47c2b', '#5f5726', '#000000', '#7e8a84'],
+      stroke: '#7e8a84',
+      background: '#ecddc5'
+    },
+    {
+      name: 'ducci_o',
+      colors: ['#c15e1f', '#e4a13a', '#000000', '#4d545a'],
+      stroke: '#4d545a',
+      background: '#dfc79b'
+    },
+    {
       name: 'ducci_q',
       colors: ['#4bae8c', '#d0c1a0', '#2d3538'],
       stroke: '#2d3538',
       background: '#d06440'
+    },
+    {
+      name: 'ducci_u',
+      colors: ['#f6d700', '#f2d692', '#000000', '#5d3552'],
+      stroke: '#5d3552',
+      background: '#ff7426'
+    },
+    {
+      name: 'ducci_v',
+      colors: ['#c65f75', '#d3990e', '#000000', '#597e7a'],
+      stroke: '#597e7a',
+      background: '#f6eccb'
     },
     {
       name: 'ducci_x',
@@ -879,25 +999,25 @@
   var kovecses = [
     {
       name: 'kov_01',
-      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35', '#142a36'],
+      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35'],
       stroke: '#132a37',
       background: '#108266'
     },
     {
       name: 'kov_02',
-      colors: ['#e8dccc', '#e94641', '#eeaeae'],
+      colors: ['#e94641', '#eeaeae'],
       stroke: '#e8dccc',
       background: '#6c96be'
     },
     {
       name: 'kov_03',
-      colors: ['#e3937b', '#d93f1d', '#090d15', '#e6cca7'],
+      colors: ['#e3937b', '#d93f1d', '#e6cca7'],
       stroke: '#090d15',
       background: '#558947'
     },
     {
       name: 'kov_04',
-      colors: ['#d03718', '#292b36', '#33762f', '#ead7c9', '#ce7028', '#689d8d'],
+      colors: ['#d03718', '#33762f', '#ead7c9', '#ce7028', '#689d8d'],
       stroke: '#292b36',
       background: '#deb330'
     },
@@ -967,52 +1087,64 @@
   var duotone = [
     {
       name: 'dt01',
-      colors: ['#172a89', '#f7f7f3'],
+      colors: ['#f7f7f3'],
       stroke: '#172a89',
-      background: '#f3abb0'
+      background: '#f3abb0',
     },
     {
       name: 'dt02',
-      colors: ['#302956', '#f3c507'],
+      colors: ['#f3c507'],
       stroke: '#302956',
-      background: '#eee3d3'
+      background: '#eee3d3',
+    },
+    {
+      name: 'dt03',
+      colors: ['#a7a7a7'],
+      stroke: '#000000',
+      background: '#0a5e78',
     },
     {
       name: 'dt04',
       colors: ['#50978e', '#f7f0df'],
       stroke: '#000000',
-      background: '#f7f0df'
+      background: '#f7f0df',
     },
     {
       name: 'dt05',
       colors: ['#ee5d65', '#f0e5cb'],
       stroke: '#080708',
-      background: '#f0e5cb'
+      background: '#f0e5cb',
     },
     {
       name: 'dt06',
-      colors: ['#271f47', '#e7ceb5'],
+      colors: ['#e7ceb5'],
       stroke: '#271f47',
-      background: '#cc2b1c'
+      background: '#cc2b1c',
     },
     {
       name: 'dt07',
       colors: ['#6a98a5', '#d24c18'],
       stroke: '#efebda',
-      background: '#efebda'
+      background: '#efebda',
     },
     {
       name: 'dt08',
       colors: ['#5d9d88', '#ebb43b'],
       stroke: '#efebda',
-      background: '#efebda'
+      background: '#efebda',
     },
     {
       name: 'dt09',
       colors: ['#052e57', '#de8d80'],
       stroke: '#efebda',
-      background: '#efebda'
-    }
+      background: '#efebda',
+    },
+    {
+      name: 'dt10',
+      colors: ['#e5dfcf', '#e9b500'],
+      stroke: '#151513',
+      background: '#e9b500',
+    },
   ];
 
   var hilda = [
@@ -1057,32 +1189,32 @@
   var spatial = [
     {
       name: 'spatial01',
-      colors: ['#ff5937', '#f6f6f4', '#4169ff'],
+      colors: ['#f6f6f4', '#4169ff'],
       stroke: '#ff5937',
       background: '#f6f6f4'
     },
     {
       name: 'spatial02',
-      colors: ['#ff5937', '#f6f6f4', '#f6f6f4'],
+      colors: ['#f6f6f4'],
       stroke: '#ff5937',
       background: '#f6f6f4'
     },
     {
       name: 'spatial02i',
-      colors: ['#f6f6f4', '#ff5937', '#ff5937'],
+      colors: ['#ff5937'],
       stroke: '#f6f6f4',
       background: '#ff5937'
     },
 
     {
       name: 'spatial03',
-      colors: ['#4169ff', '#f6f6f4', '#f6f6f4'],
+      colors: ['#f6f6f4'],
       stroke: '#4169ff',
       background: '#f6f6f4'
     },
     {
       name: 'spatial03i',
-      colors: ['#f6f6f4', '#4169ff', '#4169ff'],
+      colors: ['#4169ff'],
       stroke: '#f6f6f4',
       background: '#4169ff'
     }
@@ -1142,7 +1274,7 @@
     },
     {
       name: 'system.#04',
-      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#26265a', '#ea7d81', '#dcd9d0'],
+      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#ea7d81', '#dcd9d0'],
       stroke: '#26265a',
       backgrund: '#dcd9d0'
     },
@@ -1175,13 +1307,13 @@
   var flourish = [
     {
       name: 'empusa',
-      colors: ['#c92a28', '#e69301', '#1f8793', '#13652b', '#e7d8b0', '#e3b3ac'],
+      colors: ['#c92a28', '#e69301', '#1f8793', '#13652b', '#e7d8b0', '#48233b', '#e3b3ac'],
       stroke: '#1a1a1a',
       background: '#f0f0f2',
     },
     {
       name: 'delphi',
-      colors: ['#475b62', '#7a999c', '#2a1f1d', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
+      colors: ['#475b62', '#7a999c', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
       stroke: '#2a1f1d',
       background: '#f0e0c6',
     },
@@ -1255,23 +1387,188 @@
       background: '#f4fdec',
     },
     {
-      name: 'jrmy',
-      colors: ['#df456c', '#ea6a82', '#270b32', '#471e43'],
-      stroke: '#270b32',
-      background: '#ef9198',
-    },
-    {
-      name: 'animo',
-      colors: ['#f6c103', '#f6f6f6', '#d1cdc7', '#e7e6e5'],
-      stroke: '#010001',
-      background: '#f5f5f5',
-    },
-    {
-      name: 'book',
-      colors: ['#be1c24', '#d1a082', '#037b68', '#d8b1a5', '#1c2738', '#c95a3f'],
+      name: 'jungle',
+      colors: [
+        '#adb100',
+        '#e5f4e9',
+        '#f4650f',
+        '#4d6838',
+        '#cb9e00',
+        '#689c7d',
+        '#e2a1a8',
+        '#151c2e',
+      ],
       stroke: '#0e0f27',
-      background: '#f5b28a',
+      background: '#cecaa9',
     },
+    {
+      name: 'skyspider',
+      colors: ['#f4b232', '#f2dbbd', '#01799c', '#e93e48', '#0b1952', '#006748', '#ed817d'],
+      stroke: '#050505',
+      background: '#f0dbbc',
+    },
+    {
+      name: 'atlas',
+      colors: ['#5399b1', '#f4e9d5', '#de4037', '#ed942f', '#4e9e48', '#7a6e62'],
+      stroke: '#2d251e',
+      background: '#f0c328',
+    },
+    {
+      name: 'giftcard',
+      colors: [
+        '#FBF5E9',
+        '#FF514E',
+        '#FDBC2E',
+        '#4561CC',
+        '#2A303E',
+        '#6CC283',
+        '#A71172',
+        '#238DA5',
+        '#9BD7CB',
+        '#231E58',
+        '#4E0942',
+      ],
+      stroke: '#000',
+      background: '#FBF5E9',
+    },
+    {
+      name: 'giftcard_sub',
+      colors: [
+        '#FBF5E9',
+        '#FF514E',
+        '#FDBC2E',
+        '#4561CC',
+        '#6CC283',
+        '#238DA5',
+        '#9BD7CB',
+      ],
+      stroke: '#2A303E',
+      background: '#FBF5E9',
+    },
+  ];
+
+  var dale = [
+    {
+      name: 'dale_paddle',
+      colors: [
+        '#ff7a5a',
+        '#765aa6',
+        '#fee7bc',
+        '#515e8c',
+        '#ffc64a',
+        '#b460a6',
+        '#ffffff',
+        '#4781c1',
+      ],
+      stroke: '#000000',
+      background: '#abe9e8',
+    },
+    {
+      name: 'dale_night',
+      colors: ['#ae5d9d', '#f1e8bc', '#ef8fa3', '#f7c047', '#58c9ed', '#f77150'],
+      stroke: '#000000',
+      background: '#00ae83',
+    },
+    {
+      name: 'dale_cat',
+      colors: ['#f77656', '#f7f7f7', '#efc545', '#dfe0e2', '#3c70bd', '#66bee4'],
+      stroke: '#000000',
+      background: '#f6e0b8',
+    },
+  ];
+
+  var cako = [
+    {
+      name: 'cako1',
+      colors: ['#d55a3a', '#2a5c8a', '#7e7d14', '#dbdac9'],
+      stroke: '#000000',
+      background: '#f4e9d5',
+    },
+    {
+      name: 'cako2',
+      colors: ['#dbdac9', '#d55a3a', '#2a5c8a', '#b47b8c', '#7e7d14'],
+      stroke: '#000000',
+      background: '#000000',
+    },
+    {
+      name: 'cako2_sub1',
+      colors: ['#dbdac9', '#d55a3a', '#2a5c8a'],
+      stroke: '#000000',
+      background: '#000000',
+    },
+    {
+      name: 'cako2_sub2',
+      colors: ['#dbdac9', '#d55a3a', '#7e7d14'],
+      stroke: '#000000',
+      background: '#000000',
+    },
+    {
+      name: 'latino',
+      colors: ['#E75843','#ECEAEA'],
+      stroke: '#33181D',
+      background: '#ECEAEA'
+    }
+  ];
+
+  var mayo = [
+    {
+      name: 'mayo1',
+      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177'],
+      stroke: '#111111',
+      background: '#fff',
+    },
+    {
+      name: 'mayo2',
+      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9'],
+      stroke: '#2a2a2a',
+      background: '#f5f6f1',
+    },
+    {
+      name: 'mayo3',
+      colors: ['#ea5b19', '#f8c9b9', '#137661'],
+      stroke: '#2a2a2a',
+      background: '#f5f4f0',
+    },
+  ];
+
+  var exposito = [
+    {
+      name: 'exposito',
+      colors: [
+        '#8bc9c3',
+        '#ffae43',
+        '#ea432c',
+        '#228345',
+        '#d1d7d3',
+        '#524e9c',
+        '#9dc35e',
+        '#f0a1a1',
+      ],
+      stroke: '#fff',
+      background: '#000000',
+    },
+    {
+      name: 'exposito_sub1',
+      colors: ['#8bc9c3', '#ffae43', '#ea432c', '#524e9c'],
+      stroke: '#fff',
+      background: '#000000',
+    },
+    {
+      name: 'exposito_sub2',
+      colors: ['#8bc9c3', '#ffae43', '#ea432c', '#524e9c', '#f0a1a1', '#228345'],
+      stroke: '#fff',
+      background: '#000000',
+    },
+    {
+      name: 'exposito_sub3',
+      colors: ['#ffae43', '#ea432c', '#524e9c', '#f0a1a1'],
+      stroke: '#fff',
+      background: '#000000',
+    },
+    {
+      name: 'herge',
+      colors: ['#305B49', '#F3811F', '#FFFCD8', '#DDCE86', '#038DD5'], 
+    }
   ];
 
   const pals = misc.concat(
@@ -1290,7 +1587,11 @@
     spatial,
     jung,
     system,
-    flourish
+    flourish,
+    dale,
+    cako,
+    mayo,
+    exposito
   );
 
   var palettes = pals.map((p) => {
@@ -1410,12 +1711,22 @@
   }
   toposort_1.array = array;
 
-  function unwrapExports (x) {
-  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
+  function getDefaultExportFromCjs (x) {
+  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
   }
 
-  function createCommonjsModule$1(fn, module) {
-  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  function createCommonjsModule$1(fn, basedir, module) {
+  	return module = {
+  		path: basedir,
+  		exports: {},
+  		require: function (path, base) {
+  			return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+  		}
+  	}, fn(module, module.exports), module.exports;
+  }
+
+  function commonjsRequire () {
+  	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
   }
 
   var changePerspective = createCommonjsModule$1(function (module, exports) {
@@ -1777,7 +2088,7 @@
   exports.default = fixPerspective;
   });
 
-  var perspective = unwrapExports(changePerspective);
+  var perspective = /*@__PURE__*/getDefaultExportFromCjs(changePerspective);
 
   /**
    * dat-gui JavaScript Controller Library
@@ -4273,60 +4584,37 @@
     });
   }
   var GUI$1 = GUI;
-  //# sourceMappingURL=dat.gui.module.js.map
 
-  function ui(opts, full_reset, redraw, print) {
-    const onPaletteChange = function(controller) {
+  function ui (opts, full_reset, redraw, print) {
+    const onPaletteChange = function (controller) {
       controller.setValue(0);
       controller.max(get(opts.palette).size - 1);
     };
 
     const ctrls = {
       print: print,
-      reset: full_reset
+      reset: full_reset,
     };
 
-    const gui$$1 = new GUI$1();
-    const f0 = gui$$1.addFolder('Structural Changes');
+    const gui = new GUI$1();
+    const f0 = gui.addFolder('Structural Changes');
     f0.open();
-    f0.add(opts, 'cubedimX', 0, 80, 5)
-      .name('X Dimension')
-      .onChange(full_reset);
-    f0.add(opts, 'cubedimY', 0, 80, 5)
-      .name('Y Dimension')
-      .onChange(full_reset);
-    f0.add(opts, 'cubedimZ', 0, 80, 5)
-      .name('Z Dimension')
-      .onChange(full_reset);
-    f0.add(opts, 'outerSize', 0.7, 1, 0.02)
-      .name('Section Sizes')
-      .onChange(full_reset);
-    f0.add(opts, 'minGridSize', 1, 10, 1)
-      .name('Min Grid Size')
-      .onChange(full_reset);
-    f0.add(opts, 'innerSize', 0.7, 1, 0.02)
-      .name('Atom Sizes')
-      .onChange(full_reset);
+    f0.add(opts, 'cubedimX', 0, 70, 5).name('X Dimension').onChange(full_reset);
+    f0.add(opts, 'cubedimY', 0, 70, 5).name('Y Dimension').onChange(full_reset);
+    f0.add(opts, 'cubedimZ', 0, 70, 5).name('Z Dimension').onChange(full_reset);
+    f0.add(opts, 'outerSize', 0.9, 1, 0.01).name('Section Sizes').onChange(full_reset);
+    f0.add(opts, 'minGridSize', 1, 10, 1).name('Min Grid Size').onChange(full_reset);
+    f0.add(opts, 'innerSize', 0.7, 1, 0.02).name('Atom Sizes').onChange(full_reset);
     f0.add(opts, 'colorMode', ['single', 'main', 'group', 'random'])
       .name('Color Distr.')
       .onChange(full_reset);
-    const f1 = gui$$1.addFolder('Stylistic Changes');
+    const f1 = gui.addFolder('Stylistic Changes');
     f1.open();
-    f1.add(opts, 'tx', -600, 600, 50)
-      .name('Translate X')
-      .onChange(redraw);
-    f1.add(opts, 'ty', -600, 600, 50)
-      .name('Translate Y')
-      .onChange(redraw);
-    f1.add(opts, 'mag', 1, 12, 0.5)
-      .name('Cell Size')
-      .onChange(redraw);
-    f1.add(opts, 'depthDim', 0, 10, 0.5)
-      .name('Depth')
-      .onChange(redraw);
-    f1.add(opts, 'perspective', 0.55, 1, 0.05)
-      .name('Perspective')
-      .onChange(redraw);
+    f1.add(opts, 'tx', -2400, 2400, 200).name('Translate X').onChange(redraw);
+    f1.add(opts, 'ty', -2400, 2400, 200).name('Translate Y').onChange(redraw);
+    f1.add(opts, 'mag', 2, 30, 1).name('Cell Size').onChange(redraw);
+    f1.add(opts, 'depthDim', 0, 10, 0.5).name('Depth').onChange(redraw);
+    f1.add(opts, 'perspective', 0.65, 1, 0.05).name('Perspective').onChange(redraw);
     const shiftController = f1
       .add(opts, 'paletteShift', 0, 10, 1)
       .listen()
@@ -4336,22 +4624,18 @@
       .name('Palette')
       .onChange(redraw)
       .onFinishChange(() => onPaletteChange(shiftController));
-    f1.add(opts, 'shadeOpacity', 0, 255, 5)
-      .name('Shade Opacity')
-      .onChange(redraw);
-    f1.add(opts, 'outerStrokeWeight', 0, 5, 1)
-      .name('Outer Stroke Weight')
-      .onChange(redraw);
-    f1.add(opts, 'innerStrokeWeight', 0, 5, 1)
-      .name('Inner Stroke Weight')
-      .onChange(redraw);
-    const f2 = gui$$1.addFolder('Control');
+    f1.add(opts, 'shadeOpacityFront', 0, 1, 0.1).name('Shade Opacity Front').onChange(redraw);
+    f1.add(opts, 'shadeOpacityLeft', 0, 1, 0.1).name('Shade Opacity Left').onChange(redraw);
+    f1.add(opts, 'shadeOpacityTop', 0, 1, 0.1).name('Shade Opacity Top').onChange(redraw);
+    f1.add(opts, 'outerStrokeWeight', 0, 9, 1).name('Outer Stroke Weight').onChange(redraw);
+    f1.add(opts, 'innerStrokeWeight', 0, 9, 1).name('Inner Stroke Weight').onChange(redraw);
+    const f2 = gui.addFolder('Control');
     f2.open();
     f2.add(ctrls, 'reset').name('Generate new');
     f2.add(ctrls, 'print').name('Download image');
   }
 
-  function display(
+  function display (
     p,
     box,
     xu,
@@ -4359,7 +4643,6 @@
     zu,
     depth,
     shades,
-    shadeOpacity,
     fillColors,
     paletteShift,
     strokeColor,
@@ -4386,25 +4669,24 @@
     displayLeft();
     displayTop();
 
-    if (shadeOpacity !== 0) {
-      //p.fill(cols[shades[0]]);
-      p.fill(0, shades[0] * shadeOpacity);
-      displayFront();
+    let shadeCol = p.color(strokeColor);
 
-      //p.fill(cols[shades[1]]);
-      p.fill(0, shades[1] * shadeOpacity);
-      displayLeft();
+    shadeCol.setAlpha(shades[0] * 255);
+    p.fill(shadeCol);
+    displayFront();
 
-      //p.fill(cols[shades[2]]);
-      p.fill(0, shades[2] * shadeOpacity);
-      displayTop();
-    }
+    shadeCol.setAlpha(shades[1] * 255);
+    p.fill(shadeCol);
+    displayLeft();
+
+    shadeCol.setAlpha(shades[2] * 255);
+    p.fill(shadeCol);
+    displayTop();
 
     p.noFill();
     p.stroke(strokeColor);
     p.strokeWeight(outerStrokeWeight);
-    if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop))
-      displayInteriorFrontLine();
+    if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop)) displayInteriorFrontLine();
 
     if (!(box.x1 === 0 && hiddenLeft)) displayInteriorTopLine();
 
@@ -4480,7 +4762,9 @@
     mag: 3,
     tx: 0,
     ty: -600,
-    shadeOpacity: 30,
+    shadeOpacityFront: 0.2,
+    shadeOpacityLeft: 0.1,
+    shadeOpacityTop: 0,
     outerStrokeWeight: 1.5,
     innerStrokeWeight: 0.5,
     outerSize: 0.97,
@@ -4513,7 +4797,7 @@
     let paletteShift;
     let palette;
     let strokeCol;
-    let shadeOpacity;
+    let shadeOpacityFront, shadeOpacityLeft, shadeOpacityTop;
     let outerStrokeWeight, innerStrokeWeight;
 
     let sectionAppOpts, atomAppOpts;
@@ -4589,7 +4873,9 @@
       tx = opts.tx + (ax * (xu[0] + zu[0]) + ay * (zu[0] + yu[0])) * 55;
       ty = opts.tx + (ax * (xu[1] + zu[1]) + ay * (zu[1] + yu[1])) * 55;
 
-      shadeOpacity = opts.shadeOpacity;
+      shadeOpacityFront = opts.shadeOpacityFront;
+      shadeOpacityLeft = opts.shadeOpacityLeft;
+      shadeOpacityTop = opts.shadeOpacityTop;
       outerStrokeWeight = opts.outerStrokeWeight;
       innerStrokeWeight = opts.innerStrokeWeight;
 
@@ -4656,13 +4942,20 @@
       const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
       const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-      frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt, pal));
+      const sf = shadeOpacityFront;
+      const sl = shadeOpacityLeft;
+      const st = shadeOpacityTop;
+
+      frontLayout.forEach((i) =>
+        displayBox(i, xu, yu, zu, [sf, sl, st], true, true, ft, tt, lt, pal)
+      );
       leftLayout.forEach((i) =>
-        displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt, pal)
+        displayBox(i, yu, nzu, nxu, [sl, st, sf], false, true, lt, ft, tt, pal)
       );
       topLayout.forEach((i) =>
-        displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft, pal)
+        displayBox(i, nzu, xu, nyu, [st, sf, sl], false, false, tt, lt, ft, pal)
       );
+
       p.pop();
     }
 
@@ -4675,7 +4968,6 @@
         zu,
         maxDepth,
         shades,
-        shadeOpacity,
         pal,
         paletteShift,
         strokeCol,
@@ -4853,4 +5145,4 @@
     return [src, dst];
   }
 
-}));
+})));

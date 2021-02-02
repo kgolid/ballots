@@ -15,7 +15,9 @@ let opts = {
   mag: 3,
   tx: 0,
   ty: -600,
-  shadeOpacity: 30,
+  shadeOpacityFront: 0.2,
+  shadeOpacityLeft: 0.1,
+  shadeOpacityTop: 0,
   outerStrokeWeight: 1.5,
   innerStrokeWeight: 0.5,
   outerSize: 0.97,
@@ -48,7 +50,7 @@ let sketch = function (p) {
   let paletteShift;
   let palette;
   let strokeCol;
-  let shadeOpacity;
+  let shadeOpacityFront, shadeOpacityLeft, shadeOpacityTop;
   let outerStrokeWeight, innerStrokeWeight;
 
   let sectionAppOpts, atomAppOpts;
@@ -124,7 +126,9 @@ let sketch = function (p) {
     tx = opts.tx + (ax * (xu[0] + zu[0]) + ay * (zu[0] + yu[0])) * 55;
     ty = opts.tx + (ax * (xu[1] + zu[1]) + ay * (zu[1] + yu[1])) * 55;
 
-    shadeOpacity = opts.shadeOpacity;
+    shadeOpacityFront = opts.shadeOpacityFront;
+    shadeOpacityLeft = opts.shadeOpacityLeft;
+    shadeOpacityTop = opts.shadeOpacityTop;
     outerStrokeWeight = opts.outerStrokeWeight;
     innerStrokeWeight = opts.innerStrokeWeight;
 
@@ -191,13 +195,20 @@ let sketch = function (p) {
     const lt = perspective(...getSrcDst(yu, nzu, persp, cubedimX));
     const tt = perspective(...getSrcDst(nzu, xu, persp, cubedimX));
 
-    frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [0.5, 1, 0], true, true, ft, tt, lt, pal));
+    const sf = shadeOpacityFront;
+    const sl = shadeOpacityLeft;
+    const st = shadeOpacityTop;
+
+    frontLayout.forEach((i) =>
+      displayBox(i, xu, yu, zu, [sf, sl, st], true, true, ft, tt, lt, pal)
+    );
     leftLayout.forEach((i) =>
-      displayBox(i, yu, nzu, nxu, [1, 0, 0.5], false, true, lt, ft, tt, pal)
+      displayBox(i, yu, nzu, nxu, [sl, st, sf], false, true, lt, ft, tt, pal)
     );
     topLayout.forEach((i) =>
-      displayBox(i, nzu, xu, nyu, [0, 0.5, 1], false, false, tt, lt, ft, pal)
+      displayBox(i, nzu, xu, nyu, [st, sf, sl], false, false, tt, lt, ft, pal)
     );
+
     p.pop();
   }
 
@@ -210,7 +221,6 @@ let sketch = function (p) {
       zu,
       maxDepth,
       shades,
-      shadeOpacity,
       pal,
       paletteShift,
       strokeCol,
