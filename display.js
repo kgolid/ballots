@@ -34,15 +34,15 @@ export default function (
 
   let shadeCol = p.color(strokeColor);
 
-  shadeCol.setAlpha(shades[0]);
+  shadeCol.setAlpha(shades[0] * 255);
   p.fill(shadeCol);
   displayFront();
 
-  shadeCol.setAlpha(shades[1]);
+  shadeCol.setAlpha(shades[1] * 255);
   p.fill(shadeCol);
   displayLeft();
 
-  shadeCol.setAlpha(shades[2]);
+  shadeCol.setAlpha(shades[2] * 255);
   p.fill(shadeCol);
   displayTop();
 

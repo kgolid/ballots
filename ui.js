@@ -40,9 +40,9 @@ export default function (opts, full_reset, redraw, print) {
     .name('Palette')
     .onChange(redraw)
     .onFinishChange(() => onPaletteChange(shiftController));
-  f1.add(opts, 'shadeOpacityFront', 0, 255, 25).name('Shade Opacity Front').onChange(redraw);
-  f1.add(opts, 'shadeOpacityLeft', 0, 255, 25).name('Shade Opacity Left').onChange(redraw);
-  f1.add(opts, 'shadeOpacityTop', 0, 255, 25).name('Shade Opacity Top').onChange(redraw);
+  f1.add(opts, 'shadeOpacityFront', 0, 1, 0.1).name('Shade Opacity Front').onChange(redraw);
+  f1.add(opts, 'shadeOpacityLeft', 0, 1, 0.1).name('Shade Opacity Left').onChange(redraw);
+  f1.add(opts, 'shadeOpacityTop', 0, 1, 0.1).name('Shade Opacity Top').onChange(redraw);
   f1.add(opts, 'outerStrokeWeight', 0, 9, 1).name('Outer Stroke Weight').onChange(redraw);
   f1.add(opts, 'innerStrokeWeight', 0, 9, 1).name('Inner Stroke Weight').onChange(redraw);
   const f2 = gui.addFolder('Control');
