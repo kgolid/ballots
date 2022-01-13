@@ -22,6 +22,8 @@
   "browserInteractive": "dist/index_interactive.js",
   "browserInteractivePrint": "dist/index_interactive_print.js",
   "browserInteractivePrintB": "dist/index_interactive_print_b.js",
+  "browserInteractivePrintC": "dist/index_interactive_print_c.js",
+  "browserSymmetry": "dist/index_symmetry.js",
   "browserRadial": "dist/index_radial.js",
   "dependencies": {
     "apparatus-generator": "^1.6.5",

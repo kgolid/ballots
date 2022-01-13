@@ -68,6 +68,22 @@ export default [
     plugins: [resolve(), commonjs()],
   },
   {
+    input: 'index_interactive_print_c.js',
+    output: {
+      file: pkg.browserInteractivePrintC,
+      format: 'umd',
+    },
+    plugins: [resolve(), commonjs()],
+  },
+  {
+    input: 'index_symmetry.js',
+    output: {
+      file: pkg.browserSymmetry,
+      format: 'umd',
+    },
+    plugins: [resolve(), commonjs()],
+  },
+  {
     input: 'index_radial.js',
     output: {
       file: pkg.browserRadial,
