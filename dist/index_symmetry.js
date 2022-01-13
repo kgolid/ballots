@@ -1,15 +1,15 @@
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
-}((function () { 'use strict';
+})((function () { 'use strict';
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-  function createCommonjsModule(fn, module) {
+  function createCommonjsModule$1(fn, module) {
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  var seedRandom = createCommonjsModule(function (module) {
+  var seedRandom = createCommonjsModule$1(function (module) {
 
   var width = 256;// each RC4 output is 0 <= x < 256
   var chunks = 6;// at least six RC4 outputs for each double
@@ -43,7 +43,7 @@
     var key = [];
 
     // Flatten the seed string or build one from local entropy if needed.
-    var shortseed = mixkey(flatten(
+    mixkey(flatten(
       use_entropy ? [seed, tostring(pool)] :
       0 in arguments ? seed : autoseed(), 3), key);
 
@@ -183,7 +183,7 @@
   //
   mixkey(Math.random(), pool);
   });
-  var seedRandom_1 = seedRandom.resetGlobal;
+  seedRandom.resetGlobal;
 
   class index {
     constructor(
@@ -551,7 +551,7 @@
     },
     {
       name: 'revolucion',
-      colors: ['#ed555d', '#41b797', '#eda126', '#7b5770'],
+      colors: ['#ed555d', '#fffcc9', '#41b797', '#eda126', '#7b5770'],
       stroke: '#fffcc9',
       background: '#2d1922',
     },
@@ -859,85 +859,85 @@
     },
     {
       name: 'ducci_a',
-      colors: ['#809498', '#d3990e', '#000000', '#863f52'],
+      colors: ['#809498', '#d3990e', '#000000', '#ecddc5'],
       stroke: '#ecddc5',
       background: '#863f52'
     },
     {
       name: 'ducci_b',
-      colors: ['#ecddc5', '#79b27b', '#000000', '#d5c08e'],
+      colors: ['#ecddc5', '#79b27b', '#000000', '#ac6548'],
       stroke: '#ac6548',
       background: '#d5c08e'
     },
     {
       name: 'ducci_d',
-      colors: ['#f3cb4d', '#f2f5e3', '#20191b','#433d5f'],
+      colors: ['#f3cb4d', '#f2f5e3', '#20191b', '#67875c'],
       stroke: '#67875c',
       background: '#433d5f'
     },
     {
       name: 'ducci_e',
-      colors: ['#c37c2b', '#f6ecce', '#000000', '#e3cd98'],
+      colors: ['#c37c2b', '#f6ecce', '#000000', '#386a7a'],
       stroke: '#386a7a',
       background: '#e3cd98'
     },
     {
       name: 'ducci_f',
-      colors: ['#596f7e', '#eae6c7', '#463c21', '#e67300'],
+      colors: ['#596f7e', '#eae6c7', '#463c21', '#f4cb4c'],
       stroke: '#f4cb4c',
       background: '#e67300'
     },
     {
       name: 'ducci_g',
-      colors: ['#c75669', '#000000', '#ecddc5'],
+      colors: ['#c75669', '#000000', '#11706a'],
       stroke: '#11706a',
       background: '#ecddc5'
     },
     {
       name: 'ducci_h',
-      colors: ['#6b5c6e', '#4a2839', '#ffc34b'],
+      colors: ['#6b5c6e', '#4a2839', '#d9574a'],
       stroke: '#d9574a',
       background: '#ffc34b'
     },
     {
       name: 'ducci_i',
-      colors: ['#e9dcad', '#143331', '#a74c02'],
+      colors: ['#e9dcad', '#143331', '#ffc000'],
       stroke: '#ffc000',
       background: '#a74c02'
     },
     {
       name: 'ducci_j',
-      colors: ['#c47c2b', '#5f5726', '#000000', '#ecddc5'],
+      colors: ['#c47c2b', '#5f5726', '#000000', '#7e8a84'],
       stroke: '#7e8a84',
       background: '#ecddc5'
     },
     {
       name: 'ducci_o',
-      colors: ['#c15e1f', '#e4a13a', '#000000', '#dfc79b'],
+      colors: ['#c15e1f', '#e4a13a', '#000000', '#4d545a'],
       stroke: '#4d545a',
       background: '#dfc79b'
     },
     {
       name: 'ducci_q',
-      colors: ['#4bae8c', '#d0c1a0', '#d0c1a0', '#d0c1a0', '#d0c1a0', '#d0c1a0', '#d06440'],
+      colors: ['#4bae8c', '#d0c1a0', '#2d3538'],
       stroke: '#2d3538',
       background: '#d06440'
     },
     {
       name: 'ducci_u',
-      colors: ['#f6d700', '#f2d692', '#000000', '#ff7426'],
+      colors: ['#f6d700', '#f2d692', '#000000', '#5d3552'],
       stroke: '#5d3552',
       background: '#ff7426'
     },
     {
       name: 'ducci_v',
-      colors: ['#c65f75', '#d3990e', '#000000', '#f6eccb'],
+      colors: ['#c65f75', '#d3990e', '#000000', '#597e7a'],
       stroke: '#597e7a',
       background: '#f6eccb'
     },
     {
       name: 'ducci_x',
-      colors: ['#dd614a', '#f5cedb', '#fbb900'],
+      colors: ['#dd614a', '#f5cedb', '#1a1e4f'],
       stroke: '#1a1e4f',
       background: '#fbb900'
     }
@@ -1000,7 +1000,7 @@
   var kovecses = [
     {
       name: 'kov_01',
-      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35'],
+      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35', '#142a36'],
       stroke: '#132a37',
       background: '#108266'
     },
@@ -1012,7 +1012,7 @@
     },
     {
       name: 'kov_03',
-      colors: ['#e3937b', '#d93f1d', '#e6cca7',],
+      colors: ['#e3937b', '#d93f1d', '#090d15', '#e6cca7'],
       stroke: '#090d15',
       background: '#558947'
     },
@@ -1088,19 +1088,19 @@
   var duotone = [
     {
       name: 'dt01',
-      colors: ['#f7f7f3'],
+      colors: ['#172a89', '#f7f7f3'],
       stroke: '#172a89',
       background: '#f3abb0',
     },
     {
       name: 'dt02',
-      colors: ['#eee3d3','#f3c507'],
+      colors: ['#302956', '#f3c507'],
       stroke: '#302956',
       background: '#eee3d3',
     },
     {
       name: 'dt03',
-      colors: ['#a7a7a7'],
+      colors: ['#000000', '#a7a7a7'],
       stroke: '#000000',
       background: '#0a5e78',
     },
@@ -1118,7 +1118,7 @@
     },
     {
       name: 'dt06',
-      colors: ['#cc2b1c','#e7ceb5'],
+      colors: ['#271f47', '#e7ceb5'],
       stroke: '#271f47',
       background: '#cc2b1c',
     },
@@ -1142,7 +1142,7 @@
     },
     {
       name: 'dt10',
-      colors: ['#e5dfcf','#e9b500'],
+      colors: ['#e5dfcf', '#151513'],
       stroke: '#151513',
       background: '#e9b500',
     },
@@ -1314,7 +1314,7 @@
     },
     {
       name: 'delphi',
-      colors: ['#475b62', '#7a999c', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
+      colors: ['#475b62', '#7a999c', '#2a1f1d', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
       stroke: '#2a1f1d',
       background: '#f0e0c6',
     },
@@ -1335,7 +1335,7 @@
     },
     {
       name: 'nowak',
-      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e'],
+      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e', '#180305'],
       stroke: '#180305',
       background: '#ede4cb',
     },
@@ -1362,7 +1362,7 @@
     },
     {
       name: 'cherfi',
-      colors: ['#99cb9f', '#cfb610', '#d00701', '#dba78d', '#bfbea2', '#d2cfaf'],
+      colors: ['#99cb9f', '#cfb610', '#d00701', '#dba78d', '#2e2c1d', '#bfbea2', '#d2cfaf'],
       stroke: '#332e22',
       background: '#e3e2c5',
     },
@@ -1397,13 +1397,14 @@
         '#cb9e00',
         '#689c7d',
         '#e2a1a8',
+        '#151c2e',
       ],
       stroke: '#0e0f27',
       background: '#cecaa9',
     },
     {
       name: 'skyspider',
-      colors: ['#f4b232', '#f2dbbd', '#01799c', '#e93e48', '#006748', '#ed817d'],
+      colors: ['#f4b232', '#f2dbbd', '#01799c', '#e93e48', '#0b1952', '#006748', '#ed817d'],
       stroke: '#050505',
       background: '#f0dbbc',
     },
@@ -1508,19 +1509,19 @@
   var mayo = [
     {
       name: 'mayo1',
-      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177'],
+      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177', '#111111'],
       stroke: '#111111',
       background: '#fff',
     },
     {
       name: 'mayo2',
-      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9'],
+      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9', '#242424'],
       stroke: '#2a2a2a',
       background: '#f5f6f1',
     },
     {
       name: 'mayo3',
-      colors: ['#ea5b19', '#f8c9b9', '#137661'],
+      colors: ['#ea5b19', '#f8c9b9', '#137661', '#2a2a2a'],
       stroke: '#2a2a2a',
       background: '#f5f4f0',
     },
@@ -1560,12 +1561,6 @@
       stroke: '#fff',
       background: '#000000',
     },
-    {
-      name: 'lab1',
-      colors: ['#ffae43', '#ea432c', '#524e9c', '#f0a1a1'],
-      stroke: '#fff',
-      background: '#000000',
-    },
   ];
 
   const pals = misc.concat(
@@ -1600,7 +1595,7 @@
     return palettes[Math.floor(Math.random() * palettes.length)];
   }
 
-  function get(name) {
+  function get$1(name) {
     if (name === undefined) return getRandom();
     return palettes.find(pal => pal.name == name);
   }
@@ -1712,7 +1707,7 @@
   	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
   }
 
-  function createCommonjsModule$1(fn, basedir, module) {
+  function createCommonjsModule(fn, basedir, module) {
   	return module = {
   		path: basedir,
   		exports: {},
@@ -1726,7 +1721,7 @@
   	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
   }
 
-  var changePerspective = createCommonjsModule$1(function (module, exports) {
+  var changePerspective = createCommonjsModule(function (module, exports) {
   Object.defineProperty(exports, "__esModule", { value: true });
   function dim(x) {
       var y;
@@ -2607,7 +2602,7 @@
 
 
 
-  var get$1 = function get(object, property, receiver) {
+  var get = function get(object, property, receiver) {
     if (object === null) object = Function.prototype;
     var desc = Object.getOwnPropertyDescriptor(object, property);
 
@@ -3019,7 +3014,7 @@
     createClass(BooleanController, [{
       key: 'setValue',
       value: function setValue(v) {
-        var toReturn = get$1(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'setValue', this).call(this, v);
+        var toReturn = get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'setValue', this).call(this, v);
         if (this.__onFinishChange) {
           this.__onFinishChange.call(this, this.getValue());
         }
@@ -3037,7 +3032,7 @@
           this.__checkbox.checked = false;
           this.__prev = false;
         }
-        return get$1(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'updateDisplay', this).call(this);
+        return get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return BooleanController;
@@ -3075,7 +3070,7 @@
     createClass(OptionController, [{
       key: 'setValue',
       value: function setValue(v) {
-        var toReturn = get$1(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'setValue', this).call(this, v);
+        var toReturn = get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'setValue', this).call(this, v);
         if (this.__onFinishChange) {
           this.__onFinishChange.call(this, this.getValue());
         }
@@ -3086,7 +3081,7 @@
       value: function updateDisplay() {
         if (dom.isActive(this.__select)) return this;
         this.__select.value = this.getValue();
-        return get$1(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'updateDisplay', this).call(this);
+        return get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return OptionController;
@@ -3126,7 +3121,7 @@
         if (!dom.isActive(this.__input)) {
           this.__input.value = this.getValue();
         }
-        return get$1(StringController.prototype.__proto__ || Object.getPrototypeOf(StringController.prototype), 'updateDisplay', this).call(this);
+        return get(StringController.prototype.__proto__ || Object.getPrototypeOf(StringController.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return StringController;
@@ -3172,7 +3167,7 @@
         if (this.__step !== undefined && _v % this.__step !== 0) {
           _v = Math.round(_v / this.__step) * this.__step;
         }
-        return get$1(NumberController.prototype.__proto__ || Object.getPrototypeOf(NumberController.prototype), 'setValue', this).call(this, _v);
+        return get(NumberController.prototype.__proto__ || Object.getPrototypeOf(NumberController.prototype), 'setValue', this).call(this, _v);
       }
     }, {
       key: 'min',
@@ -3260,7 +3255,7 @@
       key: 'updateDisplay',
       value: function updateDisplay() {
         this.__input.value = this.__truncationSuspended ? this.getValue() : roundToDecimal(this.getValue(), this.__precision);
-        return get$1(NumberControllerBox.prototype.__proto__ || Object.getPrototypeOf(NumberControllerBox.prototype), 'updateDisplay', this).call(this);
+        return get(NumberControllerBox.prototype.__proto__ || Object.getPrototypeOf(NumberControllerBox.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return NumberControllerBox;
@@ -3330,7 +3325,7 @@
       value: function updateDisplay() {
         var pct = (this.getValue() - this.__min) / (this.__max - this.__min);
         this.__foreground.style.width = pct * 100 + '%';
-        return get$1(NumberControllerSlider.prototype.__proto__ || Object.getPrototypeOf(NumberControllerSlider.prototype), 'updateDisplay', this).call(this);
+        return get(NumberControllerSlider.prototype.__proto__ || Object.getPrototypeOf(NumberControllerSlider.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return NumberControllerSlider;
@@ -4582,10 +4577,10 @@
   }
   var GUI$1 = GUI;
 
-  function ui (opts, full_reset, redraw, print) {
+  function ui (opts, full_reset, redraw, print, presets = null) {
     const onPaletteChange = function (controller) {
       controller.setValue(0);
-      controller.max(get(opts.palette).size - 1);
+      controller.max(get$1(opts.palette).size - 1);
     };
 
     const ctrls = {
@@ -4593,7 +4588,13 @@
       reset: full_reset,
     };
 
-    const gui = new GUI$1();
+    let gui;
+    if (presets !== null) {
+      gui = new GUI$1({ load: presets });
+      gui.remember(opts);
+    } else {
+      gui = new GUI$1();
+    }
     const f0 = gui.addFolder('Structural Changes');
     f0.open();
     f0.add(opts, 'cubedimX', 0, 70, 5).name('X Dimension').onChange(full_reset);
@@ -4649,7 +4650,8 @@
     hiddenLeft,
     t1,
     t2,
-    t3
+    t3,
+    fullOutline = false
   ) {
     const bx = box.x1 - box.x_off * depth; // X Position
     const by = box.y1 - box.y_off * depth; // Y Position
@@ -4683,19 +4685,10 @@
     p.noFill();
     p.stroke(strokeColor);
     p.strokeWeight(outerStrokeWeight);
-    displayInteriorFrontLine();
 
-    displayInteriorTopLine();
-
-    displayInteriorLeftLine();
-
-    /*
     if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop)) displayInteriorFrontLine();
-
     if (!(box.x1 === 0 && hiddenLeft)) displayInteriorTopLine();
-
     if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
-  */
 
     p.strokeWeight(innerStrokeWeight);
     displayShape();
@@ -4746,6 +4739,10 @@
       p.vertex(...getPos(bx + bw, by + bh, bd, t1, t2, t3));
       p.vertex(...getPos(bx, by + bh, bd, t1, t2, t3));
       p.vertex(...getPos(bx, by + bh, 0, t1, t2, t3));
+      if (fullOutline) {
+        p.vertex(...getPos(bx, by, 0, t1, t2, t3));
+        p.vertex(...getPos(bx + bw, by, 0, t1, t2, t3));
+      }
       p.endShape();
     }
 
@@ -4777,7 +4774,7 @@
     innerSize: 0.9,
     perspective: 1,
     colorMode: 'group',
-    palette: 'ducci_q',
+    palette: 'dt13',
     paletteShift: 0,
   };
 
@@ -4786,7 +4783,6 @@
 
     let cubedimX;
     let cubedimY;
-    let cubedimZ;
     let tx, ty;
 
     // const xr = (-1 * Math.PI) / 6;
@@ -4798,7 +4794,7 @@
     const zr = (-3 * Math.PI) / 6;
 
     let xu, yu, zu;
-    let nxu, nyu, nzu;
+    let nzu;
 
     let maxDepth;
     const depthSteps = 8;
@@ -4810,14 +4806,11 @@
     let outerStrokeWeight, innerStrokeWeight;
 
     let sectionAppOpts, atomAppOpts;
-    let minGridSize;
 
     let persp;
 
-    let frontLayout;
-
     p.setup = function () {
-      p.createCanvas(2500, 2500);
+      p.createCanvas(2970, 4200);
       THE_SEED = p.floor(p.random(9999999));
       p.randomSeed(THE_SEED);
       p.pixelDensity(4);
@@ -4835,22 +4828,40 @@
     function generateAndDraw() {
       updateGlobals(opts);
 
-      p.background(palette.stroke ? palette.stroke : '#eee');
+      //p.background(palette.stroke ? palette.stroke : '#eee');
+      p.background(palette.background ? palette.background : '#eee');
 
       p.push();
 
-      p.translate(xu[0] * 160 * 3.5, xu[1] * 160 * 3.5);
-      p.translate(yu[0] * 80 * 4.5, yu[1] * 80 * 4.5);
-      for (var i = 0; i < 9; i++) {
-        p.push();
-        for (var j = 0; j < 7; j++) {
-          reset();
-          displayLayout();
+      var w = 12;
+      var h = 8;
+      p.translate(xu[0] * 160 * (h / 2), xu[1] * 160 * (h / 2));
+      p.translate(yu[0] * 80 * (w / 2), yu[1] * 80 * (w / 2));
 
-          p.translate(-xu[0] * 160, -xu[1] * 160);
+      var layout1 = reset();
+      var layout2 = reset();
+      var layout3 = reset();
+      var layout4 = reset();
+      var layout5 = reset();
+      var layout6 = reset();
+      var layout7 = reset();
+      for (var i = 0; i < h; i++) {
+        p.push();
+        //var layout1 = reset();
+        for (var j = 0; j < w; j++) {
+          //displayLayout(layout1);
+          var pick = Math.random();
+          if (pick < 0.15) displayLayout(layout1);
+          else if (pick < 0.3) displayLayout(layout2);
+          else if (pick < 0.45) displayLayout(layout3);
+          else if (pick < 0.6) displayLayout(layout4);
+          else if (pick < 0.75) displayLayout(layout5);
+          else if (pick < 0.9) displayLayout(layout6);
+          else displayLayout(layout7);
+          p.translate(-yu[0] * 80, -yu[1] * 80);
         }
         p.pop();
-        p.translate(-yu[0] * 80, -yu[1] * 80);
+        p.translate(-xu[0] * 160, -xu[1] * 160);
       }
       p.pop();
     }
@@ -4862,7 +4873,6 @@
     function updateGlobals(opts) {
       cubedimX = opts.cubedimX;
       cubedimY = opts.cubedimY;
-      cubedimZ = opts.cubedimZ;
 
       tx = opts.tx;
       ty = opts.ty;
@@ -4871,8 +4881,8 @@
       yu = [Math.cos(yr) * opts.mag, Math.sin(yr) * opts.mag];
       zu = [Math.cos(zr) * opts.mag, Math.sin(zr) * opts.mag];
 
-      nxu = xu.map((v) => -v);
-      nyu = yu.map((v) => -v);
+      xu.map((v) => -v);
+      yu.map((v) => -v);
       nzu = zu.map((v) => -v);
 
       shadeOpacityFront = opts.shadeOpacityFront;
@@ -4884,11 +4894,9 @@
       maxDepth = opts.depthDim;
       persp = opts.perspective;
 
-      palette = get(opts.palette);
+      palette = get$1(opts.palette);
       paletteShift = opts.paletteShift;
       strokeCol = palette.stroke ? palette.stroke : '#000';
-
-      minGridSize = opts.minGridSize;
 
       sectionAppOpts = {
         simple: true,
@@ -4914,10 +4922,10 @@
       const frontApp = generatorFront.generate(null, null, true);
 
       const frontGrids = frontApp[0].map((a) => createGrid(a, null, null));
-      frontLayout = get_overlap_graph(frontGrids.flatMap((g) => g.content));
+      return get_overlap_graph(frontGrids.flatMap((g) => g.content));
     }
 
-    function displayLayout() {
+    function displayLayout(layout) {
       p.push();
       p.translate(tx + p.width / 2, ty + p.height / 2);
       //p.clear();
@@ -4930,9 +4938,7 @@
       const sl = shadeOpacityLeft;
       const st = shadeOpacityTop;
 
-      frontLayout.forEach((i) => displayBox(i, xu, yu, zu, [sf, sl, st], true, true, ft, tt, lt));
-      //leftLayout.forEach((i) => displayBox(i, yu, nzu, nxu, [sl, st, sf], false, true, lt, ft, tt));
-      //topLayout.forEach((i) => displayBox(i, nzu, xu, nyu, [st, sf, sl], false, false, tt, lt, ft));
+      layout.forEach((i) => displayBox(i, xu, yu, zu, [sf, sl, st], false, false, ft, tt, lt));
       p.pop();
     }
 
@@ -4955,7 +4961,8 @@
         hiddenLeft,
         t1,
         t2,
-        t3
+        t3,
+        true
       );
     }
 
@@ -5124,4 +5131,4 @@
     return [src, dst];
   }
 
-})));
+}));

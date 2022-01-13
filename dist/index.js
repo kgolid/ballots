@@ -1,7 +1,7 @@
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
-}((function () { 'use strict';
+})((function () { 'use strict';
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -43,7 +43,7 @@
     var key = [];
 
     // Flatten the seed string or build one from local entropy if needed.
-    var shortseed = mixkey(flatten(
+    mixkey(flatten(
       use_entropy ? [seed, tostring(pool)] :
       0 in arguments ? seed : autoseed(), 3), key);
 
@@ -183,7 +183,7 @@
   //
   mixkey(Math.random(), pool);
   });
-  var seedRandom_1 = seedRandom.resetGlobal;
+  seedRandom.resetGlobal;
 
   class index {
     constructor(
@@ -236,7 +236,7 @@
       for (var i = 0; i < grid.length; i++) {
         grid[i] = new Array(this.xdim + 1);
         for (var j = 0; j < grid[i].length; j++) {
-          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null };
+          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null, el: null };
           else if (i == 1 && initial_top != null) grid[i][j] = { ...initial_top[j], h: true };
           else if (j == 1 && initial_left != null) grid[i][j] = { ...initial_left[i], v: true };
           else if (this.h_symmetric && j > grid[i].length / 2) {
@@ -282,48 +282,48 @@
 
       function block_set_1(x, y) {
         if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: false, h: false, in: false, col: null, id: null };
+        return { v: false, h: false, in: false, col: null, el: null, id: null };
       }
 
       function block_set_2(x, y) {
         if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: true, h: false, in: false, col: null, id: null };
+        return { v: true, h: false, in: false, col: null, el: null, id: null };
       }
 
       function block_set_3(x, y) {
-        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, id: left.id };
+        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
         return block_set_2(x, y);
       }
 
       function block_set_4(x, y) {
         if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: false, h: true, in: false, col: null, id: null };
+        return { v: false, h: true, in: false, col: null, el: null, id: null };
       }
 
       function block_set_5(x, y) {
-        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
+        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
         return block_set_4(x, y);
       }
 
       function block_set_6() {
-        return { v: false, h: false, in: true, col: left.col, id: left.id };
+        return { v: false, h: false, in: true, col: left.col, el: left.el, id: left.id };
       }
 
       function block_set_7(x, y) {
-        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, id: left.id };
+        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
         if (start_new(x, y)) return new_block(x, y);
-        return { v: true, h: true, in: false, col: null, id: null };
+        return { v: true, h: true, in: false, col: null, el: null, id: null };
       }
 
       function block_set_8(x, y) {
-        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
+        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
         if (start_new(x, y)) return new_block(x, y);
-        return { v: true, h: true, in: false, col: null, id: null };
+        return { v: true, h: true, in: false, col: null, el: null, id: null };
       }
 
       function block_set_9(x, y) {
-        if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
-        return { v: false, h: true, in: true, col: left.col, id: left.id };
+        if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
+        return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
       }
 
       // ---- Blocks ----
@@ -345,7 +345,7 @@
           col = context.main_color;
         }
 
-        return { v: true, h: true, in: true, col: col, id: context.id_counter++ };
+        return { v: true, h: true, in: true, col: col, el: context.noise(), id: context.id_counter++ };
       }
 
       // ---- Decisions ----
@@ -413,9 +413,10 @@
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
         let cell = grid[i][j];
-        if (cell.h && cell.v && cell.in) nw_corners.push({ x1: j, y1: i, col: cell.col, id: cell.id });
+        if (cell.h && cell.v && cell.in) nw_corners.push({ x1: j, y1: i, col: cell.col, el: cell.el, id: cell.id });
       }
     }
+    
     return nw_corners;
   }
 
@@ -999,25 +1000,25 @@
   var kovecses = [
     {
       name: 'kov_01',
-      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35'],
+      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35', '#142a36'],
       stroke: '#132a37',
       background: '#108266'
     },
     {
       name: 'kov_02',
-      colors: ['#e94641', '#eeaeae'],
+      colors: ['#e8dccc', '#e94641', '#eeaeae'],
       stroke: '#e8dccc',
       background: '#6c96be'
     },
     {
       name: 'kov_03',
-      colors: ['#e3937b', '#d93f1d', '#e6cca7'],
+      colors: ['#e3937b', '#d93f1d', '#090d15', '#e6cca7'],
       stroke: '#090d15',
       background: '#558947'
     },
     {
       name: 'kov_04',
-      colors: ['#d03718', '#33762f', '#ead7c9', '#ce7028', '#689d8d'],
+      colors: ['#d03718', '#292b36', '#33762f', '#ead7c9', '#ce7028', '#689d8d'],
       stroke: '#292b36',
       background: '#deb330'
     },
@@ -1087,19 +1088,19 @@
   var duotone = [
     {
       name: 'dt01',
-      colors: ['#f7f7f3'],
+      colors: ['#172a89', '#f7f7f3'],
       stroke: '#172a89',
       background: '#f3abb0',
     },
     {
       name: 'dt02',
-      colors: ['#f3c507'],
+      colors: ['#302956', '#f3c507'],
       stroke: '#302956',
       background: '#eee3d3',
     },
     {
       name: 'dt03',
-      colors: ['#a7a7a7'],
+      colors: ['#000000', '#a7a7a7'],
       stroke: '#000000',
       background: '#0a5e78',
     },
@@ -1117,7 +1118,7 @@
     },
     {
       name: 'dt06',
-      colors: ['#e7ceb5'],
+      colors: ['#271f47', '#e7ceb5'],
       stroke: '#271f47',
       background: '#cc2b1c',
     },
@@ -1141,7 +1142,7 @@
     },
     {
       name: 'dt10',
-      colors: ['#e5dfcf', '#e9b500'],
+      colors: ['#e5dfcf', '#151513'],
       stroke: '#151513',
       background: '#e9b500',
     },
@@ -1189,32 +1190,32 @@
   var spatial = [
     {
       name: 'spatial01',
-      colors: ['#f6f6f4', '#4169ff'],
+      colors: ['#ff5937', '#f6f6f4', '#4169ff'],
       stroke: '#ff5937',
       background: '#f6f6f4'
     },
     {
       name: 'spatial02',
-      colors: ['#f6f6f4'],
+      colors: ['#ff5937', '#f6f6f4', '#f6f6f4'],
       stroke: '#ff5937',
       background: '#f6f6f4'
     },
     {
       name: 'spatial02i',
-      colors: ['#ff5937'],
+      colors: ['#f6f6f4', '#ff5937', '#ff5937'],
       stroke: '#f6f6f4',
       background: '#ff5937'
     },
 
     {
       name: 'spatial03',
-      colors: ['#f6f6f4'],
+      colors: ['#4169ff', '#f6f6f4', '#f6f6f4'],
       stroke: '#4169ff',
       background: '#f6f6f4'
     },
     {
       name: 'spatial03i',
-      colors: ['#4169ff'],
+      colors: ['#f6f6f4', '#4169ff', '#4169ff'],
       stroke: '#f6f6f4',
       background: '#4169ff'
     }
@@ -1274,7 +1275,7 @@
     },
     {
       name: 'system.#04',
-      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#ea7d81', '#dcd9d0'],
+      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#26265a', '#ea7d81', '#dcd9d0'],
       stroke: '#26265a',
       backgrund: '#dcd9d0'
     },
@@ -1313,7 +1314,7 @@
     },
     {
       name: 'delphi',
-      colors: ['#475b62', '#7a999c', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
+      colors: ['#475b62', '#7a999c', '#2a1f1d', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
       stroke: '#2a1f1d',
       background: '#f0e0c6',
     },
@@ -1334,7 +1335,7 @@
     },
     {
       name: 'nowak',
-      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e'],
+      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e', '#180305'],
       stroke: '#180305',
       background: '#ede4cb',
     },
@@ -1410,7 +1411,7 @@
     {
       name: 'atlas',
       colors: ['#5399b1', '#f4e9d5', '#de4037', '#ed942f', '#4e9e48', '#7a6e62'],
-      stroke: '#2d251e',
+      stroke: '#3d352b',
       background: '#f0c328',
     },
     {
@@ -1438,11 +1439,12 @@
         '#FF514E',
         '#FDBC2E',
         '#4561CC',
+        '#2A303E',
         '#6CC283',
         '#238DA5',
         '#9BD7CB',
       ],
-      stroke: '#2A303E',
+      stroke: '#000',
       background: '#FBF5E9',
     },
   ];
@@ -1480,7 +1482,7 @@
   var cako = [
     {
       name: 'cako1',
-      colors: ['#d55a3a', '#2a5c8a', '#7e7d14', '#dbdac9'],
+      colors: ['#000000', '#d55a3a', '#2a5c8a', '#7e7d14', '#dbdac9'],
       stroke: '#000000',
       background: '#f4e9d5',
     },
@@ -1502,30 +1504,24 @@
       stroke: '#000000',
       background: '#000000',
     },
-    {
-      name: 'latino',
-      colors: ['#E75843','#ECEAEA'],
-      stroke: '#33181D',
-      background: '#ECEAEA'
-    }
   ];
 
   var mayo = [
     {
       name: 'mayo1',
-      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177'],
+      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177', '#111111'],
       stroke: '#111111',
       background: '#fff',
     },
     {
       name: 'mayo2',
-      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9'],
+      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9', '#242424'],
       stroke: '#2a2a2a',
       background: '#f5f6f1',
     },
     {
       name: 'mayo3',
-      colors: ['#ea5b19', '#f8c9b9', '#137661'],
+      colors: ['#ea5b19', '#f8c9b9', '#137661', '#2a2a2a'],
       stroke: '#2a2a2a',
       background: '#f5f4f0',
     },
@@ -1565,10 +1561,6 @@
       stroke: '#fff',
       background: '#000000',
     },
-    {
-      name: 'herge',
-      colors: ['#305B49', '#F3811F', '#FFFCD8', '#DDCE86', '#038DD5'], 
-    }
   ];
 
   const pals = misc.concat(
@@ -1797,4 +1789,4 @@
     return get(url[1]);
   }
 
-})));
+}));

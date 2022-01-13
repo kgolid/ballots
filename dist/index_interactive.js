@@ -1,15 +1,15 @@
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
-}((function () { 'use strict';
+})((function () { 'use strict';
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-  function createCommonjsModule(fn, module) {
+  function createCommonjsModule$1(fn, module) {
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  var seedRandom = createCommonjsModule(function (module) {
+  var seedRandom = createCommonjsModule$1(function (module) {
 
   var width = 256;// each RC4 output is 0 <= x < 256
   var chunks = 6;// at least six RC4 outputs for each double
@@ -43,7 +43,7 @@
     var key = [];
 
     // Flatten the seed string or build one from local entropy if needed.
-    var shortseed = mixkey(flatten(
+    mixkey(flatten(
       use_entropy ? [seed, tostring(pool)] :
       0 in arguments ? seed : autoseed(), 3), key);
 
@@ -183,7 +183,7 @@
   //
   mixkey(Math.random(), pool);
   });
-  var seedRandom_1 = seedRandom.resetGlobal;
+  seedRandom.resetGlobal;
 
   class index {
     constructor(
@@ -236,7 +236,7 @@
       for (var i = 0; i < grid.length; i++) {
         grid[i] = new Array(this.xdim + 1);
         for (var j = 0; j < grid[i].length; j++) {
-          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null };
+          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null, el: null };
           else if (i == 1 && initial_top != null) grid[i][j] = { ...initial_top[j], h: true };
           else if (j == 1 && initial_left != null) grid[i][j] = { ...initial_left[i], v: true };
           else if (this.h_symmetric && j > grid[i].length / 2) {
@@ -282,48 +282,48 @@
 
       function block_set_1(x, y) {
         if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: false, h: false, in: false, col: null, id: null };
+        return { v: false, h: false, in: false, col: null, el: null, id: null };
       }
 
       function block_set_2(x, y) {
         if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: true, h: false, in: false, col: null, id: null };
+        return { v: true, h: false, in: false, col: null, el: null, id: null };
       }
 
       function block_set_3(x, y) {
-        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, id: left.id };
+        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
         return block_set_2(x, y);
       }
 
       function block_set_4(x, y) {
         if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: false, h: true, in: false, col: null, id: null };
+        return { v: false, h: true, in: false, col: null, el: null, id: null };
       }
 
       function block_set_5(x, y) {
-        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
+        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
         return block_set_4(x, y);
       }
 
       function block_set_6() {
-        return { v: false, h: false, in: true, col: left.col, id: left.id };
+        return { v: false, h: false, in: true, col: left.col, el: left.el, id: left.id };
       }
 
       function block_set_7(x, y) {
-        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, id: left.id };
+        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
         if (start_new(x, y)) return new_block(x, y);
-        return { v: true, h: true, in: false, col: null, id: null };
+        return { v: true, h: true, in: false, col: null, el: null, id: null };
       }
 
       function block_set_8(x, y) {
-        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
+        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
         if (start_new(x, y)) return new_block(x, y);
-        return { v: true, h: true, in: false, col: null, id: null };
+        return { v: true, h: true, in: false, col: null, el: null, id: null };
       }
 
       function block_set_9(x, y) {
-        if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, id: top.id };
-        return { v: false, h: true, in: true, col: left.col, id: left.id };
+        if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
+        return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
       }
 
       // ---- Blocks ----
@@ -345,7 +345,7 @@
           col = context.main_color;
         }
 
-        return { v: true, h: true, in: true, col: col, id: context.id_counter++ };
+        return { v: true, h: true, in: true, col: col, el: context.noise(), id: context.id_counter++ };
       }
 
       // ---- Decisions ----
@@ -413,9 +413,10 @@
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
         let cell = grid[i][j];
-        if (cell.h && cell.v && cell.in) nw_corners.push({ x1: j, y1: i, col: cell.col, id: cell.id });
+        if (cell.h && cell.v && cell.in) nw_corners.push({ x1: j, y1: i, col: cell.col, el: cell.el, id: cell.id });
       }
     }
+    
     return nw_corners;
   }
 
@@ -999,25 +1000,25 @@
   var kovecses = [
     {
       name: 'kov_01',
-      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35'],
+      colors: ['#d24c23', '#7ba6bc', '#f0c667', '#ede2b3', '#672b35', '#142a36'],
       stroke: '#132a37',
       background: '#108266'
     },
     {
       name: 'kov_02',
-      colors: ['#e94641', '#eeaeae'],
+      colors: ['#e8dccc', '#e94641', '#eeaeae'],
       stroke: '#e8dccc',
       background: '#6c96be'
     },
     {
       name: 'kov_03',
-      colors: ['#e3937b', '#d93f1d', '#e6cca7'],
+      colors: ['#e3937b', '#d93f1d', '#090d15', '#e6cca7'],
       stroke: '#090d15',
       background: '#558947'
     },
     {
       name: 'kov_04',
-      colors: ['#d03718', '#33762f', '#ead7c9', '#ce7028', '#689d8d'],
+      colors: ['#d03718', '#292b36', '#33762f', '#ead7c9', '#ce7028', '#689d8d'],
       stroke: '#292b36',
       background: '#deb330'
     },
@@ -1087,19 +1088,19 @@
   var duotone = [
     {
       name: 'dt01',
-      colors: ['#f7f7f3'],
+      colors: ['#172a89', '#f7f7f3'],
       stroke: '#172a89',
       background: '#f3abb0',
     },
     {
       name: 'dt02',
-      colors: ['#f3c507'],
+      colors: ['#302956', '#f3c507'],
       stroke: '#302956',
       background: '#eee3d3',
     },
     {
       name: 'dt03',
-      colors: ['#a7a7a7'],
+      colors: ['#000000', '#a7a7a7'],
       stroke: '#000000',
       background: '#0a5e78',
     },
@@ -1117,7 +1118,7 @@
     },
     {
       name: 'dt06',
-      colors: ['#e7ceb5'],
+      colors: ['#271f47', '#e7ceb5'],
       stroke: '#271f47',
       background: '#cc2b1c',
     },
@@ -1141,7 +1142,7 @@
     },
     {
       name: 'dt10',
-      colors: ['#e5dfcf', '#e9b500'],
+      colors: ['#e5dfcf', '#151513'],
       stroke: '#151513',
       background: '#e9b500',
     },
@@ -1189,32 +1190,32 @@
   var spatial = [
     {
       name: 'spatial01',
-      colors: ['#f6f6f4', '#4169ff'],
+      colors: ['#ff5937', '#f6f6f4', '#4169ff'],
       stroke: '#ff5937',
       background: '#f6f6f4'
     },
     {
       name: 'spatial02',
-      colors: ['#f6f6f4'],
+      colors: ['#ff5937', '#f6f6f4', '#f6f6f4'],
       stroke: '#ff5937',
       background: '#f6f6f4'
     },
     {
       name: 'spatial02i',
-      colors: ['#ff5937'],
+      colors: ['#f6f6f4', '#ff5937', '#ff5937'],
       stroke: '#f6f6f4',
       background: '#ff5937'
     },
 
     {
       name: 'spatial03',
-      colors: ['#f6f6f4'],
+      colors: ['#4169ff', '#f6f6f4', '#f6f6f4'],
       stroke: '#4169ff',
       background: '#f6f6f4'
     },
     {
       name: 'spatial03i',
-      colors: ['#4169ff'],
+      colors: ['#f6f6f4', '#4169ff', '#4169ff'],
       stroke: '#f6f6f4',
       background: '#4169ff'
     }
@@ -1274,7 +1275,7 @@
     },
     {
       name: 'system.#04',
-      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#ea7d81', '#dcd9d0'],
+      colors: ['#e31f4f', '#f0ac3f', '#18acab', '#26265a', '#ea7d81', '#dcd9d0'],
       stroke: '#26265a',
       backgrund: '#dcd9d0'
     },
@@ -1313,7 +1314,7 @@
     },
     {
       name: 'delphi',
-      colors: ['#475b62', '#7a999c', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
+      colors: ['#475b62', '#7a999c', '#2a1f1d', '#fbaf3c', '#df4a33', '#f0e0c6', '#af592c'],
       stroke: '#2a1f1d',
       background: '#f0e0c6',
     },
@@ -1334,7 +1335,7 @@
     },
     {
       name: 'nowak',
-      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e'],
+      colors: ['#e85b30', '#ef9e28', '#c6ac71', '#e0c191', '#3f6279', '#ee854e', '#180305'],
       stroke: '#180305',
       background: '#ede4cb',
     },
@@ -1410,7 +1411,7 @@
     {
       name: 'atlas',
       colors: ['#5399b1', '#f4e9d5', '#de4037', '#ed942f', '#4e9e48', '#7a6e62'],
-      stroke: '#2d251e',
+      stroke: '#3d352b',
       background: '#f0c328',
     },
     {
@@ -1438,11 +1439,12 @@
         '#FF514E',
         '#FDBC2E',
         '#4561CC',
+        '#2A303E',
         '#6CC283',
         '#238DA5',
         '#9BD7CB',
       ],
-      stroke: '#2A303E',
+      stroke: '#000',
       background: '#FBF5E9',
     },
   ];
@@ -1480,7 +1482,7 @@
   var cako = [
     {
       name: 'cako1',
-      colors: ['#d55a3a', '#2a5c8a', '#7e7d14', '#dbdac9'],
+      colors: ['#000000', '#d55a3a', '#2a5c8a', '#7e7d14', '#dbdac9'],
       stroke: '#000000',
       background: '#f4e9d5',
     },
@@ -1502,30 +1504,24 @@
       stroke: '#000000',
       background: '#000000',
     },
-    {
-      name: 'latino',
-      colors: ['#E75843','#ECEAEA'],
-      stroke: '#33181D',
-      background: '#ECEAEA'
-    }
   ];
 
   var mayo = [
     {
       name: 'mayo1',
-      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177'],
+      colors: ['#ea510e', '#ffd203', '#0255a3', '#039177', '#111111'],
       stroke: '#111111',
       background: '#fff',
     },
     {
       name: 'mayo2',
-      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9'],
+      colors: ['#ea663f', '#f9cc27', '#84afd7', '#7ca994', '#f1bbc9', '#242424'],
       stroke: '#2a2a2a',
       background: '#f5f6f1',
     },
     {
       name: 'mayo3',
-      colors: ['#ea5b19', '#f8c9b9', '#137661'],
+      colors: ['#ea5b19', '#f8c9b9', '#137661', '#2a2a2a'],
       stroke: '#2a2a2a',
       background: '#f5f4f0',
     },
@@ -1565,10 +1561,6 @@
       stroke: '#fff',
       background: '#000000',
     },
-    {
-      name: 'herge',
-      colors: ['#305B49', '#F3811F', '#FFFCD8', '#DDCE86', '#038DD5'], 
-    }
   ];
 
   const pals = misc.concat(
@@ -1603,7 +1595,7 @@
     return palettes[Math.floor(Math.random() * palettes.length)];
   }
 
-  function get(name) {
+  function get$1(name) {
     if (name === undefined) return getRandom();
     return palettes.find(pal => pal.name == name);
   }
@@ -1715,7 +1707,7 @@
   	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
   }
 
-  function createCommonjsModule$1(fn, basedir, module) {
+  function createCommonjsModule(fn, basedir, module) {
   	return module = {
   		path: basedir,
   		exports: {},
@@ -1729,7 +1721,7 @@
   	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
   }
 
-  var changePerspective = createCommonjsModule$1(function (module, exports) {
+  var changePerspective = createCommonjsModule(function (module, exports) {
   Object.defineProperty(exports, "__esModule", { value: true });
   function dim(x) {
       var y;
@@ -2610,7 +2602,7 @@
 
 
 
-  var get$1 = function get(object, property, receiver) {
+  var get = function get(object, property, receiver) {
     if (object === null) object = Function.prototype;
     var desc = Object.getOwnPropertyDescriptor(object, property);
 
@@ -3022,7 +3014,7 @@
     createClass(BooleanController, [{
       key: 'setValue',
       value: function setValue(v) {
-        var toReturn = get$1(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'setValue', this).call(this, v);
+        var toReturn = get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'setValue', this).call(this, v);
         if (this.__onFinishChange) {
           this.__onFinishChange.call(this, this.getValue());
         }
@@ -3040,7 +3032,7 @@
           this.__checkbox.checked = false;
           this.__prev = false;
         }
-        return get$1(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'updateDisplay', this).call(this);
+        return get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return BooleanController;
@@ -3078,7 +3070,7 @@
     createClass(OptionController, [{
       key: 'setValue',
       value: function setValue(v) {
-        var toReturn = get$1(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'setValue', this).call(this, v);
+        var toReturn = get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'setValue', this).call(this, v);
         if (this.__onFinishChange) {
           this.__onFinishChange.call(this, this.getValue());
         }
@@ -3089,7 +3081,7 @@
       value: function updateDisplay() {
         if (dom.isActive(this.__select)) return this;
         this.__select.value = this.getValue();
-        return get$1(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'updateDisplay', this).call(this);
+        return get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return OptionController;
@@ -3129,7 +3121,7 @@
         if (!dom.isActive(this.__input)) {
           this.__input.value = this.getValue();
         }
-        return get$1(StringController.prototype.__proto__ || Object.getPrototypeOf(StringController.prototype), 'updateDisplay', this).call(this);
+        return get(StringController.prototype.__proto__ || Object.getPrototypeOf(StringController.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return StringController;
@@ -3175,7 +3167,7 @@
         if (this.__step !== undefined && _v % this.__step !== 0) {
           _v = Math.round(_v / this.__step) * this.__step;
         }
-        return get$1(NumberController.prototype.__proto__ || Object.getPrototypeOf(NumberController.prototype), 'setValue', this).call(this, _v);
+        return get(NumberController.prototype.__proto__ || Object.getPrototypeOf(NumberController.prototype), 'setValue', this).call(this, _v);
       }
     }, {
       key: 'min',
@@ -3263,7 +3255,7 @@
       key: 'updateDisplay',
       value: function updateDisplay() {
         this.__input.value = this.__truncationSuspended ? this.getValue() : roundToDecimal(this.getValue(), this.__precision);
-        return get$1(NumberControllerBox.prototype.__proto__ || Object.getPrototypeOf(NumberControllerBox.prototype), 'updateDisplay', this).call(this);
+        return get(NumberControllerBox.prototype.__proto__ || Object.getPrototypeOf(NumberControllerBox.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return NumberControllerBox;
@@ -3333,7 +3325,7 @@
       value: function updateDisplay() {
         var pct = (this.getValue() - this.__min) / (this.__max - this.__min);
         this.__foreground.style.width = pct * 100 + '%';
-        return get$1(NumberControllerSlider.prototype.__proto__ || Object.getPrototypeOf(NumberControllerSlider.prototype), 'updateDisplay', this).call(this);
+        return get(NumberControllerSlider.prototype.__proto__ || Object.getPrototypeOf(NumberControllerSlider.prototype), 'updateDisplay', this).call(this);
       }
     }]);
     return NumberControllerSlider;
@@ -4585,10 +4577,10 @@
   }
   var GUI$1 = GUI;
 
-  function ui (opts, full_reset, redraw, print) {
+  function ui (opts, full_reset, redraw, print, presets = null) {
     const onPaletteChange = function (controller) {
       controller.setValue(0);
-      controller.max(get(opts.palette).size - 1);
+      controller.max(get$1(opts.palette).size - 1);
     };
 
     const ctrls = {
@@ -4596,7 +4588,13 @@
       reset: full_reset,
     };
 
-    const gui = new GUI$1();
+    let gui;
+    if (presets !== null) {
+      gui = new GUI$1({ load: presets });
+      gui.remember(opts);
+    } else {
+      gui = new GUI$1();
+    }
     const f0 = gui.addFolder('Structural Changes');
     f0.open();
     f0.add(opts, 'cubedimX', 0, 70, 5).name('X Dimension').onChange(full_reset);
@@ -4652,7 +4650,8 @@
     hiddenLeft,
     t1,
     t2,
-    t3
+    t3,
+    fullOutline = false
   ) {
     const bx = box.x1 - box.x_off * depth; // X Position
     const by = box.y1 - box.y_off * depth; // Y Position
@@ -4686,10 +4685,9 @@
     p.noFill();
     p.stroke(strokeColor);
     p.strokeWeight(outerStrokeWeight);
+
     if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop)) displayInteriorFrontLine();
-
     if (!(box.x1 === 0 && hiddenLeft)) displayInteriorTopLine();
-
     if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
 
     p.strokeWeight(innerStrokeWeight);
@@ -4741,6 +4739,10 @@
       p.vertex(...getPos(bx + bw, by + bh, bd, t1, t2, t3));
       p.vertex(...getPos(bx, by + bh, bd, t1, t2, t3));
       p.vertex(...getPos(bx, by + bh, 0, t1, t2, t3));
+      if (fullOutline) {
+        p.vertex(...getPos(bx, by, 0, t1, t2, t3));
+        p.vertex(...getPos(bx + bw, by, 0, t1, t2, t3));
+      }
       p.endShape();
     }
 
@@ -4853,25 +4855,78 @@
     return { x1: xmin, y1: ymin, z1: zmin, w, d, h, col: b1.col };
   }
 
+  var presets = {
+    remembered: {
+      Default: {
+        0: {
+          cubedimX: 15,
+          cubedimY: 15,
+          cubedimZ: 15,
+          depthDim: 2,
+          mag: 5,
+          tx: 0,
+          ty: 0,
+          shadeOpacityFront: 0.2,
+          shadeOpacityLeft: 0.1,
+          shadeOpacityTop: 0,
+          outerStrokeWeight: 2,
+          innerStrokeWeight: 1,
+          outerSize: 0.97,
+          minGridSize: 5,
+          innerSize: 0.8,
+          perspective: 0.85,
+          colorMode: 'group',
+          palette: 'tsu_arcade',
+          paletteShift: 0,
+        },
+      },
+      archetypish: {
+        0: {
+          cubedimX: 35,
+          cubedimY: 5,
+          cubedimZ: 35,
+          depthDim: 2,
+          mag: 12,
+          tx: 0,
+          ty: 800,
+          shadeOpacityFront: 1,
+          shadeOpacityLeft: 1,
+          shadeOpacityTop: 0,
+          outerStrokeWeight: 3,
+          innerStrokeWeight: 1,
+          outerSize: 0.97,
+          minGridSize: 5,
+          innerSize: 0.8,
+          perspective: 1,
+          colorMode: 'group',
+          palette: 'tsu_arcade',
+          paletteShift: 0,
+        },
+      },
+    },
+    closed: false,
+  };
+
   let opts = {
-    cubedimX: 15,
-    cubedimY: 15,
-    cubedimZ: 15,
-    depthDim: 2,
-    mag: 5,
+    // gets values from presets.js
+    cubedimX: 0,
+    cubedimY: 0,
+    cubedimZ: 0,
+    depthDim: 0,
+    mag: 0,
     tx: 0,
     ty: 0,
-    shadeOpacityFront: 0.2,
-    shadeOpacityLeft: 0.1,
+    shadeOpacityFront: 0,
+    shadeOpacityLeft: 0,
     shadeOpacityTop: 0,
-    outerStrokeWeight: 2,
-    innerStrokeWeight: 1,
-    outerSize: 0.97,
-    minGridSize: 5,
-    innerSize: 0.8,
-    perspective: 0.85,
-    colorMode: 'group',
-    palette: 'tsu_arcade',
+    outerStrokeWeight: 0,
+    innerStrokeWeight: 0,
+    outerSize: 0,
+    minGridSize: 0,
+    innerSize: 0,
+    perspective: 0,
+    colorMode: '',
+    palette: '',
     paletteShift: 0,
   };
 
@@ -4917,7 +4972,7 @@
       p.strokeJoin(p.ROUND);
       p.noLoop();
 
-      ui(opts, generateAndDraw, updateAndDraw, print);
+      ui(opts, generateAndDraw, updateAndDraw, print, presets);
 
       generateAndDraw();
     };
@@ -4958,7 +5013,7 @@
       maxDepth = opts.depthDim;
       persp = opts.perspective;
 
-      palette = get(opts.palette);
+      palette = get$1(opts.palette);
       paletteShift = opts.paletteShift;
       strokeCol = palette.stroke ? palette.stroke : '#000';
 
@@ -5221,4 +5276,4 @@
     return [src, dst];
   }
 
-})));
+}));
