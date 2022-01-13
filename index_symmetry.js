@@ -196,9 +196,7 @@ let sketch = function (p) {
     const sl = shadeOpacityLeft;
     const st = shadeOpacityTop;
 
-    layout.forEach((i) => displayBox(i, xu, yu, zu, [sf, sl, st], true, true, ft, tt, lt));
-    //leftLayout.forEach((i) => displayBox(i, yu, nzu, nxu, [sl, st, sf], false, true, lt, ft, tt));
-    //topLayout.forEach((i) => displayBox(i, nzu, xu, nyu, [st, sf, sl], false, false, tt, lt, ft));
+    layout.forEach((i) => displayBox(i, xu, yu, zu, [sf, sl, st], false, false, ft, tt, lt));
     p.pop();
   }
 
@@ -221,7 +219,8 @@ let sketch = function (p) {
       hiddenLeft,
       t1,
       t2,
-      t3
+      t3,
+      true
     );
   }
 

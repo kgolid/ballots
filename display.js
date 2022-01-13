@@ -15,7 +15,8 @@ export default function (
   hiddenLeft,
   t1,
   t2,
-  t3
+  t3,
+  fullOutline = false
 ) {
   const bx = box.x1 - box.x_off * depth; // X Position
   const by = box.y1 - box.y_off * depth; // Y Position
@@ -49,10 +50,9 @@ export default function (
   p.noFill();
   p.stroke(strokeColor);
   p.strokeWeight(outerStrokeWeight);
+
   if (!(box.x1 === 0 && hiddenLeft) && !(box.y1 === 0 && hiddenTop)) displayInteriorFrontLine();
-
   if (!(box.x1 === 0 && hiddenLeft)) displayInteriorTopLine();
-
   if (!(box.y1 === 0 && hiddenTop)) displayInteriorLeftLine();
 
   p.strokeWeight(innerStrokeWeight);
@@ -104,6 +104,10 @@ export default function (
     p.vertex(...getPos(bx + bw, by + bh, bd, t1, t2, t3));
     p.vertex(...getPos(bx, by + bh, bd, t1, t2, t3));
     p.vertex(...getPos(bx, by + bh, 0, t1, t2, t3));
+    if (fullOutline) {
+      p.vertex(...getPos(bx, by, 0, t1, t2, t3));
+      p.vertex(...getPos(bx + bw, by, 0, t1, t2, t3));
+    }
     p.endShape();
   }
 
