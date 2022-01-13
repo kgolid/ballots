@@ -7,25 +7,28 @@ import ui from './ui';
 import display from './display';
 import { generateCSV } from './csv';
 
+import presets from './presets_interactive.js';
+
 let opts = {
-  cubedimX: 15,
-  cubedimY: 15,
-  cubedimZ: 15,
-  depthDim: 2,
-  mag: 5,
+  // gets values from presets.js
+  cubedimX: 0,
+  cubedimY: 0,
+  cubedimZ: 0,
+  depthDim: 0,
+  mag: 0,
   tx: 0,
   ty: 0,
-  shadeOpacityFront: 0.2,
-  shadeOpacityLeft: 0.1,
+  shadeOpacityFront: 0,
+  shadeOpacityLeft: 0,
   shadeOpacityTop: 0,
-  outerStrokeWeight: 2,
-  innerStrokeWeight: 1,
-  outerSize: 0.97,
-  minGridSize: 5,
-  innerSize: 0.8,
-  perspective: 0.85,
-  colorMode: 'group',
-  palette: 'tsu_arcade',
+  outerStrokeWeight: 0,
+  innerStrokeWeight: 0,
+  outerSize: 0,
+  minGridSize: 0,
+  innerSize: 0,
+  perspective: 0,
+  colorMode: '',
+  palette: '',
   paletteShift: 0,
 };
 
@@ -71,7 +74,7 @@ let sketch = function (p) {
     p.strokeJoin(p.ROUND);
     p.noLoop();
 
-    ui(opts, generateAndDraw, updateAndDraw, print);
+    ui(opts, generateAndDraw, updateAndDraw, print, presets);
 
     generateAndDraw();
   };

@@ -1,7 +1,7 @@
 import * as dat from 'dat.gui';
 import * as tome from 'chromotome';
 
-export default function (opts, full_reset, redraw, print) {
+export default function (opts, full_reset, redraw, print, presets = null) {
   const onPaletteChange = function (controller) {
     controller.setValue(0);
     controller.max(tome.get(opts.palette).size - 1);
@@ -12,7 +12,13 @@ export default function (opts, full_reset, redraw, print) {
     reset: full_reset,
   };
 
-  const gui = new dat.GUI();
+  let gui;
+  if (presets !== null) {
+    gui = new dat.GUI({ load: presets });
+    gui.remember(opts);
+  } else {
+    gui = new dat.GUI();
+  }
   const f0 = gui.addFolder('Structural Changes');
   f0.open();
   f0.add(opts, 'cubedimX', 0, 70, 5).name('X Dimension').onChange(full_reset);
