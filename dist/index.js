@@ -236,7 +236,7 @@
       for (var i = 0; i < grid.length; i++) {
         grid[i] = new Array(this.xdim + 1);
         for (var j = 0; j < grid[i].length; j++) {
-          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null, el: null };
+          if (i == 0 || j == 0) grid[i][j] = { h: false, v: false, in: false, col: null, el: null  };
           else if (i == 1 && initial_top != null) grid[i][j] = { ...initial_top[j], h: true };
           else if (j == 1 && initial_left != null) grid[i][j] = { ...initial_left[i], v: true };
           else if (this.h_symmetric && j > grid[i].length / 2) {
@@ -277,54 +277,53 @@
         if (!left.h && top.v) return block_set_8(x, y);
         return block_set_9(x, y);
       }
+  // --- Block sets ----
 
-      // --- Block sets ----
+  function block_set_1(x, y) {
+    if (start_new_from_blank(x, y)) return new_block(x, y);
+    return { v: false, h: false, in: false, col: null, el: null, id: null };
+  }
 
-      function block_set_1(x, y) {
-        if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: false, h: false, in: false, col: null, el: null, id: null };
-      }
+  function block_set_2(x, y) {
+    if (start_new_from_blank(x, y)) return new_block(x, y);
+    return { v: true, h: false, in: false, col: null, el: null, id: null };
+  }
 
-      function block_set_2(x, y) {
-        if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: true, h: false, in: false, col: null, el: null, id: null };
-      }
+  function block_set_3(x, y) {
+    if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
+    return block_set_2(x, y);
+  }
 
-      function block_set_3(x, y) {
-        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
-        return block_set_2(x, y);
-      }
+  function block_set_4(x, y) {
+    if (start_new_from_blank(x, y)) return new_block(x, y);
+    return { v: false, h: true, in: false, col: null, el: null, id: null };
+  }
 
-      function block_set_4(x, y) {
-        if (start_new_from_blank(x, y)) return new_block(x, y);
-        return { v: false, h: true, in: false, col: null, el: null, id: null };
-      }
+  function block_set_5(x, y) {
+    if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
+    return block_set_4(x, y);
+  }
 
-      function block_set_5(x, y) {
-        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
-        return block_set_4(x, y);
-      }
+  function block_set_6() {
+    return { v: false, h: false, in: true, col: left.col, el: left.el, id: left.id };
+  }
 
-      function block_set_6() {
-        return { v: false, h: false, in: true, col: left.col, el: left.el, id: left.id };
-      }
+  function block_set_7(x, y) {
+    if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
+    if (start_new(x, y)) return new_block(x, y);
+    return { v: true, h: true, in: false, col: null, el: null, id: null };
+  }
 
-      function block_set_7(x, y) {
-        if (extend(x, y)) return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
-        if (start_new(x, y)) return new_block(x, y);
-        return { v: true, h: true, in: false, col: null, el: null, id: null };
-      }
+  function block_set_8(x, y) {
+    if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
+    if (start_new(x, y)) return new_block(x, y);
+    return { v: true, h: true, in: false, col: null, el: null, id: null };
+  }
 
-      function block_set_8(x, y) {
-        if (extend(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
-        if (start_new(x, y)) return new_block(x, y);
-        return { v: true, h: true, in: false, col: null, el: null, id: null };
-      }
-
-      function block_set_9(x, y) {
-        if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
-        return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
-      }
+  function block_set_9(x, y) {
+    if (vertical_dir(x, y)) return { v: true, h: false, in: true, col: top.col, el: top.el, id: top.id };
+    return { v: false, h: true, in: true, col: left.col, el: left.el, id: left.id };
+  }
 
       // ---- Blocks ----
 
@@ -416,7 +415,6 @@
         if (cell.h && cell.v && cell.in) nw_corners.push({ x1: j, y1: i, col: cell.col, el: cell.el, id: cell.id });
       }
     }
-    
     return nw_corners;
   }
 
@@ -1099,6 +1097,12 @@
       background: '#eee3d3',
     },
     {
+      name: 'dt02b',
+      colors: ['#eee3d3'],
+      stroke: '#302956',
+      background: '#f3c507',
+    },
+    {
       name: 'dt03',
       colors: ['#000000', '#a7a7a7'],
       stroke: '#000000',
@@ -1146,6 +1150,66 @@
       stroke: '#151513',
       background: '#e9b500',
     },
+    {
+      name: 'dt11',
+      colors: ['#ece9e2'],
+      stroke: '#221e1f',
+      background: '#75c4bf',
+    },
+    {
+      name: 'dt12',
+      colors: ['#f5f2d3'],
+      stroke: '#073c5c',
+      background: '#c0d0c3',
+    },
+    {
+      name: 'dt13',
+      colors: ['#f5f2d3', '#f5f2d3', '#fbd6b8'],
+      stroke: '#ec5525',
+      background: '#ec5525',
+    },
+    {
+      name: 'dt14',
+      colors:['#b8bcc4','#ebe8dc','#ebe8dc','#ebe8dc'],
+      stroke:'#2d4059',
+      background:'#ca6b43'  
+    },
+    {
+      name: 'dt14b',
+      colors:['#eaa763','#b8928c','#f5e5c0', '#f5e5c0', '#f5e5c0'],
+      stroke:'#581a47',
+      background:'#b5cdbd'  
+    },
+    {
+      name: 'dt15',
+      colors:['#33308c'],
+      stroke:'#f3eca4',
+      background:'#33308c'
+    },
+    {
+      name: 'dt15b',
+      colors:['#f3eca4'],
+      stroke:'#33308c',
+      background:'#f3eca4'
+    },
+    {
+      name: 'dt16',
+      colors:['#e9e6dc'],
+      stroke:'#232827',
+      background:'#e9e6dc'
+    },
+    {
+      name: 'dt16b',
+      colors:['#232827'],
+      stroke:'#e9e6dc',
+      background:'#232827'
+    },
+    {
+      name: 'dt17',
+      colors: ['#e1ac28','#dfd2b9','#dfd2b9','#dfd2b9'],
+      stroke:'#1d2225',
+      background:'#1d2225'
+    }
   ];
 
   var hilda = [
@@ -1404,7 +1468,7 @@
     },
     {
       name: 'skyspider',
-      colors: ['#f4b232', '#f2dbbd', '#01799c', '#e93e48', '#0b1952', '#006748', '#ed817d'],
+      colors: ['#f4b232', '#f2dbbd', '#f2dbbd', '#f2dbbd', '#f2dbbd', '#01799c', '#e93e48', '#006748', '#ed817d'],
       stroke: '#050505',
       background: '#f0dbbc',
     },
